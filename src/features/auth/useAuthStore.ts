@@ -17,7 +17,7 @@ interface AuthState {
   initializeAuth: () => Promise<void>;
 }
 
-const useAuthStore = create<AuthState>((set, get) => ({
+const useAuthStore = create<AuthState>((set) => ({
   user: null,
   session: null,
   loading: true,

@@ -10,6 +10,7 @@ import {
 } from '@chakra-ui/react';
 import LoginForm from '../auth/LoginForm';
 import { useAuthUser, useAuthLoading, useAuthInitialize, useAuthSignOut } from '../auth/useAuthStore';
+import Templates from '../templates/Templates';
 
 function App() {
   const user = useAuthUser();
@@ -23,10 +24,18 @@ function App() {
 
   if (loading) {
     return (
-      <Center height="100vh">
-        <Flex direction="column" align="center" gap={4}>
-          <Spinner size="lg" />
-          <Text fontSize="lg">Loading...</Text>
+      <Center height="100vh" bg="bg.primary">
+        <Flex 
+          direction="column" 
+          align="center" 
+          gap={6}
+          p={8}
+          bg="surface.primary"
+          borderRadius="2xl"
+          boxShadow="neuomorphicLarge"
+        >
+          <Spinner size="lg" color="accent.primary" />
+          <Text fontSize="lg" color="text.secondary">Loading...</Text>
         </Flex>
       </Center>
     );
@@ -34,24 +43,45 @@ function App() {
 
   if (!user) {
     return (
-      <Box>
+      <Box minH="100vh" bg="bg.primary" py={8}>
         <LoginForm />
       </Box>
     );
   }
 
   return (
-    <Box p={6}>
-      <Flex justify="space-between" align="center" mb={6}>
-        <Heading size="lg">Welcome, {user.email}!</Heading>
+    <Box minH="100vh" bg="bg.primary">
+      <Flex 
+        justify="space-between" 
+        align="center" 
+        p={6} 
+        bg="surface.primary"
+        boxShadow="0 4px 8px rgba(0,0,0,0.1)"
+        mb={6}
+      >
+        <Heading size="lg" color="text.primary">Welcome, {user.email}!</Heading>
         <Button
           onClick={signOut}
           size="md"
+          bg="surface.primary"
+          color="text.primary"
+          boxShadow="neuomorphic"
+          _hover={{
+            boxShadow: "neuomorphicHover",
+            transform: "translateY(-2px)"
+          }}
+          _active={{
+            boxShadow: "neuomorphicInset",
+            transform: "translateY(0px)"
+          }}
+          borderRadius="xl"
+          border="none"
+          transition="all 0.2s ease-in-out"
         >
           Sign Out
         </Button>
       </Flex>
-      <Text fontSize="lg">You are now logged in successfully!</Text>
+      <Templates />
     </Box>
   );
 }
