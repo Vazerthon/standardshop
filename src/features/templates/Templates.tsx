@@ -5,9 +5,9 @@ import {
   Heading,
   Stack,
   Text,
-  Spinner,
   SimpleGrid,
   Center,
+  Spinner,
 } from '@chakra-ui/react';
 import { useTemplates, useTemplatesLoading, useTemplatesMessage, useTemplatesFetch } from './useTemplatesStore';
 import TemplateItem from './TemplateItem';

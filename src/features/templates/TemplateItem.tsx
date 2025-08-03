@@ -7,7 +7,7 @@ import {
   Badge,
 } from '@chakra-ui/react';
 import { TemplateWithItems } from './types';
-import { transitions } from '../../theme';
+import { transitions } from '@/theme';
 
 interface TemplateItemProps {
   template: TemplateWithItems;

@@ -4,13 +4,13 @@ import {
   Flex,
   Heading,
   Text,
-  Spinner,
   Center,
+  Spinner,
 } from '@chakra-ui/react';
 import LoginForm from '../auth/LoginForm';
 import { useAuthUser, useAuthLoading, useAuthInitialize, useAuthSignOut } from '../auth/useAuthStore';
-import Templates from '../templates/Templates';
 import NeuomorphicButton from '../../components/NeuomorphicButton';
+import { Drawer } from '../../components/Drawer';
 
 function App() {
   const user = useAuthUser();
@@ -67,7 +67,8 @@ function App() {
           Sign Out
         </NeuomorphicButton>
       </Flex>
-      <Templates />
+      
+      <Drawer />
     </Box>
   );
 }

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button, ButtonProps } from '@chakra-ui/react';
-import { transitions } from '../theme';
+import { transitions } from '@/theme';
 
 interface NeuomorphicButtonProps extends Omit<ButtonProps, 'variant'> {
   variant?: 'raised' | 'inset';
