@@ -4,13 +4,13 @@ import {
   Flex,
   Heading,
   Text,
-  Button,
   Spinner,
   Center,
 } from '@chakra-ui/react';
 import LoginForm from '../auth/LoginForm';
 import { useAuthUser, useAuthLoading, useAuthInitialize, useAuthSignOut } from '../auth/useAuthStore';
 import Templates from '../templates/Templates';
+import NeuomorphicButton from '../../components/NeuomorphicButton';
 
 function App() {
   const user = useAuthUser();
@@ -56,30 +56,16 @@ function App() {
         align="center" 
         p={6} 
         bg="surface.primary"
-        boxShadow="0 4px 8px rgba(0,0,0,0.1)"
+        boxShadow="header"
         mb={6}
       >
         <Heading size="lg" color="text.primary">Welcome, {user.email}!</Heading>
-        <Button
+        <NeuomorphicButton
           onClick={signOut}
           size="md"
-          bg="surface.primary"
-          color="text.primary"
-          boxShadow="neuomorphic"
-          _hover={{
-            boxShadow: "neuomorphicHover",
-            transform: "translateY(-2px)"
-          }}
-          _active={{
-            boxShadow: "neuomorphicInset",
-            transform: "translateY(0px)"
-          }}
-          borderRadius="xl"
-          border="none"
-          transition="all 0.2s ease-in-out"
         >
           Sign Out
-        </Button>
+        </NeuomorphicButton>
       </Flex>
       <Templates />
     </Box>

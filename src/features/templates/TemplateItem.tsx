@@ -7,6 +7,7 @@ import {
   Badge,
 } from '@chakra-ui/react';
 import { TemplateWithItems } from './types';
+import { transitions } from '../../theme';
 
 interface TemplateItemProps {
   template: TemplateWithItems;
@@ -24,7 +25,7 @@ const TemplateItem: React.FC<TemplateItemProps> = ({ template }) => {
         boxShadow: "neuomorphicHover",
         transform: "translateY(-4px)"
       }}
-      transition="all 0.3s ease-in-out"
+      transition={transitions.default}
     >
       <Box p={6} borderBottom="1px" borderColor="neuomorphic.shadow">
         <Heading size="md" color="text.primary">{template.name}</Heading>

@@ -2,12 +2,12 @@ import React, { useState, useCallback } from 'react';
 import {
   Box,
   Input,
-  Button,
   Stack,
   Text,
   Center,
 } from '@chakra-ui/react';
 import { useAuthSignIn, useAuthLoading, useAuthMessage } from './useAuthStore';
+import NeuomorphicButton from '../../components/NeuomorphicButton';
 
 const LoginForm: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -101,29 +101,14 @@ const LoginForm: React.FC = () => {
                 />
               </Box>
 
-              <Button
+              <NeuomorphicButton
                 type="submit"
                 size="lg"
                 width="full"
                 loading={loading}
-                bg="surface.primary"
-                color="text.primary"
-                boxShadow="neuomorphic"
-                _hover={{
-                  boxShadow: "neuomorphicHover",
-                  transform: "translateY(-2px)"
-                }}
-                _active={{
-                  boxShadow: "neuomorphicInset",
-                  transform: "translateY(0px)"
-                }}
-                borderRadius="xl"
-                border="none"
-                transition="all 0.2s ease-in-out"
-                fontWeight="semibold"
               >
                 Sign In
-              </Button>
+              </NeuomorphicButton>
             </Stack>
           </form>
         </Stack>
