@@ -1,11 +1,15 @@
 import {
   Box,
   Drawer as ChakraDrawer,
-  type DrawerBodyProps,
 } from '@chakra-ui/react';
 import NeuomorphicButton from './NeuomorphicButton';
 
-export const Drawer: React.FC<DrawerBodyProps> = ({ children, ...rest }) => {
+interface DrawerProps {
+  children: [React.ReactNode, React.ReactNode];
+}
+
+export const Drawer: React.FC<DrawerProps> = ({ children }) => {
+  const [body, footer] = children;
   return (
       <ChakraDrawer.Root placement="start">
         <ChakraDrawer.Trigger asChild bottom={6} left={6 } position="fixed">
@@ -37,9 +41,12 @@ export const Drawer: React.FC<DrawerBodyProps> = ({ children, ...rest }) => {
             <ChakraDrawer.Header borderBottomWidth="1px" borderColor="bg.primary">
               <ChakraDrawer.Title color="text.primary">Menu</ChakraDrawer.Title>
             </ChakraDrawer.Header>
-            <ChakraDrawer.Body p={1} {...rest}>
-              {children}
+            <ChakraDrawer.Body p={1}>
+              {body}
             </ChakraDrawer.Body>
+            <ChakraDrawer.Footer borderTopWidth="1px" borderColor="bg.primary">
+              {footer}
+            </ChakraDrawer.Footer>
           </ChakraDrawer.Content>
         </ChakraDrawer.Positioner>
       </ChakraDrawer.Root>

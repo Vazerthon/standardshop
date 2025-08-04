@@ -53,24 +53,23 @@ function App() {
   return (
     <Box minH="100vh" bg="bg.primary">
       <Flex 
-        justify="space-between" 
         align="center" 
-        p={6} 
+        p={4} 
         bg="surface.primary"
         boxShadow="header"
-        mb={6}
+        mb={2}
       >
-        <Heading size="lg" color="text.primary">Welcome, {user.email}!</Heading>
+        <Heading size="lg" color="text.primary">Welcome!</Heading>
+      </Flex>
+      
+      <Drawer>
+        <Templates />
         <NeuomorphicButton
           onClick={signOut}
           size="md"
         >
           Sign Out
         </NeuomorphicButton>
-      </Flex>
-      
-      <Drawer>
-        <Templates />
       </Drawer>
     </Box>
   );
