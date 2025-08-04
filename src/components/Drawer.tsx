@@ -1,67 +1,48 @@
-import { transitions } from '@/theme';
 import {
   Box,
-  IconButton,
   Drawer as ChakraDrawer,
+  type DrawerBodyProps,
 } from '@chakra-ui/react';
+import NeuomorphicButton from './NeuomorphicButton';
 
-export const Drawer: React.FC = () => {
+export const Drawer: React.FC<DrawerBodyProps> = ({ children, ...rest }) => {
   return (
-    <Box
-      position="fixed"
-      bottom={6}
-      left={6}
-    >
       <ChakraDrawer.Root placement="start">
-        <ChakraDrawer.Trigger asChild>
-          <IconButton
+        <ChakraDrawer.Trigger asChild bottom={6} left={6 } position="fixed">
+          <NeuomorphicButton
             aria-label="Open drawer"
-            size="lg"
             borderRadius="full"
-            bg="surface.primary"
-            color="text.primary"
-            boxShadow="neuomorphicLarge"
-            _hover={{
-              boxShadow: 'neuomorphicHover',
-              transform: 'scale(1.05)',
-            }}
-            _active={{
-              boxShadow: 'neuomorphicInset',
-              transform: 'scale(0.95)',
-            }}
-            transition={transitions.default}
+            width="3rem"
+            height="3rem"
+            variant="raised"
           >
             <Box as="span" fontSize="lg">☰</Box>
-          </IconButton>
+          </NeuomorphicButton>
         </ChakraDrawer.Trigger>
         
         <ChakraDrawer.Backdrop />
         <ChakraDrawer.Positioner>
           <ChakraDrawer.Content bg="surface.primary" boxShadow="neuomorphicLarge">
             <ChakraDrawer.CloseTrigger asChild>
-              <IconButton
+              <NeuomorphicButton
                 aria-label="Close drawer"
-                size="sm"
                 borderRadius="full"
-                bg="surface.primary"
-                color="text.primary"
-                boxShadow="neuomorphic"
-                _hover={{ bg: 'bg.primary' }}
-                _active={{ boxShadow: 'neuomorphicInset' }}
+                variant="raised"
+                width="3rem"
+                height="3rem"
               >
                 <Box as="span" fontSize="lg">×</Box>
-              </IconButton>
+              </NeuomorphicButton>
             </ChakraDrawer.CloseTrigger>
             <ChakraDrawer.Header borderBottomWidth="1px" borderColor="bg.primary">
               <ChakraDrawer.Title color="text.primary">Menu</ChakraDrawer.Title>
             </ChakraDrawer.Header>
-            <ChakraDrawer.Body>
-              {/* Drawer content will go here */}
+            <ChakraDrawer.Body p={1} {...rest}>
+              {children}
             </ChakraDrawer.Body>
           </ChakraDrawer.Content>
         </ChakraDrawer.Positioner>
       </ChakraDrawer.Root>
-    </Box>
   );
 };
 

@@ -21,7 +21,6 @@ const useTemplatesStore = create<TemplatesState>((set) => ({
     set({ loading: true, message: null });
     
     try {
-      // Get current user
       const { data: { user } } = await supabase.auth.getUser();
       
       if (!user) {
@@ -29,7 +28,6 @@ const useTemplatesStore = create<TemplatesState>((set) => ({
         return;
       }
 
-      // Fetch templates with their items in a single query using a join
       const { data: templatesWithItems, error } = await supabase
         .from('template')
         .select(`
@@ -37,14 +35,13 @@ const useTemplatesStore = create<TemplatesState>((set) => ({
           items:item(*)
         `)
         .eq('userId', user.id)
-        .order('createdAt', { ascending: false });
+        .order('name');
 
       if (error) {
         set({ loading: false, message: error.message });
         return;
       }
 
-      // Transform the data to match our TemplateWithItems interface
       const transformedTemplates: TemplateWithItems[] = (templatesWithItems || []).map(template => ({
         ...template,
         items: template.items || []

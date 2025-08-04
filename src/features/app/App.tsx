@@ -11,6 +11,7 @@ import LoginForm from '../auth/LoginForm';
 import { useAuthUser, useAuthLoading, useAuthInitialize, useAuthSignOut } from '../auth/useAuthStore';
 import NeuomorphicButton from '../../components/NeuomorphicButton';
 import { Drawer } from '../../components/Drawer';
+import Templates from '../templates/Templates';
 
 function App() {
   const user = useAuthUser();
@@ -68,7 +69,9 @@ function App() {
         </NeuomorphicButton>
       </Flex>
       
-      <Drawer />
+      <Drawer>
+        <Templates />
+      </Drawer>
     </Box>
   );
 }

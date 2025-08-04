@@ -29,6 +29,7 @@ export const theme = defineConfig({
         'surface.primary': { value: '{colors.neuomorphic.surface}' },
         'text.primary': { value: '{colors.neuomorphic.text}' },
         'text.secondary': { value: '{colors.neuomorphic.textSecondary}' },
+        'text.error': { value: '#e53e3e' },
         'accent.primary': { value: '{colors.neuomorphic.accent}' },
       },
     },
