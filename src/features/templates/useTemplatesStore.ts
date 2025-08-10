@@ -1,9 +1,9 @@
 import { create } from "zustand";
 import { supabase } from "../../supabaseClient";
-import { TemplateWithItems } from "./types";
+import { Template } from "./types";
 
 interface TemplatesState {
-  templates: TemplateWithItems[];
+  templates: Template[];
   loading: boolean;
   message: string | null;
   fetchTemplates: () => Promise<void>;
@@ -31,8 +31,16 @@ const useTemplatesStore = create<TemplatesState>((set) => ({
       const { data: templatesWithItems, error } = await supabase
         .from('template')
         .select(`
-          *,
-          items:item(*)
+          id,
+          name,
+          templateItems:templateItem!templateId(
+            id,
+            quantity,
+            item:item!itemId(
+              id,
+              name
+            )
+          )
         `)
         .eq('userId', user.id)
         .order('name');
@@ -42,9 +50,14 @@ const useTemplatesStore = create<TemplatesState>((set) => ({
         return;
       }
 
-      const transformedTemplates: TemplateWithItems[] = (templatesWithItems || []).map(template => ({
+      const transformedTemplates: Template[] = (templatesWithItems || []).map(template => ({
         ...template,
-        items: template.items || []
+        items: (template.templateItems || []).map(item => ({
+          id: item.id,
+          // @ts-expect-error TypeScript doens't understand this is a 1:1 relationship
+          name: item.item.name,
+          quantity: item.quantity
+        }))
       }));
 
       set({ 

@@ -7,11 +7,11 @@ import {
   Stack,
   Badge,
 } from '@chakra-ui/react';
-import { TemplateWithItems } from './types';
+import { Template } from './types';
 import { transitions } from '@/theme';
 
 interface TemplateItemProps {
-  template: TemplateWithItems;
+  template: Template;
 }
 
 const TemplateItem: React.FC<TemplateItemProps> = ({ template }) => {
@@ -38,23 +38,23 @@ const TemplateItem: React.FC<TemplateItemProps> = ({ template }) => {
       
       <Box>
         <Stack direction="column" gap={2}>
-          {template.items.map((item) => (
+          {template.items.map((templateItem) => (
             <Box 
-              key={item.id} 
+              key={templateItem.id} 
               p={2} 
               bg="bg.primary" 
               borderRadius="xl"
               boxShadow="neuomorphicInset"
             >
               <Stack direction="row" justify="space-between" align="center">
-                <Text truncate fontSize="sm" color="text.primary">{item.name}</Text>
+                <Text truncate fontSize="sm" color="text.primary">{templateItem.name}</Text>
                 <Badge 
                   variant="solid"
                   borderRadius="lg"
                   px={3}
                   py={1}
                 >
-                  Qty: {item.quantity}
+                  Qty: {templateItem.quantity}
                 </Badge>
               </Stack>
             </Box>

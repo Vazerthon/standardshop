@@ -12,6 +12,7 @@ import { useAuthUser, useAuthLoading, useAuthInitialize, useAuthSignOut } from '
 import NeuomorphicButton from '../../components/NeuomorphicButton';
 import { Drawer } from '../../components/Drawer';
 import Templates from '../templates/Templates';
+import { ShoppingList } from '../shopping-list';
 
 function App() {
   const user = useAuthUser();
@@ -61,7 +62,7 @@ function App() {
       >
         <Heading size="lg" color="text.primary">Welcome!</Heading>
       </Flex>
-      
+      <ShoppingList />
       <Drawer>
         <Templates />
         <NeuomorphicButton

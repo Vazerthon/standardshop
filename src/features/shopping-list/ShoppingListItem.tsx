@@ -1,0 +1,44 @@
+import React from 'react';
+import {
+  Box,
+  Flex,
+  Text,
+} from '@chakra-ui/react';
+import { ShoppingListItem as ShoppingListItemType } from './types';
+import NeuomorphicCheckbox from '../../components/NeuomorphicCheckbox';
+import { transitions } from '@/theme';
+
+interface ShoppingListItemProps {
+  item: ShoppingListItemType;
+}
+
+const ShoppingListItem: React.FC<ShoppingListItemProps> = ({ item }) => {
+  return (
+    <Box
+      width="100%"
+      p={3}
+      bg="surface.primary"
+      borderRadius="xl"
+      boxShadow="neuomorphic"
+      _hover={{
+        boxShadow: "neuomorphicHover",
+        transform: "translateY(-2px)"
+      }}
+      transition={transitions.default}
+    >
+      <Flex align="center" gap={3}>
+        <NeuomorphicCheckbox />
+        <Text
+          fontSize="md"
+          color="text.primary"
+          fontWeight="medium"
+          flex={1}
+        >
+          {item.name}
+        </Text>
+      </Flex>
+    </Box>
+  );
+};
+
+export default ShoppingListItem; 
