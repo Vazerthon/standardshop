@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { supabase } from "../../supabaseClient";
+import { fetchTemplates } from "./templatesRepository";
 import { Template } from "./types";
 
 interface TemplatesState {
@@ -21,47 +21,9 @@ const useTemplatesStore = create<TemplatesState>((set) => ({
     set({ loading: true, message: null });
     
     try {
-      const { data: { user } } = await supabase.auth.getUser();
-      
-      if (!user) {
-        set({ loading: false, message: "User not authenticated" });
-        return;
-      }
-
-      const { data: templatesWithItems, error } = await supabase
-        .from('template')
-        .select(`
-          id,
-          name,
-          templateItems:templateItem!templateId(
-            id,
-            quantity,
-            item:item!itemId(
-              id,
-              name
-            )
-          )
-        `)
-        .eq('userId', user.id)
-        .order('name');
-
-      if (error) {
-        set({ loading: false, message: error.message });
-        return;
-      }
-
-      const transformedTemplates: Template[] = (templatesWithItems || []).map(template => ({
-        ...template,
-        items: (template.templateItems || []).map(item => ({
-          id: item.id,
-          // @ts-expect-error TypeScript doens't understand this is a 1:1 relationship
-          name: item.item.name,
-          quantity: item.quantity
-        }))
-      }));
-
+      const templates = await fetchTemplates();
       set({ 
-        templates: transformedTemplates, 
+        templates, 
         loading: false, 
         message: null 
       });

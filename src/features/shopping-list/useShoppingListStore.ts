@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { supabase } from "../../supabaseClient";
+import { fetchShoppingListItems } from "./shoppingListRepository";
 import { ShoppingListItem } from "./types";
 
 interface ShoppingListState {
@@ -21,39 +21,9 @@ const useShoppingListStore = create<ShoppingListState>((set) => ({
     set({ loading: true, message: null });
     
     try {
-      const { data: { user } } = await supabase.auth.getUser();
-      
-      if (!user) {
-        set({ loading: false, message: "User not authenticated" });
-        return;
-      }
-
-      const { data: items, error } = await supabase
-        .from('shopListItem')
-        .select(`
-          id,
-          quantity,
-          sortOrder,
-          item:item!itemId(
-            id,
-            name
-          )`)
-        .eq('userId', user.id)
-        .order('sortOrder');
-
-      if (error) {
-        set({ loading: false, message: error.message });
-        return;
-      }
-
-      const transformedItems: ShoppingListItem[] = (items || []).map(item => ({
-        ...item,
-        // @ts-expect-error TypeScript doens't understand this is a 1:1 relationship
-        name: item.item.name
-      }));
-
+      const items = await fetchShoppingListItems();
       set({ 
-        items: transformedItems, 
+        items, 
         loading: false, 
         message: null 
       });
