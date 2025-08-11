@@ -44,7 +44,7 @@ const Templates: React.FC = () => {
             </Text>
           </Box>
         )}
-        {templates.map((template) => (
+        {Object.values(templates).map((template) => (
           <TemplateItem key={template.id} template={template} />
         ))}
       </Container>

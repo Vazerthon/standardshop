@@ -2,8 +2,12 @@ import { create } from "zustand";
 import { fetchShoppingListItems } from "./shoppingListRepository";
 import { ShoppingListItem } from "./types";
 
+type ShoppingListItems = {
+  [id: ShoppingListItem['id']]: ShoppingListItem;
+}
+
 interface ShoppingListState {
-  items: ShoppingListItem[];
+  items: ShoppingListItems;
   loading: boolean;
   message: string | null;
   fetchItems: () => Promise<void>;
@@ -13,28 +17,31 @@ interface ShoppingListState {
 }
 
 const useShoppingListStore = create<ShoppingListState>((set) => ({
-  items: [],
+  items: {},
   loading: false,
   message: null,
-  
+
   fetchItems: async () => {
     set({ loading: true, message: null });
-    
+
     try {
       const items = await fetchShoppingListItems();
-      set({ 
-        items, 
-        loading: false, 
-        message: null 
+      set({
+        items: items.reduce((acc: ShoppingListItems, item) => ({
+          ...acc,
+          [item.id]: item
+        }), {}),
+        loading: false,
+        message: null
       });
     } catch (error) {
-      set({ 
-        loading: false, 
-        message: error instanceof Error ? error.message : 'An error occurred' 
+      set({
+        loading: false,
+        message: error instanceof Error ? error.message : 'An error occurred'
       });
     }
   },
-  
+
   setLoading: (loading: boolean) => set({ loading }),
   setMessage: (message: string | null) => set({ message }),
   clearMessage: () => set({ message: null }),

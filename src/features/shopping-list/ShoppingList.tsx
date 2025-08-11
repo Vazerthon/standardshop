@@ -45,7 +45,7 @@ const ShoppingList: React.FC = () => {
         </Box>
       )}
       <Stack direction="column" gap={3} mt={4}>
-        {items.map((item) => (
+        {Object.values(items).map((item) => (
           <ShoppingListItem key={item.id} item={item} />
         ))}
       </Stack>

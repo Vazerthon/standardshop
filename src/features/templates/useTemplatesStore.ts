@@ -2,8 +2,12 @@ import { create } from "zustand";
 import { fetchTemplates } from "./templatesRepository";
 import { Template } from "./types";
 
+type Templates = {
+  [id: Template['id']]: Template;
+}
+
 interface TemplatesState {
-  templates: Template[];
+  templates: Templates;
   loading: boolean;
   message: string | null;
   fetchTemplates: () => Promise<void>;
@@ -13,7 +17,7 @@ interface TemplatesState {
 }
 
 const useTemplatesStore = create<TemplatesState>((set) => ({
-  templates: [],
+  templates: {},
   loading: false,
   message: null,
   
@@ -23,7 +27,10 @@ const useTemplatesStore = create<TemplatesState>((set) => ({
     try {
       const templates = await fetchTemplates();
       set({ 
-        templates, 
+        templates: templates.reduce((acc: { [id: Template['id']]: Template }, template) => ({
+          ...acc,
+          [template.id]: template
+        }), {}),
         loading: false, 
         message: null 
       });
