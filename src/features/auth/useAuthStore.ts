@@ -9,11 +9,6 @@ interface AuthState {
   message: string | null;
   signIn: (email: string, password: string) => Promise<{ error: any }>;
   signOut: () => Promise<void>;
-  setUser: (user: User | null) => void;
-  setSession: (session: Session | null) => void;
-  setLoading: (loading: boolean) => void;
-  setMessage: (message: string | null) => void;
-  clearMessage: () => void;
   initializeAuth: () => Promise<void>;
 }
 
@@ -55,12 +50,6 @@ const useAuthStore = create<AuthState>((set) => ({
     await supabase.auth.signOut();
     set({ user: null, session: null, loading: false, message: null });
   },
-  
-  setUser: (user: User | null) => set({ user }),
-  setSession: (session: Session | null) => set({ session }),
-  setLoading: (loading: boolean) => set({ loading }),
-  setMessage: (message: string | null) => set({ message }),
-  clearMessage: () => set({ message: null }),
 }));
 
 // Custom hooks for specific functionality

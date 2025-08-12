@@ -1,6 +1,7 @@
 import { create } from "zustand";
-import { fetchShoppingListItems } from "./shoppingListRepository";
-import { ShoppingListItem } from "./types";
+import { fetchShoppingListItems, addShoppingListItem as addShoppingListItemRemote } from "./shoppingListRepository";
+import { ShoppingListItem, ShopListItemCreate } from "./types";
+import { useAddItem, useGetItemByName } from "./useItemsStore";
 
 type ShoppingListItems = {
   [id: ShoppingListItem['id']]: ShoppingListItem;
@@ -10,18 +11,17 @@ interface ShoppingListState {
   items: ShoppingListItems;
   loading: boolean;
   message: string | null;
-  fetchItems: () => Promise<void>;
-  setLoading: (loading: boolean) => void;
-  setMessage: (message: string | null) => void;
-  clearMessage: () => void;
+  fetchShoppingListItems: () => Promise<void>;
+  addShoppingListItem: (item: ShoppingListItem) => Promise<void>;
+  maxSortOrder: () => number;
 }
 
-const useShoppingListStore = create<ShoppingListState>((set) => ({
+const useShoppingListStore = create<ShoppingListState>((set, get) => ({
   items: {},
   loading: false,
   message: null,
 
-  fetchItems: async () => {
+  fetchShoppingListItems: async () => {
     set({ loading: true, message: null });
 
     try {
@@ -42,15 +42,56 @@ const useShoppingListStore = create<ShoppingListState>((set) => ({
     }
   },
 
-  setLoading: (loading: boolean) => set({ loading }),
-  setMessage: (message: string | null) => set({ message }),
-  clearMessage: () => set({ message: null }),
+  maxSortOrder: () => {
+    const items = get().items;
+    return Object.keys(items).length > 0
+      ? Math.max(...Object.values(items).map(item => item.sortOrder))
+      : 0;
+  },
+
+  addShoppingListItem: async (item: ShoppingListItem) => {
+    set((state) => ({
+      items: {
+        ...state.items,
+        [item.id]: item,
+      },
+    }));
+  }
 }));
 
-// Custom hooks for specific functionality
 export const useShoppingListItems = () => useShoppingListStore((state) => state.items);
 export const useShoppingListLoading = () => useShoppingListStore((state) => state.loading);
 export const useShoppingListMessage = () => useShoppingListStore((state) => state.message);
-export const useShoppingListFetch = () => useShoppingListStore((state) => state.fetchItems);
+export const useShoppingListFetch = () => useShoppingListStore((state) => state.fetchShoppingListItems);
+export const useShoppingListMaxSortOrder = () => useShoppingListStore((state) => state.maxSortOrder);
+export const useShoppingListAddItem = (name: string) => {
+  const addShoppingListItem = useShoppingListStore((state) => state.addShoppingListItem);
+  const maxSortOrder = useShoppingListMaxSortOrder();
+  const addItem = useAddItem();
+  const item = useGetItemByName(name);
 
+  return async () => {
+    const id = crypto.randomUUID();
+    const newItem = {
+      id,
+      quantity: 1,
+      sortOrder: maxSortOrder() + 1,
+    };
+
+    if (!item) {
+      const createdItem = await addItem(name);
+      const createdShoppingListItem = await addShoppingListItemRemote({
+        ...newItem,
+        itemId: createdItem.id,
+      }); 
+      addShoppingListItem(createdShoppingListItem);
+    } else {
+      const createdShoppingListItem = await addShoppingListItemRemote({
+        ...newItem,
+        itemId: item.id,
+      });
+      addShoppingListItem(createdShoppingListItem);
+    }
+  }
+}
 export default useShoppingListStore; 

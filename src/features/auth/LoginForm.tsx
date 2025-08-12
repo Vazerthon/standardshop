@@ -1,13 +1,13 @@
 import React, { useState, useCallback } from 'react';
 import {
   Box,
-  Input,
   Stack,
   Text,
   Center,
 } from '@chakra-ui/react';
 import { useAuthSignIn, useAuthLoading, useAuthMessage } from './useAuthStore';
 import NeuomorphicButton from '../../components/NeuomorphicButton';
+import NeuomorphicInput from '../../components/NeuomorphicInput';
 
 const LoginForm: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -53,53 +53,25 @@ const LoginForm: React.FC = () => {
 
           <form onSubmit={handleSubmit} style={{ width: '100%' }}>
             <Stack gap={6}>
-              <Box>
-                <Text as="label" display="block" mb={3} fontWeight="medium" color="text.primary">
-                  Email
-                </Text>
-                <Input
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="Enter your email"
-                  size="lg"
-                  required
-                  bg="surface.primary"
-                  border="none"
-                  borderRadius="xl"
-                  boxShadow="neuomorphicInset"
-                  _focus={{
-                    boxShadow: "neuomorphicInsetHover",
-                    outline: "none"
-                  }}
-                  color="text.primary"
-                  _placeholder={{ color: "text.secondary" }}
-                />
-              </Box>
+              <NeuomorphicInput
+                type="email"
+                label="Email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Enter your email"
+                size="lg"
+                required
+              />
 
-              <Box>
-                <Text as="label" display="block" mb={3} fontWeight="medium" color="text.primary">
-                  Password
-                </Text>
-                <Input
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="Enter your password"
-                  size="lg"
-                  required
-                  bg="surface.primary"
-                  border="none"
-                  borderRadius="xl"
-                  boxShadow="neuomorphicInset"
-                  _focus={{
-                    boxShadow: "neuomorphicInsetHover",
-                    outline: "none"
-                  }}
-                  color="text.primary"
-                  _placeholder={{ color: "text.secondary" }}
-                />
-              </Box>
+              <NeuomorphicInput
+                type="password"
+                label="Password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Enter your password"
+                size="lg"
+                required
+              />
 
               <NeuomorphicButton
                 type="submit"

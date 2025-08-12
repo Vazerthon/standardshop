@@ -2,7 +2,6 @@ import { useEffect } from 'react';
 import {
   Box,
   Flex,
-  Heading,
   Text,
   Center,
   Spinner,
@@ -12,25 +11,17 @@ import { useAuthUser, useAuthLoading, useAuthInitialize, useAuthSignOut } from '
 import NeuomorphicButton from '../../components/NeuomorphicButton';
 import { Drawer } from '../../components/Drawer';
 import Templates from '../templates/Templates';
-import { ShoppingList } from '../shopping-list';
-import { useItemsFetch } from '../items';
+import ShoppingList from '../shopping-list/ShoppingList';
 
 function App() {
   const user = useAuthUser();
   const loading = useAuthLoading();
   const initializeAuth = useAuthInitialize();
   const signOut = useAuthSignOut();
-  const fetchItems = useItemsFetch();
 
   useEffect(() => {
     initializeAuth();
   }, [initializeAuth]);
-
-  useEffect(() => {
-    if (user) {
-      fetchItems();
-    }
-  }, [user, fetchItems]);
 
   if (loading) {
     return (
@@ -61,15 +52,6 @@ function App() {
 
   return (
     <Box minH="100vh" bg="bg.primary">
-      <Flex 
-        align="center" 
-        p={4} 
-        bg="surface.primary"
-        boxShadow="header"
-        mb={2}
-      >
-        <Heading size="lg" color="text.primary">Welcome!</Heading>
-      </Flex>
       <ShoppingList />
       <Drawer>
         <Templates />

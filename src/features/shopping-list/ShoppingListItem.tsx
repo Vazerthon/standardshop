@@ -35,6 +35,7 @@ const ShoppingListItem: React.FC<ShoppingListItemProps> = ({ item }) => {
           flex={1}
         >
           {item.name}
+          ({item.sortOrder})
         </Text>
       </Flex>
     </Box>

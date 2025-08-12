@@ -9,16 +9,17 @@ import {
 } from '@chakra-ui/react';
 import { useShoppingListItems, useShoppingListLoading, useShoppingListMessage, useShoppingListFetch } from './useShoppingListStore';
 import ShoppingListItem from './ShoppingListItem';
+import AddShopListItemInput from './AddShopListItemInput';
 
 const ShoppingList: React.FC = () => {
   const items = useShoppingListItems();
   const loading = useShoppingListLoading();
   const message = useShoppingListMessage();
-  const fetchItems = useShoppingListFetch();
+  const fetchShoppingListItems = useShoppingListFetch();
 
   useEffect(() => {
-    fetchItems();
-  }, [fetchItems]);
+    fetchShoppingListItems();
+  }, [fetchShoppingListItems]);
 
   if (loading) {
     return (
@@ -48,6 +49,7 @@ const ShoppingList: React.FC = () => {
         {Object.values(items).map((item) => (
           <ShoppingListItem key={item.id} item={item} />
         ))}
+        <AddShopListItemInput />
       </Stack>
     </Container>
   );

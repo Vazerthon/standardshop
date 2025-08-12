@@ -11,9 +11,6 @@ interface TemplatesState {
   loading: boolean;
   message: string | null;
   fetchTemplates: () => Promise<void>;
-  setLoading: (loading: boolean) => void;
-  setMessage: (message: string | null) => void;
-  clearMessage: () => void;
 }
 
 const useTemplatesStore = create<TemplatesState>((set) => ({
@@ -41,10 +38,6 @@ const useTemplatesStore = create<TemplatesState>((set) => ({
       });
     }
   },
-  
-  setLoading: (loading: boolean) => set({ loading }),
-  setMessage: (message: string | null) => set({ message }),
-  clearMessage: () => set({ message: null }),
 }));
 
 // Custom hooks for specific functionality
