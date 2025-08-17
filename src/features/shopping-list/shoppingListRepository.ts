@@ -44,7 +44,6 @@ export async function fetchShoppingListItems(): Promise<ShoppingListItem[]> {
     throw new Error(error.message);
   }
 
-  // @ts-expect-error // TS doesn't know about the structure of Supabase data
   const transformedItems: ShoppingListItem[] = (items || []).map(transformItem);
 
   return transformedItems;
@@ -70,6 +69,5 @@ export async function addShoppingListItem(item: ShopListItemCreate): Promise<Sho
     throw new Error(error.message);
   }
 
-  // @ts-expect-error // TS doesn't know about the structure of Supabase data
   return transformItem(data)
 }

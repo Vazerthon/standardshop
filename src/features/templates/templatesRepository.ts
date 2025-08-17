@@ -33,7 +33,6 @@ export async function fetchTemplates(): Promise<Template[]> {
     ...template,
     items: (template.templateItems || []).map(item => ({
       id: item.id,
-      // @ts-expect-error TypeScript doesn't understand this is a 1:1 relationship
       name: item.item.name,
       quantity: item.quantity
     }))
