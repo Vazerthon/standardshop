@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { db } from "../../lib/db";
+import { db } from "@/lib/db";
 
 interface AuthState {
   getMagicCode: () => Promise<void>;

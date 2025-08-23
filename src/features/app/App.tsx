@@ -5,7 +5,7 @@ import {
   Center,
   Spinner,
 } from '@chakra-ui/react';
-import { db } from '../../lib/db';
+import { db } from "@/lib/db";
 import LoginForm from '../auth/LoginForm';
 import { useAuthLoading, useAuthSignOut } from '../auth/useAuthStore';
 import NeuomorphicButton from '../../components/NeuomorphicButton';

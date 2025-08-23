@@ -7,11 +7,11 @@ import {
   Stack,
   Badge,
 } from '@chakra-ui/react';
-import { Template } from './types';
 import { transitions } from '@/theme';
+import { AppSchema } from '@/instant.schema';
 
 interface TemplateItemProps {
-  template: Template;
+  template: any
 }
 
 const TemplateItem: React.FC<TemplateItemProps> = ({ template }) => {
@@ -31,14 +31,14 @@ const TemplateItem: React.FC<TemplateItemProps> = ({ template }) => {
     >
       <Flex justify="space-between" align="center" pb={1}>
         <Heading size="md" color="text.primary">{template.name}</Heading>
-        <Text fontWeight="medium" fontSize="sm" color="text.secondary">
+        {/* <Text fontWeight="medium" fontSize="sm" color="text.secondary">
           Items ({template.items.length})
-        </Text>
+        </Text> */}
       </Flex>
       
       <Box>
         <Stack direction="column" gap={2}>
-          {template.items.map((templateItem) => (
+          {/* {template.items.map((templateItem) => (
             <Box 
               key={templateItem.id} 
               p={2} 
@@ -58,7 +58,7 @@ const TemplateItem: React.FC<TemplateItemProps> = ({ template }) => {
                 </Badge>
               </Stack>
             </Box>
-          ))}
+          ))} */}
         </Stack>
       </Box>
     </Box>

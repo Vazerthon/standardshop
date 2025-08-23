@@ -43,26 +43,6 @@ const _schema = i.schema({
       forward: { on: 'template', has: 'many', label: 'templateItems' },
       reverse: { on: 'templateItem', has: 'one', label: 'template' },
     },
-    // Link users to their items (one-to-many)
-    userItems: {
-      forward: { on: '$users', has: 'many', label: 'items' },
-      reverse: { on: 'item', has: 'one', label: '$user' },
-    },
-    // Link users to their shop list items (one-to-many)
-    userShopListItems: {
-      forward: { on: '$users', has: 'many', label: 'shopListItems' },
-      reverse: { on: 'shopListItem', has: 'one', label: '$user' },
-    },
-    // Link users to their templates (one-to-many)
-    userTemplates: {
-      forward: { on: '$users', has: 'many', label: 'templates' },
-      reverse: { on: 'template', has: 'one', label: '$user' },
-    },
-    // Link users to their template items (one-to-many)
-    userTemplateItems: {
-      forward: { on: '$users', has: 'many', label: 'templateItems' },
-      reverse: { on: 'templateItem', has: 'one', label: '$user' },
-    },
   },
   rooms: {},
 });

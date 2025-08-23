@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import {
   Box,
   Container,
@@ -7,18 +7,13 @@ import {
   Center,
   Spinner,
 } from '@chakra-ui/react';
-import { useTemplates, useTemplatesLoading, useTemplatesMessage, useTemplatesFetch } from './useTemplatesStore';
+import { useTemplates, useCreateTemplate } from './useTemplates';
 import TemplateItem from './TemplateItem';
+import NeuomorphicButton from '@/components/NeuomorphicButton';
+const createTemplate = useCreateTemplate();
 
 const Templates: React.FC = () => {
-  const templates = useTemplates();
-  const loading = useTemplatesLoading();
-  const message = useTemplatesMessage();
-  const fetchTemplates = useTemplatesFetch();
-
-  useEffect(() => {
-    fetchTemplates();
-  }, [fetchTemplates]);
+  const { templates, loading, error } = useTemplates();
 
   if (loading) {
     return (
@@ -32,7 +27,7 @@ const Templates: React.FC = () => {
 
   return (
     <Container p={2}>
-        {message && (
+        {error?.message && (
           <Box 
             p={4}
             mt={4}
@@ -40,13 +35,21 @@ const Templates: React.FC = () => {
             boxShadow="neuomorphicInset"
           >
             <Text fontSize="sm" color="text.error">
-              {message}
+              {error.message}
             </Text>
           </Box>
         )}
-        {Object.values(templates).map((template) => (
+        {templates?.map((template) => (
           <TemplateItem key={template.id} template={template} />
         ))}
+        <Box mt={4}>
+          <NeuomorphicButton
+            onClick={() => createTemplate("New Template")}
+            colorScheme="accent"
+          >
+            Create Template
+          </NeuomorphicButton>
+        </Box>
       </Container>
   );
 };
