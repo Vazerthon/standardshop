@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 import {
   Box,
   Flex,
@@ -6,29 +5,24 @@ import {
   Center,
   Spinner,
 } from '@chakra-ui/react';
+import { db } from '../../lib/db';
 import LoginForm from '../auth/LoginForm';
-import { useAuthUser, useAuthLoading, useAuthInitialize, useAuthSignOut } from '../auth/useAuthStore';
+import { useAuthLoading, useAuthSignOut } from '../auth/useAuthStore';
 import NeuomorphicButton from '../../components/NeuomorphicButton';
 import { Drawer } from '../../components/Drawer';
 import Templates from '../templates/Templates';
 import ShoppingList from '../shopping-list/ShoppingList';
 
 function App() {
-  const user = useAuthUser();
   const loading = useAuthLoading();
-  const initializeAuth = useAuthInitialize();
   const signOut = useAuthSignOut();
-
-  useEffect(() => {
-    initializeAuth();
-  }, [initializeAuth]);
 
   if (loading) {
     return (
       <Center height="100vh" bg="bg.primary">
-        <Flex 
-          direction="column" 
-          align="center" 
+        <Flex
+          direction="column"
+          align="center"
           gap={6}
           p={8}
           bg="surface.primary"
@@ -42,27 +36,30 @@ function App() {
     );
   }
 
-  if (!user) {
-    return (
-      <Box minH="100vh" bg="bg.primary" py={8}>
-        <LoginForm />
-      </Box>
-    );
-  }
-
   return (
-    <Box minH="100vh" bg="bg.primary">
-      <ShoppingList />
-      <Drawer>
-        <Templates />
-        <NeuomorphicButton
-          onClick={signOut}
-          size="md"
-        >
-          Sign Out
-        </NeuomorphicButton>
-      </Drawer>
-    </Box>
+    <>
+      <db.SignedOut>
+        <Box minH="100vh" bg="bg.primary" py={8}>
+          <LoginForm />
+        </Box>
+      </db.SignedOut>
+      <db.SignedIn>
+        <Box minH="100vh" bg="bg.primary">
+          <ShoppingList />
+          <Drawer>
+            <Templates />
+            <NeuomorphicButton
+              onClick={signOut}
+              size="md"
+            >
+              Sign Out
+            </NeuomorphicButton>
+          </Drawer>
+        </Box>
+      </db.SignedIn>
+
+    </>
+
   );
 }
 

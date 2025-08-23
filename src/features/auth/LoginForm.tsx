@@ -2,37 +2,38 @@ import React, { useState, useCallback } from 'react';
 import {
   Box,
   Stack,
-  Text,
   Center,
+  Text,
 } from '@chakra-ui/react';
-import { useAuthSignIn, useAuthLoading, useAuthMessage } from './useAuthStore';
+import { useAuthGetMagicCode, useAuthLoading, useAuthMessage, useAuthWaitingForCode, useAuthVerifyMagicCode, useAuthEmail, useSetAuthEmail } from './useAuthStore';
 import NeuomorphicButton from '../../components/NeuomorphicButton';
 import NeuomorphicInput from '../../components/NeuomorphicInput';
 
 const LoginForm: React.FC = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  
-  const signIn = useAuthSignIn();
-  const loading = useAuthLoading();
   const message = useAuthMessage();
+  const loading = useAuthLoading();
+  const waitingForCode = useAuthWaitingForCode();
+  const verifyMagicCode = useAuthVerifyMagicCode();
+  const signIn = useAuthGetMagicCode();
+  const email = useAuthEmail();
+  const setEmail = useSetAuthEmail();
+  const [magicCode, setMagicCode] = useState('');
 
   const handleSubmit = useCallback(async (e: React.FormEvent) => {
     e.preventDefault();
-
-    try {
-      await signIn(email, password);
-    } catch (error) {
-      // Error handling is now done in the auth store
+    if (waitingForCode) {
+      await verifyMagicCode(magicCode);
+    } else {
+      await signIn();
     }
-  }, [email, password, signIn]);
+  }, [email, signIn, waitingForCode, magicCode, verifyMagicCode]);
 
   return (
     <Center minH="100vh" px={4}>
-      <Box 
-        maxW="md" 
+      <Box
+        maxW="md"
         w="full"
-        p={8} 
+        p={8}
         bg="surface.primary"
         borderRadius="2xl"
         boxShadow="neuomorphicLarge"
@@ -50,7 +51,6 @@ const LoginForm: React.FC = () => {
               </Text>
             </Box>
           )}
-
           <form onSubmit={handleSubmit} style={{ width: '100%' }}>
             <Stack gap={6}>
               <NeuomorphicInput
@@ -61,17 +61,17 @@ const LoginForm: React.FC = () => {
                 placeholder="Enter your email"
                 size="lg"
                 required
+                disabled={waitingForCode}
               />
 
-              <NeuomorphicInput
-                type="password"
-                label="Password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="Enter your password"
-                size="lg"
-                required
-              />
+              {waitingForCode && (
+                <NeuomorphicInput
+                  type="text"
+                  label="Magic code"
+                  value={magicCode}
+                  onChange={(e) => setMagicCode(e.target.value)}
+                />
+              )}
 
               <NeuomorphicButton
                 type="submit"
@@ -79,7 +79,7 @@ const LoginForm: React.FC = () => {
                 width="full"
                 loading={loading}
               >
-                Sign In
+                {waitingForCode ? 'Verify Magic Code' : 'Send Magic Code'}
               </NeuomorphicButton>
             </Stack>
           </form>

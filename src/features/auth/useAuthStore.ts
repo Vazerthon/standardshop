@@ -1,62 +1,84 @@
 import { create } from "zustand";
-import { User, Session } from "@supabase/supabase-js";
-import { supabase } from "../../supabaseClient";
+import { db } from "../../lib/db";
 
 interface AuthState {
-  user: User | null;
-  session: Session | null;
+  getMagicCode: () => Promise<void>;
+  verifyMagicCode: (code: string) => Promise<void>;
+  signOut: () => Promise<void>;
   loading: boolean;
   message: string | null;
-  signIn: (email: string, password: string) => Promise<{ error: any }>;
-  signOut: () => Promise<void>;
-  initializeAuth: () => Promise<void>;
+  waitingForCode: boolean;
+  email: string | undefined;
+  setEmail: (email: string | undefined) => void;
 }
 
-const useAuthStore = create<AuthState>((set) => ({
-  user: null,
-  session: null,
-  loading: true,
+const useAuthStore = create<AuthState>((set, get) => ({
+  loading: false,
   message: null,
-  
-  initializeAuth: async () => {
-    // Get initial session
-    const { data: { session } } = await supabase.auth.getSession();
-    set({ session, user: session?.user ?? null, loading: false });
+  waitingForCode: false,
+  email: undefined,
 
-    // Listen for auth changes
-    supabase.auth.onAuthStateChange((_event, session) => {
-      set({ session, user: session?.user ?? null });
-    });
+  setEmail: (email: string | undefined) => {
+    set({ email });
   },
-  
-  signIn: async (email: string, password: string) => {
-    set({ loading: true, message: null });
-    const { data, error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
-    
-    if (data.user) {
-      set({ user: data.user, session: data.session, loading: false, message: 'Login successful!' });
-    } else {
-      set({ loading: false, message: error?.message || 'Something went wrong, please try again' });
+
+  getMagicCode: async () => {
+    const email = get().email;
+
+    if (!email) {
+      set({ message: 'Please enter your email address.' });
+      return;
     }
-    
-    return { error };
+
+    set({ loading: true });
+    set({ message: null });
+    try {
+      await db.auth.sendMagicCode({ email });
+      set({ waitingForCode: true });
+      set({ message: 'Check your email for the magic code!' });
+    } catch (error) {
+      set({ waitingForCode: false });
+      set({ message: 'Error signing in. Please try again.' });
+    } finally {
+      set({ loading: false });
+    }
   },
-  
+
+  verifyMagicCode: async (code: string) => {
+    const email = get().email;
+
+    if (!email) {
+      set({ message: 'Please enter your email address.' });
+      return;
+    }
+
+    set({ loading: true });
+    set({ message: null });
+
+    try {
+      await db.auth.signInWithMagicCode({ code, email });
+      set({ message: 'Magic code verified successfully!' });
+    } catch (error) {
+      set({ message: 'Error verifying magic code. Please try again.' });
+    } finally {
+      set({ loading: false });
+    }
+  },
+
   signOut: async () => {
     set({ loading: true });
-    await supabase.auth.signOut();
-    set({ user: null, session: null, loading: false, message: null });
+    set({ message: null });
+    await db.auth.signOut();
+    set({ loading: false });
   },
 }));
 
 // Custom hooks for specific functionality
-export const useAuthUser = () => useAuthStore((state) => state.user);
-export const useAuthSession = () => useAuthStore((state) => state.session);
 export const useAuthLoading = () => useAuthStore((state) => state.loading);
 export const useAuthMessage = () => useAuthStore((state) => state.message);
-export const useAuthSignIn = () => useAuthStore((state) => state.signIn);
+export const useAuthGetMagicCode = () => useAuthStore((state) => state.getMagicCode);
 export const useAuthSignOut = () => useAuthStore((state) => state.signOut);
-export const useAuthInitialize = () => useAuthStore((state) => state.initializeAuth);
+export const useAuthWaitingForCode = () => useAuthStore((state) => state.waitingForCode);
+export const useAuthVerifyMagicCode = () => useAuthStore((state) => state.verifyMagicCode);
+export const useAuthEmail = () => useAuthStore((state) => state.email);
+export const useSetAuthEmail = () => useAuthStore((state) => state.setEmail);
