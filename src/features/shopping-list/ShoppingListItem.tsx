@@ -4,12 +4,11 @@ import {
   Flex,
   Text,
 } from '@chakra-ui/react';
-import { ShoppingListItem as ShoppingListItemType } from './types';
 import NeuomorphicCheckbox from '../../components/NeuomorphicCheckbox';
 import { transitions } from '@/theme';
 
 interface ShoppingListItemProps {
-  item: ShoppingListItemType;
+  item: any;
 }
 
 const ShoppingListItem: React.FC<ShoppingListItemProps> = ({ item }) => {

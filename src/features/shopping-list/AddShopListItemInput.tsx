@@ -1,25 +1,13 @@
-import React, { useEffect, useState } from 'react';
-import {} from '@chakra-ui/react';
-import { useItemsFetch } from './useItemsStore';
-import { useShoppingListAddItem } from './useShoppingListStore';
+import React, { useState } from 'react';
 import NeuomorphicInput from '@/components/NeuomorphicInput';
 
 const AddShopListItemInput: React.FC = () => {
-  const fetchItems = useItemsFetch();
-
   const [newItemName, setNewItemName] = useState('');
-
-  const addShoppingListItem = useShoppingListAddItem(newItemName.trim());
-
-  useEffect(() => {
-    fetchItems();
-  }, [fetchItems]);
 
   const handleCreateItem = async () => {
     if (!newItemName.trim()) return;
 
     try {
-      await addShoppingListItem();
       setNewItemName('');
     } catch (error) {
       console.error('Error adding item:', error);

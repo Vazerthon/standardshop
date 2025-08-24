@@ -57,9 +57,7 @@ function App() {
           </Drawer>
         </Box>
       </db.SignedIn>
-
     </>
-
   );
 }
 

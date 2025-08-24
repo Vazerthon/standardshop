@@ -8,19 +8,22 @@ import {
   Badge,
 } from '@chakra-ui/react';
 import { transitions } from '@/theme';
-import { AppSchema } from '@/instant.schema';
+import { Template, useDeleteTemplate } from './useTemplates';
+import NeuomorphicButton from '@/components/NeuomorphicButton';
 
 interface TemplateItemProps {
-  template: any
+  template: Template
 }
 
 const TemplateItem: React.FC<TemplateItemProps> = ({ template }) => {
+  const deleteTemplate = useDeleteTemplate();
+
   return (
-    <Box 
+    <Box
       width="100%"
       p={2}
       bg="surface.primary"
-      borderRadius="xl" 
+      borderRadius="xl"
       overflow="hidden"
       boxShadow="neuomorphic"
       _hover={{
@@ -30,12 +33,22 @@ const TemplateItem: React.FC<TemplateItemProps> = ({ template }) => {
       transition={transitions.default}
     >
       <Flex justify="space-between" align="center" pb={1}>
+        <NeuomorphicButton
+          onClick={() => deleteTemplate(template.id)}
+          aria-label="Delete template"
+          borderRadius="full"
+          variant="raised"
+          width="2rem"
+          height="2rem"
+        >
+          <Box as="span" fontSize="lg">×</Box>
+        </NeuomorphicButton>
         <Heading size="md" color="text.primary">{template.name}</Heading>
         {/* <Text fontWeight="medium" fontSize="sm" color="text.secondary">
           Items ({template.items.length})
         </Text> */}
       </Flex>
-      
+
       <Box>
         <Stack direction="column" gap={2}>
           {/* {template.items.map((templateItem) => (
