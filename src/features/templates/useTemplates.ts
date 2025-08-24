@@ -1,17 +1,28 @@
 import { db, id } from "@/lib/db";
 
+export interface TemplateItem {
+  id: string;
+  name: string;
+  quantity: number;
+}
+
 export interface Template {
   id: string;
   name: string;
   createdAt: Date;
-}
+  items: TemplateItem[];
+  };
 
 export const useTemplates = (): {
   templates: Template[] | undefined;
   loading: boolean;
   error: Error | null;
 } => {
-  const query = { template: {} };
+  const query = { template: {
+    templateItem: {
+      item: {}
+    }
+  } };
   const { isLoading, error, data } = db.useQuery(query);
 
   const mapTemplates = (data: any): Template[] => {
@@ -19,6 +30,11 @@ export const useTemplates = (): {
       id: item.id,
       name: item.name,
       createdAt: new Date(item.createdAt),
+      items: item.templateItem.map((templateItem: any) => ({
+        id: templateItem.id,
+        name: templateItem.item.name,
+        quantity: templateItem.quantity
+      }))
     })) || [];
   };
 

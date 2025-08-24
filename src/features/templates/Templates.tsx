@@ -39,9 +39,11 @@ const Templates: React.FC = () => {
             </Text>
           </Box>
         )}
-        {templates?.map((template) => (
-          <TemplateItem key={template.id} template={template} />
-        ))}
+        <Stack gap={2}>
+          {templates?.map((template) => (
+            <TemplateItem key={template.id} template={template} />
+          ))}
+        </Stack>
         <Box mt={4}>
           <NeuomorphicButton
             onClick={() => createTemplate("New Template")}

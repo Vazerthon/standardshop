@@ -35,12 +35,12 @@ const _schema = i.schema({
     },
     // Link items to template items (one-to-many)
     itemTemplateItems: {
-      forward: { on: 'item', has: 'many', label: 'templateItems' },
+      forward: { on: 'item', has: 'many', label: 'templateItem' },
       reverse: { on: 'templateItem', has: 'one', label: 'item' },
     },
     // Link templates to template items (one-to-many)
     templateTemplateItems: {
-      forward: { on: 'template', has: 'many', label: 'templateItems' },
+      forward: { on: 'template', has: 'many', label: 'templateItem' },
       reverse: { on: 'templateItem', has: 'one', label: 'template' },
     },
   },

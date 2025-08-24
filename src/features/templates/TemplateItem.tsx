@@ -33,6 +33,10 @@ const TemplateItem: React.FC<TemplateItemProps> = ({ template }) => {
       transition={transitions.default}
     >
       <Flex justify="space-between" align="center" pb={1}>
+        <Heading size="md" color="text.primary">{template.name}</Heading>
+        <Text fontWeight="medium" fontSize="sm" color="text.secondary">
+          Items ({template.items.length})
+        </Text>
         <NeuomorphicButton
           onClick={() => deleteTemplate(template.id)}
           aria-label="Delete template"
@@ -43,25 +47,21 @@ const TemplateItem: React.FC<TemplateItemProps> = ({ template }) => {
         >
           <Box as="span" fontSize="lg">×</Box>
         </NeuomorphicButton>
-        <Heading size="md" color="text.primary">{template.name}</Heading>
-        {/* <Text fontWeight="medium" fontSize="sm" color="text.secondary">
-          Items ({template.items.length})
-        </Text> */}
       </Flex>
 
       <Box>
         <Stack direction="column" gap={2}>
-          {/* {template.items.map((templateItem) => (
-            <Box 
-              key={templateItem.id} 
-              p={2} 
-              bg="bg.primary" 
+          {template.items.map((templateItem) => (
+            <Box
+              key={templateItem.id}
+              p={2}
+              bg="bg.primary"
               borderRadius="xl"
               boxShadow="neuomorphicInset"
             >
               <Stack direction="row" justify="space-between" align="center">
                 <Text truncate fontSize="sm" color="text.primary">{templateItem.name}</Text>
-                <Badge 
+                <Badge
                   variant="solid"
                   borderRadius="lg"
                   px={3}
@@ -71,7 +71,7 @@ const TemplateItem: React.FC<TemplateItemProps> = ({ template }) => {
                 </Badge>
               </Stack>
             </Box>
-          ))} */}
+          ))}
         </Stack>
       </Box>
     </Box>
