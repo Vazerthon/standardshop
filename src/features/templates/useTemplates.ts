@@ -14,11 +14,11 @@ export interface Template {
 };
 
 const mapTemplates = (data: any): Template[] => {
-  return data?.template.map((item: any) => ({
+  return data?.templates.map((item: any) => ({
     id: item.id,
     name: item.name,
     createdAt: new Date(item.createdAt),
-    items: item.templateItem.map((templateItem: any) => ({
+    items: item.templateItems.map((templateItem: any) => ({
       id: templateItem.id,
       name: templateItem.item.name,
       quantity: templateItem.quantity
@@ -28,8 +28,8 @@ const mapTemplates = (data: any): Template[] => {
 
 export const useTemplates = () => {
   const { isLoading, error, data } = db.useQuery({
-    template: {
-      templateItem: {
+    templates: {
+      templateItems: {
         item: {}
       }
     }
@@ -44,8 +44,8 @@ export const useTemplates = () => {
 
 export const useCreateTemplate = () =>
   (name: string) =>
-    db.transact(db.tx.template[id()].create({ name, createdAt: new Date() }));
+    db.transact(db.tx.templates[id()].create({ name, createdAt: new Date() }));
 
 export const useDeleteTemplate = () =>
   (id: string) =>
-    db.transact(db.tx.template[id].delete());
+    db.transact(db.tx.templates[id].delete());

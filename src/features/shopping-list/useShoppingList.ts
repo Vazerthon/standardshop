@@ -9,10 +9,10 @@ export interface ShoppingListItem {
 }
 
 const mapShoppingList = (data: any): ShoppingListItem[] => {
-  return data?.shopListItem.map((item: any) => ({
+  return data?.shopListItems.map((item: any) => ({
     id: item.id,
-    itemId: item?.item.id,
-    name: item?.item.name,
+    itemId: item?.item?.id,
+    name: item?.item?.name,
     quantity: item?.quantity,
     sortOrder: item?.sortOrder
   })) || [];
@@ -20,7 +20,7 @@ const mapShoppingList = (data: any): ShoppingListItem[] => {
 
 export const useShoppingList = () => {
   const { isLoading, error, data } = db.useQuery({
-    shopListItem: {
+    shopListItems: {
       item: {}
     }
   });
@@ -44,10 +44,10 @@ export const useAddShoppingListItem = () => {
     const shopListItemId = id();
 
     db.transact([
-      db.tx.item[lookup('name', name)]
+      db.tx.items[lookup('name', name)]
         .update({ createdAt: new Date() })
         .link({ shopListItems: [shopListItemId] }),
-      db.tx.shopListItem[shopListItemId].update({ sortOrder: nextSortOrder }),
+      db.tx.shopListItems[shopListItemId].update({ sortOrder: nextSortOrder, quantity: 1, createdAt: new Date() }),
     ]);
   };
 };
