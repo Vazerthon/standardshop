@@ -82,3 +82,7 @@ export const useAuthWaitingForCode = () => useAuthStore((state) => state.waiting
 export const useAuthVerifyMagicCode = () => useAuthStore((state) => state.verifyMagicCode);
 export const useAuthEmail = () => useAuthStore((state) => state.email);
 export const useSetAuthEmail = () => useAuthStore((state) => state.setEmail);
+export const useCurrentUserEmail = () => {
+  const { user } = db.useAuth();
+  return user?.email;
+}

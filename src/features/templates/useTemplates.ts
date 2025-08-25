@@ -1,6 +1,6 @@
 import { db, id } from "@/lib/db";
 
-export interface TemplateItem {
+interface TemplateItem {
   id: string;
   name: string;
   quantity: number;
@@ -11,32 +11,29 @@ export interface Template {
   name: string;
   createdAt: Date;
   items: TemplateItem[];
-  };
+};
 
-export const useTemplates = (): {
-  templates: Template[] | undefined;
-  loading: boolean;
-  error: Error | null;
-} => {
-  const query = { template: {
-    templateItem: {
-      item: {}
+const mapTemplates = (data: any): Template[] => {
+  return data?.template.map((item: any) => ({
+    id: item.id,
+    name: item.name,
+    createdAt: new Date(item.createdAt),
+    items: item.templateItem.map((templateItem: any) => ({
+      id: templateItem.id,
+      name: templateItem.item.name,
+      quantity: templateItem.quantity
+    }))
+  })) || [];
+};
+
+export const useTemplates = () => {
+  const { isLoading, error, data } = db.useQuery({
+    template: {
+      templateItem: {
+        item: {}
+      }
     }
-  } };
-  const { isLoading, error, data } = db.useQuery(query);
-
-  const mapTemplates = (data: any): Template[] => {
-    return data?.template.map((item: any) => ({
-      id: item.id,
-      name: item.name,
-      createdAt: new Date(item.createdAt),
-      items: item.templateItem.map((templateItem: any) => ({
-        id: templateItem.id,
-        name: templateItem.item.name,
-        quantity: templateItem.quantity
-      }))
-    })) || [];
-  };
+  });
 
   return {
     templates: mapTemplates(data),

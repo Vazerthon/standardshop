@@ -6,9 +6,10 @@ import {
 } from '@chakra-ui/react';
 import NeuomorphicCheckbox from '../../components/NeuomorphicCheckbox';
 import { transitions } from '@/theme';
+import { type ShoppingListItem } from './useShoppingList';
 
 interface ShoppingListItemProps {
-  item: any;
+  item: ShoppingListItem;
 }
 
 const ShoppingListItem: React.FC<ShoppingListItemProps> = ({ item }) => {
