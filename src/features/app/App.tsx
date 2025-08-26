@@ -7,15 +7,15 @@ import {
 } from '@chakra-ui/react';
 import { db } from "@/lib/db";
 import LoginForm from '../auth/LoginForm';
-import { useAuthLoading, useAuthSignOut, useCurrentUserEmail } from '../auth/useAuthStore';
+import { useAuthLoading, useAuthSignOut } from '../auth/useAuthStore';
 import NeuomorphicButton from '../../components/NeuomorphicButton';
 import { Drawer } from '../../components/Drawer';
 import Templates from '../templates/Templates';
 import ShoppingList from '../shopping-list/ShoppingList';
+import UserEmail from './UserEmail';
 
 function App() {
   const loading = useAuthLoading();
-  const email = useCurrentUserEmail();
   const signOut = useAuthSignOut();
 
   if (loading) {
@@ -50,12 +50,12 @@ function App() {
           <Drawer>
             <Templates />
             <>
-            {email && (<Text color="text.secondary">{email}</Text>)}
-            <NeuomorphicButton
-              onClick={signOut}
-              size="md"
-            >
-              Sign Out
+              <UserEmail />
+              <NeuomorphicButton
+                onClick={signOut}
+                size="md"
+              >
+                Sign Out
             </NeuomorphicButton>
             </>
           </Drawer>

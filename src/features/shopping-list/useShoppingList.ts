@@ -37,17 +37,20 @@ const useNextSortOrder = () => {
   const maxSortOrder = Math.max(...shoppingList.map(item => item.sortOrder), 0);
   return maxSortOrder + 1;
 }
-export const useAddShoppingListItem = () => {
+export const useCreateShoppingListItem = () => {
   const nextSortOrder = useNextSortOrder();
 
-  return (name: string) => {
+  return (name: string, owner: string) => {
     const shopListItemId = id();
 
     db.transact([
-      db.tx.items[lookup('name', name)]
-        .update({ createdAt: new Date() })
-        .link({ shopListItems: [shopListItemId] }),
-      db.tx.shopListItems[shopListItemId].update({ sortOrder: nextSortOrder, quantity: 1, createdAt: new Date() }),
+      db.tx.items[lookup('nameAndUserId', `${name}:${owner}`)]
+        .update({ name, createdAt: new Date() })
+        .link({ shopListItems: [shopListItemId] })
+        .link({ owner }),
+      db.tx.shopListItems[shopListItemId]
+        .update({ sortOrder: nextSortOrder, quantity: 1, createdAt: new Date() })
+        .link({ owner }),
     ]);
   };
 };

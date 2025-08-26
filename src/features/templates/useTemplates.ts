@@ -43,8 +43,12 @@ export const useTemplates = () => {
 }
 
 export const useCreateTemplate = () =>
-  (name: string) =>
-    db.transact(db.tx.templates[id()].create({ name, createdAt: new Date() }));
+  (name: string, owner: string) =>
+    db
+      .transact(db.tx.templates[id()]
+        .create({ name, createdAt: new Date() })
+        .link({ owner })
+      );
 
 export const useDeleteTemplate = () =>
   (id: string) =>

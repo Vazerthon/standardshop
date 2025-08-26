@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { use } from 'react';
 import {
   Box,
   Container,
@@ -10,10 +10,12 @@ import {
 import { useTemplates, useCreateTemplate } from './useTemplates';
 import TemplateItem from './TemplateItem';
 import NeuomorphicButton from '@/components/NeuomorphicButton';
+import { useCurrentUser } from '../auth/useAuthStore';
 const createTemplate = useCreateTemplate();
 
 const Templates: React.FC = () => {
   const { templates, loading, error } = useTemplates();
+  const user = useCurrentUser();
 
   if (loading) {
     return (
@@ -46,7 +48,7 @@ const Templates: React.FC = () => {
         </Stack>
         <Box mt={4}>
           <NeuomorphicButton
-            onClick={() => createTemplate("New Template")}
+            onClick={() => createTemplate("New Template", user.id)}
             colorScheme="accent"
           >
             Create Template

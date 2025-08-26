@@ -1,16 +1,18 @@
 import React, { useState } from 'react';
 import NeuomorphicInput from '@/components/NeuomorphicInput';
-import { useAddShoppingListItem } from './useShoppingList';
+import { useCreateShoppingListItem } from './useShoppingList';
+import { useCurrentUser } from '../auth/useAuthStore';
 
 const AddShopListItemInput: React.FC = () => {
-  const addShoppingListItem = useAddShoppingListItem();
+  const addShoppingListItem = useCreateShoppingListItem();
+  const user = useCurrentUser();
   const [newItemName, setNewItemName] = useState('');
 
   const handleCreateItem = () => {
     if (!newItemName.trim()) return;
     
     try {
-      addShoppingListItem(newItemName);
+      addShoppingListItem(newItemName, user.id);
       setNewItemName('');
     } catch (error) {
       console.error('Error adding item:', error);
