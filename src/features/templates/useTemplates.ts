@@ -11,28 +11,30 @@ export interface Template {
   name: string;
   createdAt: Date;
   items: TemplateItem[];
-};
+}
 
 const mapTemplates = (data: any): Template[] => {
-  return data?.templates.map((item: any) => ({
-    id: item.id,
-    name: item.name,
-    createdAt: new Date(item.createdAt),
-    items: item.templateItems.map((templateItem: any) => ({
-      id: templateItem.id,
-      name: templateItem.item.name,
-      quantity: templateItem.quantity
-    }))
-  })) || [];
+  return (
+    data?.templates.map((item: any) => ({
+      id: item.id,
+      name: item.name,
+      createdAt: new Date(item.createdAt),
+      items: item.templateItems.map((templateItem: any) => ({
+        id: templateItem.id,
+        name: templateItem.item.name,
+        quantity: templateItem.quantity,
+      })),
+    })) || []
+  );
 };
 
 export const useTemplates = () => {
   const { isLoading, error, data } = db.useQuery({
     templates: {
       templateItems: {
-        item: {}
-      }
-    }
+        item: {},
+      },
+    },
   });
 
   return {
@@ -40,16 +42,14 @@ export const useTemplates = () => {
     loading: isLoading,
     error: error as Error | null,
   };
-}
+};
 
-export const useCreateTemplate = () =>
-  (name: string, owner: string) =>
-    db
-      .transact(db.tx.templates[id()]
-        .create({ name, createdAt: new Date() })
-        .link({ owner })
-      );
+export const useCreateTemplate = () => (name: string, owner: string) =>
+  db.transact(
+    db.tx.templates[id()]
+      .create({ name, createdAt: new Date() })
+      .link({ owner })
+  );
 
-export const useDeleteTemplate = () =>
-  (id: string) =>
-    db.transact(db.tx.templates[id].delete());
+export const useDeleteTemplate = () => (id: string) =>
+  db.transact(db.tx.templates[id].delete());
