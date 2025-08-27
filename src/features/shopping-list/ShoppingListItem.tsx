@@ -1,18 +1,29 @@
-import React from 'react';
+import React from "react";
+import { Box, Flex, Text } from "@chakra-ui/react";
+import NeuomorphicCheckbox from "../../components/NeuomorphicCheckbox";
+import { transitions } from "@/theme";
+import { type ShoppingListItem } from "./useShoppingList";
 import {
-  Box,
-  Flex,
-  Text,
-} from '@chakra-ui/react';
-import NeuomorphicCheckbox from '../../components/NeuomorphicCheckbox';
-import { transitions } from '@/theme';
-import { type ShoppingListItem } from './useShoppingList';
+  useCheckShoppingListItem,
+  useUncheckShoppingListItem,
+} from "./useShoppingList";
 
 interface ShoppingListItemProps {
   item: ShoppingListItem;
 }
 
 const ShoppingListItem: React.FC<ShoppingListItemProps> = ({ item }) => {
+  const checkItem = useCheckShoppingListItem();
+  const uncheckItem = useUncheckShoppingListItem();
+
+  const handleCheckboxChange = () => {
+    if (item.checkedAt) {
+      uncheckItem(item.id);
+    } else {
+      checkItem(item.id);
+    }
+  };
+
   return (
     <Box
       width="100%"
@@ -22,24 +33,21 @@ const ShoppingListItem: React.FC<ShoppingListItemProps> = ({ item }) => {
       boxShadow="neuomorphic"
       _hover={{
         boxShadow: "neuomorphicHover",
-        transform: "translateY(-2px)"
+        transform: "translateY(-2px)",
       }}
       transition={transitions.default}
     >
       <Flex align="center" gap={3}>
-        <NeuomorphicCheckbox />
-        <Text
-          fontSize="md"
-          color="text.primary"
-          fontWeight="medium"
-          flex={1}
-        >
-          {item.name}
-          ({item.sortOrder})
+        <NeuomorphicCheckbox
+          checked={!!item.checkedAt}
+          onCheckedChange={handleCheckboxChange}
+        />
+        <Text fontSize="md" color="text.primary" fontWeight="medium" flex={1}>
+          {item.name}({item.sortOrder})
         </Text>
       </Flex>
     </Box>
   );
 };
 
-export default ShoppingListItem; 
+export default ShoppingListItem;

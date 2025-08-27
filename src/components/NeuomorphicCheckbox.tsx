@@ -1,24 +1,37 @@
-import React from 'react';
-import { CheckboxRoot, CheckboxControl, CheckboxIndicator, CheckboxLabel, type CheckboxRootProps } from '@chakra-ui/react';
+import React from "react";
+import {
+  Checkbox,
+  CheckboxRoot,
+  CheckboxControl,
+  CheckboxIndicator,
+  CheckboxLabel,
+  type CheckboxRootProps,
+} from "@chakra-ui/react";
 
-const NeuomorphicCheckbox: React.FC<CheckboxRootProps> = ({ children, ...props }) => {
+const NeuomorphicCheckbox: React.FC<CheckboxRootProps> = ({
+  children,
+  ...props
+}: CheckboxRootProps) => {
   return (
     <CheckboxRoot
-      {...props}
-      borderRadius='lg'
-      border='none'
+      borderRadius="lg"
       transition="transitions.default"
-      boxShadow='neuomorphic'
+      boxShadow="neuomorphic"
       _hover={{
-        boxShadow: 'neuomorphicHover',
-        transform: 'translateY(-1px)',
+        boxShadow: "neuomorphicHover",
+        transform: "translateY(-1px)",
       }}
       _checked={{
-        boxShadow: 'neuomorphicInset',
-        transform: 'translateY(0px)',
+        boxShadow: "neuomorphicInset",
+        transform: "translateY(0px)",
+        border: "1px solid",
+        borderColor: "accent.primary",
+        borderRadius: "none",
       }}
+      {...props}
     >
       <CheckboxControl>
+        <Checkbox.HiddenInput />
         <CheckboxIndicator />
       </CheckboxControl>
       {children && <CheckboxLabel>{children}</CheckboxLabel>}
@@ -26,4 +39,4 @@ const NeuomorphicCheckbox: React.FC<CheckboxRootProps> = ({ children, ...props }
   );
 };
 
-export default NeuomorphicCheckbox; 
+export default NeuomorphicCheckbox;
