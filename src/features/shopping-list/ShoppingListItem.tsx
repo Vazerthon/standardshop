@@ -58,6 +58,7 @@ const ShoppingListItem: React.FC<ShoppingListItemProps> = ({ item, dragHandlePro
         </Text>
         <Text
           color="text.secondary"
+          touchAction="manipulation"
           cursor="grab"
           _active={{ cursor: "grabbing" }}
           opacity={0.6}
