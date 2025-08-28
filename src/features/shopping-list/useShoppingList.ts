@@ -1,4 +1,4 @@
-import { db, id, lookup } from "@/lib/db";
+import { db, id, lookup, UpdateParams, AppSchema} from "@/lib/db";
 
 export interface ShoppingListItem {
   id: string;
@@ -27,7 +27,7 @@ export const useShoppingList = () => {
     shopListItems: {
       $: {
         where: {
-          deletedAt: { $isNull: false },
+          deletedAt: { $isNull: true },
         },
         order: { sortOrder: "asc" },
       },
@@ -73,34 +73,21 @@ export const useCreateShoppingListItem = () => {
   };
 };
 
-export const useCheckShoppingListItem = () => {
-  return (itemId: string) => {
+const updateShopListItemProperty = (updateObj: UpdateParams<AppSchema, "shopListItems">) => (itemId: string) => {
     db.transact([
       db.tx.shopListItems[lookup("id", itemId)].update(
-        { checkedAt: new Date() },
+        updateObj,
         { upsert: false }
       ),
     ]);
   };
-};
-export const useUncheckShoppingListItem = () => {
-  return (itemId: string) => {
-    db.transact([
-      db.tx.shopListItems[lookup("id", itemId)].update(
-        { checkedAt: null },
-        { upsert: false }
-      ),
-    ]);
-  };
-};
 
-export const useDeleteShoppingListItem = () => {
-  return (itemId: string) => {
-    db.transact([
-      db.tx.shopListItems[lookup("id", itemId)].update(
-        { deletedAt: new Date() },
-        { upsert: false }
-      ),
-    ]);
-  };
-};
+export const useCheckShoppingListItem = () => 
+    updateShopListItemProperty({ checkedAt: new Date() })
+  
+export const useUncheckShoppingListItem = () => 
+    updateShopListItemProperty({ checkedAt: null })
+
+export const useDeleteShoppingListItem = () => 
+   updateShopListItemProperty({ deletedAt: new Date() });
+  
