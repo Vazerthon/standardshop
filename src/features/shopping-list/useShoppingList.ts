@@ -90,4 +90,11 @@ export const useUncheckShoppingListItem = () =>
 
 export const useDeleteShoppingListItem = () => 
    updateShopListItemProperty({ deletedAt: new Date() });
+
+export const useUpdateShoppingListOrder = () => {
+  return (itemId: string, newSortOrder: number) => {
+    updateShopListItemProperty({ sortOrder: newSortOrder })(itemId);
+  };
+};
+
   

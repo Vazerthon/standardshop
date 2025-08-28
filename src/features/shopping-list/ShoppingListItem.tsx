@@ -12,9 +12,13 @@ import NeuomorphicButton from "@/components/NeuomorphicButton";
 
 interface ShoppingListItemProps {
   item: ShoppingListItem;
+  dragHandleProps?: {
+    attributes: any;
+    listeners: any;
+  };
 }
 
-const ShoppingListItem: React.FC<ShoppingListItemProps> = ({ item }) => {
+const ShoppingListItem: React.FC<ShoppingListItemProps> = ({ item, dragHandleProps }) => {
   const checkItem = useCheckShoppingListItem();
   const uncheckItem = useUncheckShoppingListItem();
   const deleteItem = useDeleteShoppingListItem();
@@ -50,7 +54,20 @@ const ShoppingListItem: React.FC<ShoppingListItemProps> = ({ item }) => {
           onCheckedChange={handleCheckboxChange}
         />
         <Text fontSize="md" color="text.primary" fontWeight="medium" flex={1}>
-          {item.name}({item.sortOrder})
+          {item.name}
+        </Text>
+        <Text
+          color="text.secondary"
+          cursor="grab"
+          _active={{ cursor: "grabbing" }}
+          opacity={0.6}
+          _hover={{ opacity: 1 }}
+          fontSize="lg"
+          fontWeight="bold"
+          {...dragHandleProps?.attributes}
+          {...dragHandleProps?.listeners}
+        >
+          ⋮⋮
         </Text>
         <NeuomorphicButton
           size="sm"
