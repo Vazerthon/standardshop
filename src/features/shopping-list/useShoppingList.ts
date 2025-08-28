@@ -25,6 +25,12 @@ const mapShoppingList = (data: any): ShoppingListItem[] => {
 export const useShoppingList = () => {
   const { isLoading, error, data } = db.useQuery({
     shopListItems: {
+      $: {
+        where: {
+          deletedAt: { $isNull: false },
+        },
+        order: { sortOrder: "asc" },
+      },
       item: {},
     },
   });
@@ -82,6 +88,17 @@ export const useUncheckShoppingListItem = () => {
     db.transact([
       db.tx.shopListItems[lookup("id", itemId)].update(
         { checkedAt: null },
+        { upsert: false }
+      ),
+    ]);
+  };
+};
+
+export const useDeleteShoppingListItem = () => {
+  return (itemId: string) => {
+    db.transact([
+      db.tx.shopListItems[lookup("id", itemId)].update(
+        { deletedAt: new Date() },
         { upsert: false }
       ),
     ]);

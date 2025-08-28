@@ -8,6 +8,7 @@
     "build": "tsc -b && vite build",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
+    "instant:login": "instant-cli login",
     "instant:push:schema": "instant-cli push schema",
     "instant:push:perms": "instant-cli push perms"
   },

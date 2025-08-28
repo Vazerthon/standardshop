@@ -14,9 +14,9 @@ const _schema = i.schema({
     }),
     shopListItems: i.entity({
       quantity: i.number(),
-      sortOrder: i.number(),
+      sortOrder: i.number().indexed(),
       checkedAt: i.date().optional(),
-      deletedAt: i.date().optional(),
+      deletedAt: i.date().optional().indexed(),
       createdAt: i.date(),
     }),
     templates: i.entity({
@@ -31,34 +31,34 @@ const _schema = i.schema({
   links: {
     // Link items to shop list items (one-to-many)
     itemsShopListItems: {
-      forward: { on: 'items', has: 'many', label: 'shopListItems' },
-      reverse: { on: 'shopListItems', has: 'one', label: 'item' },
+      forward: { on: "items", has: "many", label: "shopListItems" },
+      reverse: { on: "shopListItems", has: "one", label: "item" },
     },
     // Link items to template items (one-to-many)
     itemTemplateItems: {
-      forward: { on: 'items', has: 'many', label: 'templateItems' },
-      reverse: { on: 'templateItems', has: 'one', label: 'item' },
+      forward: { on: "items", has: "many", label: "templateItems" },
+      reverse: { on: "templateItems", has: "one", label: "item" },
     },
     // Link templates to template items (one-to-many)
     templatesTemplateItems: {
-      forward: { on: 'templates', has: 'many', label: 'templateItems' },
-      reverse: { on: 'templateItems', has: 'one', label: 'template' },
+      forward: { on: "templates", has: "many", label: "templateItems" },
+      reverse: { on: "templateItems", has: "one", label: "template" },
     },
     itemsOwner: {
-      forward: { on: 'items', has: 'one', label: 'owner' },
-      reverse: { on: '$users', has: 'many', label: 'items' },
+      forward: { on: "items", has: "one", label: "owner" },
+      reverse: { on: "$users", has: "many", label: "items" },
     },
     shopListItemsOwner: {
-      forward: { on: 'shopListItems', has: 'one', label: 'owner' },
-      reverse: { on: '$users', has: 'many', label: 'shopListItems' },
+      forward: { on: "shopListItems", has: "one", label: "owner" },
+      reverse: { on: "$users", has: "many", label: "shopListItems" },
     },
     templatesOwner: {
-      forward: { on: 'templates', has: 'one', label: 'owner' },
-      reverse: { on: '$users', has: 'many', label: 'templates' },
+      forward: { on: "templates", has: "one", label: "owner" },
+      reverse: { on: "$users", has: "many", label: "templates" },
     },
     templateItemsOwner: {
-      forward: { on: 'templateItems', has: 'one', label: 'owner' },
-      reverse: { on: '$users', has: 'many', label: 'templateItems' },
+      forward: { on: "templateItems", has: "one", label: "owner" },
+      reverse: { on: "$users", has: "many", label: "templateItems" },
     },
   },
   rooms: {},

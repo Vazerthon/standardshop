@@ -6,7 +6,9 @@ import { type ShoppingListItem } from "./useShoppingList";
 import {
   useCheckShoppingListItem,
   useUncheckShoppingListItem,
+  useDeleteShoppingListItem,
 } from "./useShoppingList";
+import NeuomorphicButton from "@/components/NeuomorphicButton";
 
 interface ShoppingListItemProps {
   item: ShoppingListItem;
@@ -15,6 +17,7 @@ interface ShoppingListItemProps {
 const ShoppingListItem: React.FC<ShoppingListItemProps> = ({ item }) => {
   const checkItem = useCheckShoppingListItem();
   const uncheckItem = useUncheckShoppingListItem();
+  const deleteItem = useDeleteShoppingListItem();
 
   const handleCheckboxChange = () => {
     if (item.checkedAt) {
@@ -22,6 +25,10 @@ const ShoppingListItem: React.FC<ShoppingListItemProps> = ({ item }) => {
     } else {
       checkItem(item.id);
     }
+  };
+
+  const handleDeleteItem = () => {
+    deleteItem(item.id);
   };
 
   return (
@@ -45,6 +52,13 @@ const ShoppingListItem: React.FC<ShoppingListItemProps> = ({ item }) => {
         <Text fontSize="md" color="text.primary" fontWeight="medium" flex={1}>
           {item.name}({item.sortOrder})
         </Text>
+        <NeuomorphicButton
+          size="sm"
+          onClick={handleDeleteItem}
+          aria-label={`Delete ${item.name}`}
+        >
+          🗑
+        </NeuomorphicButton>
       </Flex>
     </Box>
   );
