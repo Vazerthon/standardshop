@@ -9,12 +9,14 @@ import {
   useDeleteShoppingListItem,
 } from "./useShoppingList";
 import NeuomorphicButton from "@/components/NeuomorphicButton";
+import { DraggableAttributes } from "@dnd-kit/core";
+import { SyntheticListenerMap } from "@dnd-kit/core/dist/hooks/utilities";
 
 interface ShoppingListItemProps {
   item: ShoppingListItem;
   dragHandleProps?: {
-    attributes: any;
-    listeners: any;
+    attributes: DraggableAttributes;
+    listeners: SyntheticListenerMap | undefined;
   };
 }
 
@@ -65,6 +67,7 @@ const ShoppingListItem: React.FC<ShoppingListItemProps> = ({ item, dragHandlePro
           _hover={{ opacity: 1 }}
           fontSize="lg"
           fontWeight="bold"
+          userSelect="none"
           {...dragHandleProps?.attributes}
           {...dragHandleProps?.listeners}
         >
