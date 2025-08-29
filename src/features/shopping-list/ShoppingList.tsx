@@ -147,7 +147,7 @@ const ShoppingList: React.FC = () => {
               Checked Items ({checkedItems.length})
             </Text>
           </Accordion.ItemTrigger>
-          <Accordion.ItemContent>
+          <Accordion.ItemContent overflow="unset">
             {checkedItems.map((item) => (
               <ShoppingListItem key={item.id} item={item} />
             ))}
