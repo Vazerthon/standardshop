@@ -45,6 +45,7 @@ const ShoppingListItem: React.FC<ShoppingListItemProps> = ({
     <Box
       width="100%"
       p={3}
+      mb={2}
       bg="surface.primary"
       borderRadius="xl"
       boxShadow="neuomorphic"
@@ -64,6 +65,7 @@ const ShoppingListItem: React.FC<ShoppingListItemProps> = ({
           _hover={{ opacity: 1 }}
           fontSize="lg"
           fontWeight="bold"
+          userSelect="none"
           {...dragHandleProps?.attributes}
           {...dragHandleProps?.listeners}
         >

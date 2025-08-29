@@ -33,25 +33,16 @@ import {
 const SortableShoppingListItem: React.FC<{ item: ShopListItemType }> = ({
   item,
 }) => {
-  const {
-    attributes,
-    listeners,
-    setNodeRef,
-    transform,
-    transition,
-    isDragging,
-  } = useSortable({ id: item.id });
-
-  const style = {
-    transform: CSS.Transform.toString(transform),
-    transition,
-    opacity: isDragging ? 0.5 : 1,
-  };
+  const { attributes, listeners, setNodeRef, transform, transition } =
+    useSortable({ id: item.id });
 
   return (
-    <Box ref={setNodeRef} style={style} mb={2}>
+    <Box
+      ref={setNodeRef}
+      transform={CSS.Transform.toString(transform)}
+      transition={transition}
+    >
       <ShoppingListItem
-        style={style}
         item={item}
         dragHandleProps={{ attributes, listeners }}
       />
