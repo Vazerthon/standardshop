@@ -56,6 +56,19 @@ const ShoppingListItem: React.FC<ShoppingListItemProps> = ({
       {...boxProps}
     >
       <Flex align="center" gap={3}>
+        <Text
+          color="text.secondary"
+          touchAction="none"
+          cursor="grab"
+          _active={{ cursor: "grabbing" }}
+          _hover={{ opacity: 1 }}
+          fontSize="lg"
+          fontWeight="bold"
+          {...dragHandleProps?.attributes}
+          {...dragHandleProps?.listeners}
+        >
+          ⋮⋮
+        </Text>
         <NeuomorphicCheckbox
           checked={!!item.checkedAt}
           onCheckedChange={handleCheckboxChange}
@@ -63,21 +76,7 @@ const ShoppingListItem: React.FC<ShoppingListItemProps> = ({
         <Text fontSize="md" color="text.primary" fontWeight="medium" flex={1}>
           {item.name}
         </Text>
-        <Text
-          color="text.secondary"
-          touchAction="none"
-          cursor="grab"
-          _active={{ cursor: "grabbing" }}
-          opacity={0.6}
-          _hover={{ opacity: 1 }}
-          fontSize="lg"
-          fontWeight="bold"
-          userSelect="none"
-          {...dragHandleProps?.attributes}
-          {...dragHandleProps?.listeners}
-        >
-          ⋮⋮
-        </Text>
+
         <NeuomorphicButton
           size="sm"
           onClick={handleDeleteItem}

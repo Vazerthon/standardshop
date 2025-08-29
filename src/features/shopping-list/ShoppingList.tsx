@@ -16,6 +16,7 @@ import {
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import {
+  restrictToParentElement,
   restrictToVerticalAxis,
   restrictToWindowEdges,
 } from "@dnd-kit/modifiers";
@@ -121,7 +122,11 @@ const ShoppingList: React.FC = () => {
         sensors={sensors}
         collisionDetection={closestCenter}
         onDragEnd={handleDragEnd}
-        modifiers={[restrictToVerticalAxis, restrictToWindowEdges]}
+        modifiers={[
+          restrictToVerticalAxis,
+          restrictToWindowEdges,
+          restrictToParentElement,
+        ]}
       >
         <SortableContext
           items={shoppingList.map((item) => item.id)}
