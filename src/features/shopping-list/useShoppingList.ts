@@ -1,4 +1,4 @@
-import { db, id, lookup, UpdateParams, AppSchema} from "@/lib/db";
+import { db, id, lookup, UpdateParams, AppSchema } from "@/lib/db";
 
 export interface ShoppingListItem {
   id: string;
@@ -9,8 +9,13 @@ export interface ShoppingListItem {
   checkedAt?: Date | null;
 }
 
-const mapShoppingList = (data: any): ShoppingListItem[] => {
-  return (
+interface MappedShoppingList {
+  uncheckedItems: ShoppingListItem[];
+  checkedItems: ShoppingListItem[];
+}
+
+const mapShoppingList = (data: any): MappedShoppingList => {
+  const allItems =
     data?.shopListItems.map((item: any) => ({
       id: item.id,
       itemId: item?.item?.id,
@@ -18,8 +23,19 @@ const mapShoppingList = (data: any): ShoppingListItem[] => {
       quantity: item?.quantity,
       sortOrder: item?.sortOrder,
       checkedAt: item?.checkedAt ? new Date(item.checkedAt) : null,
-    })) || []
+    })) || [];
+
+  const uncheckedItems = allItems.filter(
+    (item: ShoppingListItem) => !item.checkedAt
   );
+  const checkedItems = allItems.filter(
+    (item: ShoppingListItem) => item.checkedAt
+  );
+
+  return {
+    uncheckedItems,
+    checkedItems,
+  };
 };
 
 export const useShoppingList = () => {
@@ -43,9 +59,11 @@ export const useShoppingList = () => {
 };
 
 const useNextSortOrder = () => {
-  const { shoppingList } = useShoppingList();
+  const {
+    shoppingList: { checkedItems },
+  } = useShoppingList();
   const maxSortOrder = Math.max(
-    ...shoppingList.map((item) => item.sortOrder),
+    ...checkedItems.map((item) => item.sortOrder),
     0
   );
   return maxSortOrder + 1;
@@ -73,28 +91,26 @@ export const useCreateShoppingListItem = () => {
   };
 };
 
-const updateShopListItemProperty = (updateObj: UpdateParams<AppSchema, "shopListItems">) => (itemId: string) => {
+const updateShopListItemProperty =
+  (updateObj: UpdateParams<AppSchema, "shopListItems">) => (itemId: string) => {
     db.transact([
-      db.tx.shopListItems[lookup("id", itemId)].update(
-        updateObj,
-        { upsert: false }
-      ),
+      db.tx.shopListItems[lookup("id", itemId)].update(updateObj, {
+        upsert: false,
+      }),
     ]);
   };
 
-export const useCheckShoppingListItem = () => 
-    updateShopListItemProperty({ checkedAt: new Date() })
-  
-export const useUncheckShoppingListItem = () => 
-    updateShopListItemProperty({ checkedAt: null })
+export const useCheckShoppingListItem = () =>
+  updateShopListItemProperty({ checkedAt: new Date() });
 
-export const useDeleteShoppingListItem = () => 
-   updateShopListItemProperty({ deletedAt: new Date() });
+export const useUncheckShoppingListItem = () =>
+  updateShopListItemProperty({ checkedAt: null });
+
+export const useDeleteShoppingListItem = () =>
+  updateShopListItemProperty({ deletedAt: new Date() });
 
 export const useUpdateShoppingListOrder = () => {
   return (itemId: string, newSortOrder: number) => {
     updateShopListItemProperty({ sortOrder: newSortOrder })(itemId);
   };
 };
-
-  

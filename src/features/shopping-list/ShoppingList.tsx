@@ -1,4 +1,11 @@
-import { Box, Container, Text, Center, Spinner } from "@chakra-ui/react";
+import {
+  Box,
+  Container,
+  Text,
+  Center,
+  Spinner,
+  Accordion,
+} from "@chakra-ui/react";
 import {
   DndContext,
   closestCenter,
@@ -54,6 +61,8 @@ const ShoppingList: React.FC = () => {
   const { shoppingList, loading, error } = useShoppingList();
   const updateOrder = useUpdateShoppingListOrder();
 
+  const { checkedItems, uncheckedItems } = shoppingList;
+
   const sensors = useSensors(
     useSensor(TouchSensor, {
       activationConstraint: {
@@ -75,11 +84,13 @@ const ShoppingList: React.FC = () => {
     const { active, over } = event;
 
     if (over && active.id !== over.id) {
-      const oldIndex = shoppingList.findIndex((item) => item.id === active.id);
-      const newIndex = shoppingList.findIndex((item) => item.id === over.id);
+      const oldIndex = uncheckedItems.findIndex(
+        (item) => item.id === active.id
+      );
+      const newIndex = uncheckedItems.findIndex((item) => item.id === over.id);
 
       if (oldIndex !== -1 && newIndex !== -1) {
-        const newOrder = arrayMove(shoppingList, oldIndex, newIndex);
+        const newOrder = arrayMove(uncheckedItems, oldIndex, newIndex);
 
         // Update sort order for all affected items
         newOrder.forEach((item, index) => {
@@ -120,15 +131,29 @@ const ShoppingList: React.FC = () => {
         ]}
       >
         <SortableContext
-          items={shoppingList.map((item) => item.id)}
+          items={uncheckedItems.map((item) => item.id)}
           strategy={verticalListSortingStrategy}
         >
-          {shoppingList.map((item) => (
+          {uncheckedItems.map((item) => (
             <SortableShoppingListItem key={item.id} item={item} />
           ))}
-          <AddShopListItemInput />
         </SortableContext>
       </DndContext>
+      <AddShopListItemInput />
+      <Accordion.Root collapsible>
+        <Accordion.Item key="checked-items" value="checked-items">
+          <Accordion.ItemTrigger>
+            <Text fontSize="md" fontWeight="bold" mt={4} color="text.secondary">
+              Checked Items ({checkedItems.length})
+            </Text>
+          </Accordion.ItemTrigger>
+          <Accordion.ItemContent>
+            {checkedItems.map((item) => (
+              <ShoppingListItem key={item.id} item={item} />
+            ))}
+          </Accordion.ItemContent>
+        </Accordion.Item>
+      </Accordion.Root>
     </Container>
   );
 };
