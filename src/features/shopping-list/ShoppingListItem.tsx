@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Flex, Text } from "@chakra-ui/react";
+import { Box, BoxProps, Flex, Text } from "@chakra-ui/react";
 import NeuomorphicCheckbox from "../../components/NeuomorphicCheckbox";
 import { transitions } from "@/theme";
 import { type ShoppingListItem } from "./useShoppingList";
@@ -12,7 +12,7 @@ import NeuomorphicButton from "@/components/NeuomorphicButton";
 import { DraggableAttributes } from "@dnd-kit/core";
 import { SyntheticListenerMap } from "@dnd-kit/core/dist/hooks/utilities";
 
-interface ShoppingListItemProps {
+interface ShoppingListItemProps extends BoxProps {
   item: ShoppingListItem;
   dragHandleProps?: {
     attributes: DraggableAttributes;
@@ -20,7 +20,11 @@ interface ShoppingListItemProps {
   };
 }
 
-const ShoppingListItem: React.FC<ShoppingListItemProps> = ({ item, dragHandleProps }) => {
+const ShoppingListItem: React.FC<ShoppingListItemProps> = ({
+  item,
+  dragHandleProps,
+  ...boxProps
+}) => {
   const checkItem = useCheckShoppingListItem();
   const uncheckItem = useUncheckShoppingListItem();
   const deleteItem = useDeleteShoppingListItem();
@@ -49,6 +53,7 @@ const ShoppingListItem: React.FC<ShoppingListItemProps> = ({ item, dragHandlePro
         transform: "translateY(-2px)",
       }}
       transition={transitions.default}
+      {...boxProps}
     >
       <Flex align="center" gap={3}>
         <NeuomorphicCheckbox
@@ -60,7 +65,7 @@ const ShoppingListItem: React.FC<ShoppingListItemProps> = ({ item, dragHandlePro
         </Text>
         <Text
           color="text.secondary"
-          touchAction="manipulation"
+          touchAction="none"
           cursor="grab"
           _active={{ cursor: "grabbing" }}
           opacity={0.6}
