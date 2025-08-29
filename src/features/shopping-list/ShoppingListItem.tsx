@@ -2,7 +2,7 @@ import React from "react";
 import { Box, BoxProps, Flex, Text } from "@chakra-ui/react";
 import NeuomorphicCheckbox from "../../components/NeuomorphicCheckbox";
 import { transitions } from "@/theme";
-import { type ShoppingListItem } from "./useShoppingList";
+import { useUpdateShoppingListItemQuantity, type ShoppingListItem } from "./useShoppingList";
 import {
   useCheckShoppingListItem,
   useUncheckShoppingListItem,
@@ -11,6 +11,8 @@ import {
 import NeuomorphicButton from "@/components/NeuomorphicButton";
 import { DraggableAttributes } from "@dnd-kit/core";
 import { SyntheticListenerMap } from "@dnd-kit/core/dist/hooks/utilities";
+import NumberStepper from "./NumberStepper";
+import Icons from "@/components/icons";
 
 interface ShoppingListItemProps extends BoxProps {
   item: ShoppingListItem;
@@ -28,6 +30,7 @@ const ShoppingListItem: React.FC<ShoppingListItemProps> = ({
   const checkItem = useCheckShoppingListItem();
   const uncheckItem = useUncheckShoppingListItem();
   const deleteItem = useDeleteShoppingListItem();
+  const updateQuantity = useUpdateShoppingListItemQuantity();
 
   const handleCheckboxChange = () => {
     if (item.checkedAt) {
@@ -70,7 +73,7 @@ const ShoppingListItem: React.FC<ShoppingListItemProps> = ({
             {...dragHandleProps?.attributes}
             {...dragHandleProps?.listeners}
           >
-            ⋮⋮
+            <Icons.Drag />
           </Text>
         )}
         <NeuomorphicCheckbox
@@ -80,13 +83,16 @@ const ShoppingListItem: React.FC<ShoppingListItemProps> = ({
         <Text fontSize="md" color="text.primary" fontWeight="medium" flex={1}>
           {item.name}
         </Text>
-
+        <NumberStepper
+          value={item.quantity}
+          onChange={(value: number) => updateQuantity(item.id, value)}
+        />
         <NeuomorphicButton
-          size="sm"
+          maxW={2}
           onClick={handleDeleteItem}
           aria-label={`Delete ${item.name}`}
         >
-          🗑
+          <Icons.Trash />
         </NeuomorphicButton>
       </Flex>
     </Box>

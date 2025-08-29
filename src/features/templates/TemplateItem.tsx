@@ -10,6 +10,7 @@ import {
 import { transitions } from '@/theme';
 import { Template, useDeleteTemplate } from './useTemplates';
 import NeuomorphicButton from '@/components/NeuomorphicButton';
+import Icons from '@/components/icons';
 
 interface TemplateItemProps {
   template: Template
@@ -45,7 +46,7 @@ const TemplateItem: React.FC<TemplateItemProps> = ({ template }) => {
           width="2rem"
           height="2rem"
         >
-          <Box as="span" fontSize="lg">×</Box>
+          <Box as="span" fontSize="lg"><Icons.Trash /></Box>
         </NeuomorphicButton>
       </Flex>
 

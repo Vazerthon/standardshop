@@ -3,6 +3,7 @@ import {
   Drawer as ChakraDrawer,
 } from '@chakra-ui/react';
 import NeuomorphicButton from './NeuomorphicButton';
+import Icons from './icons';
 
 interface DrawerProps {
   children: [React.ReactNode, React.ReactNode];
@@ -20,7 +21,7 @@ export const Drawer: React.FC<DrawerProps> = ({ children }) => {
             height="3rem"
             variant="raised"
           >
-            <Box as="span" fontSize="lg">☰</Box>
+            <Box as="span" fontSize="lg"><Icons.Menu /></Box>
           </NeuomorphicButton>
         </ChakraDrawer.Trigger>
         
@@ -35,7 +36,7 @@ export const Drawer: React.FC<DrawerProps> = ({ children }) => {
                 width="3rem"
                 height="3rem"
               >
-                <Box as="span" fontSize="lg">×</Box>
+                <Box as="span" fontSize="lg"><Icons.Close /></Box>
               </NeuomorphicButton>
             </ChakraDrawer.CloseTrigger>
             <ChakraDrawer.Header borderBottomWidth="1px" borderColor="bg.primary">

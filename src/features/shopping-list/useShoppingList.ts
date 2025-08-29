@@ -109,8 +109,12 @@ export const useUncheckShoppingListItem = () =>
 export const useDeleteShoppingListItem = () =>
   updateShopListItemProperty({ deletedAt: new Date() });
 
-export const useUpdateShoppingListOrder = () => {
-  return (itemId: string, newSortOrder: number) => {
-    updateShopListItemProperty({ sortOrder: newSortOrder })(itemId);
-  };
+export const useUpdateShoppingListOrder = () => (itemId: string, newSortOrder: number) => {
+  updateShopListItemProperty({ sortOrder: newSortOrder })(itemId);
 };
+
+export const useUpdateShoppingListItemQuantity = () => (itemId: string, quantity: number) => {
+  updateShopListItemProperty({ quantity })(itemId);
+};
+
+
