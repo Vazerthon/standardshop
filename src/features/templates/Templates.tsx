@@ -6,15 +6,12 @@ import {
   Center,
   Spinner,
 } from '@chakra-ui/react';
-import { useTemplates, useCreateTemplate } from './useTemplates';
+import { useTemplates } from './useTemplates';
 import TemplateItem from './TemplateItem';
-import NeuomorphicButton from '@/features/components/NeuomorphicButton';
-import { useCurrentUser } from '../auth/useAuthStore';
-const createTemplate = useCreateTemplate();
+import CreateTemplate from './CreateTemplate';
 
 const Templates: React.FC = () => {
   const { templates, loading, error } = useTemplates();
-  const user = useCurrentUser();
 
   if (loading) {
     return (
@@ -46,12 +43,7 @@ const Templates: React.FC = () => {
           ))}
         </Stack>
         <Box mt={4}>
-          <NeuomorphicButton
-            onClick={() => createTemplate("New Template", user.id)}
-            colorScheme="accent"
-          >
-            Create Template
-          </NeuomorphicButton>
+          <CreateTemplate />
         </Box>
       </Container>
   );

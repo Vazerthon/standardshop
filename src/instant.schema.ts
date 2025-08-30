@@ -22,10 +22,12 @@ const _schema = i.schema({
     templates: i.entity({
       name: i.string(),
       createdAt: i.date(),
+      deletedAt: i.date().optional().indexed(),
     }),
     templateItems: i.entity({
       quantity: i.number(),
       createdAt: i.date(),
+      deletedAt: i.date().optional().indexed(),
     }),
   },
   links: {

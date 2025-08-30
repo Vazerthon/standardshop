@@ -34,20 +34,22 @@ const TemplateItem: React.FC<TemplateItemProps> = ({ template }) => {
       transition={transitions.default}
     >
       <Flex justify="space-between" align="center" pb={1}>
-        <Heading size="md" color="text.primary">{template.name}</Heading>
-        <Text fontWeight="medium" fontSize="sm" color="text.secondary">
-          Items ({template.items.length})
-        </Text>
-        <NeuomorphicButton
-          onClick={() => deleteTemplate(template.id)}
-          aria-label="Delete template"
-          borderRadius="full"
-          variant="raised"
-          width="2rem"
-          height="2rem"
-        >
-          <Box as="span" fontSize="lg"><Icons.Trash /></Box>
-        </NeuomorphicButton>
+        <Heading flexGrow={1} size="md" color="text.primary">{template.name}</Heading>
+        <>
+          <Text mr={2} fontWeight="medium" fontSize="sm" color="text.secondary">
+            Items ({template.items.length})
+          </Text>
+          <NeuomorphicButton
+            onClick={() => deleteTemplate(template.id)}
+            aria-label="Delete template"
+            borderRadius="full"
+            variant="raised"
+            width="2rem"
+            height="2rem"
+          >
+            <Box as="span" fontSize="lg"><Icons.Trash /></Box>
+          </NeuomorphicButton>
+        </>
       </Flex>
 
       <Box>

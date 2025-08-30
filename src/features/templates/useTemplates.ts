@@ -1,4 +1,4 @@
-import { db, id } from "@/lib/db";
+import { AppSchema, db, id, lookup, UpdateParams } from "@/lib/db";
 
 interface TemplateItem {
   id: string;
@@ -31,7 +31,17 @@ const mapTemplates = (data: any): Template[] => {
 export const useTemplates = () => {
   const { isLoading, error, data } = db.useQuery({
     templates: {
+      $: {
+        where: {
+          deletedAt: { $isNull: true },
+        },
+      },
       templateItems: {
+        $: {
+          where: {
+            deletedAt: { $isNull: true },
+          },
+        },
         item: {},
       },
     },
@@ -51,5 +61,14 @@ export const useCreateTemplate = () => (name: string, owner: string) =>
       .link({ owner })
   );
 
-export const useDeleteTemplate = () => (id: string) =>
-  db.transact(db.tx.templates[id].delete());
+const updateTemplateProperty =
+  (updateObj: UpdateParams<AppSchema, "templates">) => (itemId: string) => {
+    db.transact([
+      db.tx.templates[lookup("id", itemId)].update(updateObj, {
+        upsert: false,
+      }),
+    ]);
+  };
+
+export const useDeleteTemplate = () =>
+  updateTemplateProperty({ deletedAt: new Date() });
