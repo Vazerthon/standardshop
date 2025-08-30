@@ -29,16 +29,16 @@ import {
 } from "@dnd-kit/modifiers";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import ShoppingListItem from "./ShoppingListItem";
+import ShoppingListItem, { ShoppingListItemProps } from "./ShoppingListItem";
 import AddShopListItemInput from "./AddShopListItemInput";
 import {
-  type ShoppingListItem as ShopListItemType,
   useShoppingList,
   useUpdateShoppingListOrder,
 } from "./useShoppingList";
 
-const SortableShoppingListItem: React.FC<{ item: ShopListItemType }> = ({
+const SortableShoppingListItem: React.FC<ShoppingListItemProps> = ({
   item,
+  ...props
 }) => {
   const { attributes, listeners, setNodeRef, transform, transition } =
     useSortable({ id: item.id });
@@ -52,6 +52,7 @@ const SortableShoppingListItem: React.FC<{ item: ShopListItemType }> = ({
       <ShoppingListItem
         item={item}
         dragHandleProps={{ attributes, listeners }}
+        {...props}
       />
     </Box>
   );
@@ -135,7 +136,7 @@ const ShoppingList: React.FC = () => {
           strategy={verticalListSortingStrategy}
         >
           {uncheckedItems.map((item) => (
-            <SortableShoppingListItem key={item.id} item={item} />
+            <SortableShoppingListItem key={item.id} item={item} allowQuantityChange allowCheckboxChange />
           ))}
         </SortableContext>
       </DndContext>
@@ -149,7 +150,7 @@ const ShoppingList: React.FC = () => {
           </Accordion.ItemTrigger>
           <Accordion.ItemContent overflow="unset">
             {checkedItems.map((item) => (
-              <ShoppingListItem key={item.id} item={item} />
+              <ShoppingListItem key={item.id} item={item} allowCheckboxChange />
             ))}
           </Accordion.ItemContent>
         </Accordion.Item>

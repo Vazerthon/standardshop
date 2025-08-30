@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import NeuomorphicInput from '@/components/NeuomorphicInput';
+import NeuomorphicInput from '@/features/components/NeuomorphicInput';
 import { useCreateShoppingListItem } from './useShoppingList';
 import { useCurrentUser } from '../auth/useAuthStore';
 

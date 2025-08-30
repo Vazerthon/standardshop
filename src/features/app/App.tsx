@@ -8,8 +8,8 @@ import {
 import { db } from "@/lib/db";
 import LoginForm from '../auth/LoginForm';
 import { useAuthLoading, useAuthSignOut } from '../auth/useAuthStore';
-import NeuomorphicButton from '../../components/NeuomorphicButton';
-import { Drawer } from '../../components/Drawer';
+import NeuomorphicButton from '../components/NeuomorphicButton';
+import { Drawer } from '../components/Drawer';
 import Templates from '../templates/Templates';
 import ShoppingList from '../shopping-list/ShoppingList';
 import UserEmail from './UserEmail';

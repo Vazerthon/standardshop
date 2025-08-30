@@ -6,8 +6,8 @@ import {
   Text,
 } from '@chakra-ui/react';
 import { useAuthGetMagicCode, useAuthLoading, useAuthMessage, useAuthWaitingForCode, useAuthVerifyMagicCode, useAuthEmail, useSetAuthEmail } from './useAuthStore';
-import NeuomorphicButton from '../../components/NeuomorphicButton';
-import NeuomorphicInput from '../../components/NeuomorphicInput';
+import NeuomorphicButton from '../components/NeuomorphicButton';
+import NeuomorphicInput from '../components/NeuomorphicInput';
 
 const LoginForm: React.FC = () => {
   const message = useAuthMessage();

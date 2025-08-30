@@ -1,6 +1,6 @@
 import React from "react";
 import { Box, BoxProps, Flex, Text } from "@chakra-ui/react";
-import NeuomorphicCheckbox from "../../components/NeuomorphicCheckbox";
+import NeuomorphicCheckbox from "../components/NeuomorphicCheckbox";
 import { transitions } from "@/theme";
 import { useUpdateShoppingListItemQuantity, type ShoppingListItem } from "./useShoppingList";
 import {
@@ -8,23 +8,27 @@ import {
   useUncheckShoppingListItem,
   useDeleteShoppingListItem,
 } from "./useShoppingList";
-import NeuomorphicButton from "@/components/NeuomorphicButton";
+import NeuomorphicButton from "@/features/components/NeuomorphicButton";
 import { DraggableAttributes } from "@dnd-kit/core";
 import { SyntheticListenerMap } from "@dnd-kit/core/dist/hooks/utilities";
 import NumberStepper from "./NumberStepper";
-import Icons from "@/components/icons";
+import Icons from "@/features/components/icons";
 
-interface ShoppingListItemProps extends BoxProps {
+export interface ShoppingListItemProps extends BoxProps {
   item: ShoppingListItem;
   dragHandleProps?: {
     attributes: DraggableAttributes;
     listeners: SyntheticListenerMap | undefined;
   };
+  allowQuantityChange?: boolean;
+  allowCheckboxChange?: boolean;
 }
 
 const ShoppingListItem: React.FC<ShoppingListItemProps> = ({
   item,
   dragHandleProps,
+  allowQuantityChange,
+  allowCheckboxChange,
   ...boxProps
 }) => {
   const checkItem = useCheckShoppingListItem();
@@ -76,17 +80,21 @@ const ShoppingListItem: React.FC<ShoppingListItemProps> = ({
             <Icons.Drag />
           </Text>
         )}
-        <NeuomorphicCheckbox
-          checked={!!item.checkedAt}
-          onCheckedChange={handleCheckboxChange}
-        />
+        {allowCheckboxChange && (
+          <NeuomorphicCheckbox
+            checked={!!item.checkedAt}
+            onCheckedChange={handleCheckboxChange}
+          />
+        )}
         <Text fontSize="md" color="text.primary" fontWeight="medium" flex={1}>
           {item.name}
         </Text>
-        <NumberStepper
-          value={item.quantity}
-          onChange={(value: number) => updateQuantity(item.id, value)}
-        />
+        {allowQuantityChange && (
+          <NumberStepper
+            value={item.quantity}
+            onChange={(value: number) => updateQuantity(item.id, value)}
+          />
+        )}
         <NeuomorphicButton
           maxW={2}
           onClick={handleDeleteItem}

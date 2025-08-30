@@ -9,8 +9,8 @@ import {
 } from '@chakra-ui/react';
 import { transitions } from '@/theme';
 import { Template, useDeleteTemplate } from './useTemplates';
-import NeuomorphicButton from '@/components/NeuomorphicButton';
-import Icons from '@/components/icons';
+import NeuomorphicButton from '@/features/components/NeuomorphicButton';
+import Icons from '@/features/components/icons';
 
 interface TemplateItemProps {
   template: Template

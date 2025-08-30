@@ -8,7 +8,7 @@ import {
 } from '@chakra-ui/react';
 import { useTemplates, useCreateTemplate } from './useTemplates';
 import TemplateItem from './TemplateItem';
-import NeuomorphicButton from '@/components/NeuomorphicButton';
+import NeuomorphicButton from '@/features/components/NeuomorphicButton';
 import { useCurrentUser } from '../auth/useAuthStore';
 const createTemplate = useCreateTemplate();
 
