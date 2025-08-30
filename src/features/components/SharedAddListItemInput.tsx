@@ -1,10 +1,14 @@
 import React, { useState } from 'react';
 import NeuomorphicInput from '@/features/components/NeuomorphicInput';
-import { useCreateShoppingListItem } from './useShoppingList';
 import { useCurrentUser } from '../auth/useAuthStore';
 
-const AddShopListItemInput: React.FC = () => {
-  const addShoppingListItem = useCreateShoppingListItem();
+interface SharedAddListItemInputProps {
+  onAddItem: (itemName: string, userId: string) => void;
+}
+
+const SharedAddListItemInput: React.FC<SharedAddListItemInputProps> = ({
+  onAddItem,
+}) => {
   const user = useCurrentUser();
   const [newItemName, setNewItemName] = useState('');
 
@@ -12,7 +16,7 @@ const AddShopListItemInput: React.FC = () => {
     if (!newItemName.trim()) return;
     
     try {
-      addShoppingListItem(newItemName, user.id);
+      onAddItem(newItemName, user.id);
       setNewItemName('');
     } catch (error) {
       console.error('Error adding item:', error);
@@ -36,4 +40,4 @@ const AddShopListItemInput: React.FC = () => {
   );
 };
 
-export default AddShopListItemInput; 
+export default SharedAddListItemInput;

@@ -2,50 +2,49 @@ import React from "react";
 import { Box, BoxProps, Flex, Text } from "@chakra-ui/react";
 import NeuomorphicCheckbox from "../components/NeuomorphicCheckbox";
 import { transitions } from "@/theme";
-import { useUpdateShoppingListItemQuantity, type ShoppingListItem } from "./useShoppingList";
-import {
-  useCheckShoppingListItem,
-  useUncheckShoppingListItem,
-  useDeleteShoppingListItem,
-} from "./useShoppingList";
+
 import NeuomorphicButton from "@/features/components/NeuomorphicButton";
 import { DraggableAttributes } from "@dnd-kit/core";
 import { SyntheticListenerMap } from "@dnd-kit/core/dist/hooks/utilities";
-import NumberStepper from "./NumberStepper";
 import Icons from "@/features/components/icons";
+import NumberStepper from "./NumberStepper";
+import { SharedListItemType } from "./SharedItemList";
 
-export interface ShoppingListItemProps extends BoxProps {
-  item: ShoppingListItem;
+export interface SharedListItemProps extends BoxProps {
+  item: SharedListItemType;
   dragHandleProps?: {
     attributes: DraggableAttributes;
     listeners: SyntheticListenerMap | undefined;
   };
   allowQuantityChange?: boolean;
   allowCheckboxChange?: boolean;
+  onUpdateQuantity?: (itemId: string, quantity: number) => void;
+  onCheckItem?: (itemId: string) => void;
+  onUncheckItem?: (itemId: string) => void;
+  onDeleteItem?: (itemId: string) => void;
 }
 
-const ShoppingListItem: React.FC<ShoppingListItemProps> = ({
+const SharedListItem: React.FC<SharedListItemProps> = ({
   item,
   dragHandleProps,
   allowQuantityChange,
   allowCheckboxChange,
+  onUpdateQuantity,
+  onCheckItem,
+  onUncheckItem,
+  onDeleteItem,
   ...boxProps
 }) => {
-  const checkItem = useCheckShoppingListItem();
-  const uncheckItem = useUncheckShoppingListItem();
-  const deleteItem = useDeleteShoppingListItem();
-  const updateQuantity = useUpdateShoppingListItemQuantity();
-
   const handleCheckboxChange = () => {
     if (item.checkedAt) {
-      uncheckItem(item.id);
+      onUncheckItem?.(item.id);
     } else {
-      checkItem(item.id);
+      onCheckItem?.(item.id);
     }
   };
 
   const handleDeleteItem = () => {
-    deleteItem(item.id);
+    onDeleteItem?.(item.id);
   };
 
   return (
@@ -92,7 +91,7 @@ const ShoppingListItem: React.FC<ShoppingListItemProps> = ({
         {allowQuantityChange && (
           <NumberStepper
             value={item.quantity}
-            onChange={(value: number) => updateQuantity(item.id, value)}
+            onChange={(value: number) => onUpdateQuantity?.(item.id, value)}
           />
         )}
         <NeuomorphicButton
@@ -107,4 +106,4 @@ const ShoppingListItem: React.FC<ShoppingListItemProps> = ({
   );
 };
 
-export default ShoppingListItem;
+export default SharedListItem;
