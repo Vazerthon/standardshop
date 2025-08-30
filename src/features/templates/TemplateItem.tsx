@@ -11,6 +11,7 @@ import { transitions } from '@/theme';
 import { Template, useDeleteTemplate } from './useTemplates';
 import NeuomorphicButton from '@/features/components/NeuomorphicButton';
 import Icons from '@/features/components/icons';
+import { routes } from '../app/Router';
 
 interface TemplateItemProps {
   template: Template
@@ -40,14 +41,23 @@ const TemplateItem: React.FC<TemplateItemProps> = ({ template }) => {
             Items ({template.items.length})
           </Text>
           <NeuomorphicButton
+            as="a"
+            // @ts-expect-error
+            href={routes.makeTemplateRoute(template.id)}
+            aria-label="Edit template"
+            borderRadius="full"
+            width={2}
+            mr={2}
+          >
+            <Icons.Edit />
+          </NeuomorphicButton>
+          <NeuomorphicButton
             onClick={() => deleteTemplate(template.id)}
             aria-label="Delete template"
             borderRadius="full"
-            variant="raised"
-            width="2rem"
-            height="2rem"
+            width={2}
           >
-            <Box as="span" fontSize="lg"><Icons.Trash /></Box>
+            <Icons.Trash />
           </NeuomorphicButton>
         </>
       </Flex>

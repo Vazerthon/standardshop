@@ -2,13 +2,15 @@ import { Routes, Route, BrowserRouter, Link } from "react-router-dom";
 import ShoppingList from "@/features/shopping-list/ShoppingList";
 import Templates from "@/features/templates/Templates";
 import { Box, List, Text } from "@chakra-ui/react";
+import EditTemplate from "../templates/EditTemplate";
 
 const appBaseUrl = '/standardshop'
 
-const routes = {
+export const routes = {
   shoppingList: `${appBaseUrl}/`,
   templates: `${appBaseUrl}/templates`,
   template: `${appBaseUrl}/template/:id`,
+  makeTemplateRoute: (id: string) => `${appBaseUrl}/template/${id}`,
 }
 
 const Router: React.FC = () => {
@@ -16,6 +18,7 @@ const Router: React.FC = () => {
     <Routes>
       <Route path={routes.shoppingList} element={<ShoppingList />} />
       <Route path={routes.templates} element={<Templates />} />
+      <Route path={routes.template} element={<EditTemplate />} />
     </Routes>
   );
 }

@@ -54,6 +54,33 @@ export const useTemplates = () => {
   };
 };
 
+export const useTemplate = (templateId: string) => {
+  const { isLoading, error, data } = db.useQuery({
+    templates: {
+      $: {
+        where: {
+          id: templateId,
+          deletedAt: { $isNull: true },
+        },
+      },
+      templateItems: {
+        $: {
+          where: {
+            deletedAt: { $isNull: true },
+          },
+        },
+        item: {},
+      },
+    },
+  });
+
+  return {
+    template: mapTemplates(data)[0] || null,
+    loading: isLoading,
+    error: error as Error | null,
+  };
+};
+
 export const useCreateTemplate = () => (name: string, owner: string) =>
   db.transact(
     db.tx.templates[id()]

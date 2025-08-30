@@ -7,7 +7,7 @@ import NeuomorphicButton from '@/features/components/NeuomorphicButton';
 import { useCurrentUser } from '../auth/useAuthStore';
 import NeuomorphicInput from '../components/NeuomorphicInput';
 
-const TemplateItem: React.FC = () => {
+const CreateTemplate: React.FC = () => {
   const createTemplate = useCreateTemplate();
   const user = useCurrentUser();
   const [templateName, setTemplateName] = useState('');
@@ -39,4 +39,4 @@ const TemplateItem: React.FC = () => {
   );
 };
 
-export default TemplateItem; 
+export default CreateTemplate; 

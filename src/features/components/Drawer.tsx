@@ -17,9 +17,7 @@ export const Drawer: React.FC<DrawerProps> = ({ children }) => {
           <NeuomorphicButton
             aria-label="Open drawer"
             borderRadius="full"
-            width="3rem"
-            height="3rem"
-            variant="raised"
+            width={10}
           >
             <Box as="span" fontSize="lg"><Icons.Menu /></Box>
           </NeuomorphicButton>
@@ -33,8 +31,7 @@ export const Drawer: React.FC<DrawerProps> = ({ children }) => {
                 aria-label="Close drawer"
                 borderRadius="full"
                 variant="raised"
-                width="3rem"
-                height="3rem"
+                width={2}
               >
                 <Box as="span" fontSize="lg"><Icons.Close /></Box>
               </NeuomorphicButton>
