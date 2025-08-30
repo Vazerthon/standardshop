@@ -59,7 +59,7 @@ export interface SharedListItemType {
   itemId: string;
   name: string;
   quantity: number;
-  sortOrder: number;
+  sortOrder?: number;
   checkedAt?: Date | null;
 }
 

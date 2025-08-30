@@ -1,7 +1,7 @@
 import { Box, Flex, Text } from '@chakra-ui/react';
 import SharedItemList from '../components/SharedItemList';
 import { useParams } from 'react-router-dom';
-// import { useTemplate } from './useTemplates';
+import { useTemplate } from './useTemplates';
 
 const EditTemplate: React.FC = () => {
   const { templateId } = useParams<{ templateId: string }>();
@@ -36,13 +36,14 @@ const EditTemplate: React.FC = () => {
   }
 
   // const { template, loading, error } = useTemplate(templateId);
+  const { loading, error } = useTemplate(templateId);
 
   return (
     <SharedItemList
       uncheckedItems={[]}
       checkedItems={[]}
-      loading={false}
-      error={null}
+      loading={loading}
+      error={error}
       onUpdateQuantity={() => { }}
       onCheckItem={() => { }}
       onUncheckItem={() => { }}

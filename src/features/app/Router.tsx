@@ -9,7 +9,7 @@ const appBaseUrl = '/standardshop'
 export const routes = {
   shoppingList: `${appBaseUrl}/`,
   templates: `${appBaseUrl}/templates`,
-  template: `${appBaseUrl}/template/:id`,
+  template: `${appBaseUrl}/template/:templateId`,
   makeTemplateRoute: (id: string) => `${appBaseUrl}/template/${id}`,
 }
 
