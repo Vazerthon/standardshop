@@ -10,9 +10,8 @@ import LoginForm from '../auth/LoginForm';
 import { useAuthLoading, useAuthSignOut } from '../auth/useAuthStore';
 import NeuomorphicButton from '../components/NeuomorphicButton';
 import { Drawer } from '../components/Drawer';
-import Templates from '../templates/Templates';
-import ShoppingList from '../shopping-list/ShoppingList';
 import UserEmail from './UserEmail';
+import Router, { BrowserRouter, Navigation } from './Router';
 
 function App() {
   const loading = useAuthLoading();
@@ -45,21 +44,23 @@ function App() {
         </Box>
       </db.SignedOut>
       <db.SignedIn>
-        <Box minH="100vh" bg="bg.primary">
-          <ShoppingList />
-          <Drawer>
-            <Templates />
-            <>
-              <UserEmail />
-              <NeuomorphicButton
-                onClick={signOut}
-                size="md"
-              >
-                Sign Out
-            </NeuomorphicButton>
-            </>
-          </Drawer>
-        </Box>
+        <BrowserRouter>
+          <Box minH="100vh" bg="bg.primary">
+            <Router />
+            <Drawer>
+              <Navigation />
+              <>
+                <UserEmail />
+                <NeuomorphicButton
+                  onClick={signOut}
+                  size="md"
+                >
+                  Sign Out
+                </NeuomorphicButton>
+              </>
+            </Drawer>
+          </Box>
+        </BrowserRouter>
       </db.SignedIn>
     </>
   );

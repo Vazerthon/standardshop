@@ -1,7 +1,7 @@
 import { Text } from '@chakra-ui/react';
 import { useCurrentUser } from '../auth/useAuthStore';
 
-function UserEmail() {
+const UserEmail: React.FC = () => {
   const user = useCurrentUser();
 
   return (
