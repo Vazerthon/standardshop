@@ -21,6 +21,7 @@ const mapTemplates = (data: any): Template[] => {
       createdAt: new Date(item.createdAt),
       items: item.templateItems.map((templateItem: any) => ({
         id: templateItem.id,
+        itemId: templateItem?.id,
         name: templateItem.item.name,
         quantity: templateItem.quantity,
       })),
@@ -62,6 +63,7 @@ export const useTemplate = (templateId: string) => {
           id: templateId,
           deletedAt: { $isNull: true },
         },
+        limit: 1,
       },
       templateItems: {
         $: {

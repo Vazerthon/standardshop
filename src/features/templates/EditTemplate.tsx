@@ -3,12 +3,9 @@ import SharedItemList from '../components/SharedItemList';
 import { useParams } from 'react-router-dom';
 import { useTemplate } from './useTemplates';
 
-const EditTemplate: React.FC = () => {
-  const { templateId } = useParams<{ templateId: string }>();
-
-  if (!templateId) {
-    return (
-      <Flex
+const InvalidTemplate: React.FC = () => {
+  return (
+    <Flex
         alignItems="center"
         justifyContent="center"
         minH="100vh"
@@ -32,11 +29,23 @@ const EditTemplate: React.FC = () => {
           </Box>
         </Box>
       </Flex>
+  );
+};
+
+const EditTemplate: React.FC = () => {
+  const { templateId } = useParams<{ templateId: string }>();
+
+  if (!templateId) {
+    return (
+      <InvalidTemplate /> 
     );
   }
 
-  // const { template, loading, error } = useTemplate(templateId);
-  const { loading, error } = useTemplate(templateId);
+  const { template, loading, error } = useTemplate(templateId);
+
+  if ((!template && !loading) || error) {
+    return <InvalidTemplate />;
+  }
 
   return (
     <SharedItemList
