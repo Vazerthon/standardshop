@@ -25,7 +25,7 @@ const mapTemplates = (data: any): Template[] => {
         id: templateItem.id,
         itemId: templateItem?.id,
         sortOrder: templateItem.sortOrder,
-        name: templateItem.item.name,
+        name: templateItem.item?.name,
         quantity: templateItem.quantity,
       })),
     })) || []
@@ -45,6 +45,7 @@ export const useTemplates = () => {
           where: {
             deletedAt: { $isNull: true },
           },
+          order: { sortOrder: "asc" },
         },
         item: {},
       },
@@ -73,6 +74,7 @@ export const useTemplate = (templateId: string) => {
           where: {
             deletedAt: { $isNull: true },
           },
+          order: { sortOrder: "asc" },
         },
         item: {},
       },
@@ -92,6 +94,44 @@ export const useCreateTemplate = () => (name: string, owner: string) =>
       .create({ name, createdAt: new Date() })
       .link({ owner })
   );
+
+const useNextSortOrder = (templateId: string) => {
+  const {
+    template
+  } = useTemplate(templateId);
+
+  if (!template) return 1;
+
+  const maxSortOrder = Math.max(
+    ...template.items.map((item) => item.sortOrder || 0),
+    0
+  );
+
+  return maxSortOrder + 1;
+};
+
+export const useCreateTemplateItem = (templateId: string) => {
+  const nextSortOrder = useNextSortOrder(templateId);
+
+  return (name: string, owner: string) => {
+    const templateItemId = id();
+
+    db.transact([
+      db.tx.templateItems[templateItemId]
+        .update({
+          sortOrder: nextSortOrder,
+          quantity: 1,
+          createdAt: new Date(),
+        })
+        .link({ owner })
+        .link({ template: templateId }),
+      db.tx.items[lookup("nameAndUserId", `${name}:${owner}`)]
+        .update({ name, createdAt: new Date() })
+        .link({ templateItems: [templateItemId] })
+        .link({ owner }),
+    ]);
+  };
+};
 
 const updateTemplateProperty =
   (updateObj: UpdateParams<AppSchema, "templates">) => (id: string) => {
@@ -118,3 +158,10 @@ export const useUpdateTemplateItemQuantity =
   () => (id: string, quantity: number) => {
     updateTemplateItemProperty({ quantity })(id);
   };
+
+export const useDeleteTemplateItem = () =>
+  updateTemplateItemProperty({ deletedAt: new Date() });
+
+export const useUpdateTemplateListOrder = () => (itemId: string, newSortOrder: number) => {
+  updateTemplateItemProperty({ sortOrder: newSortOrder })(itemId);
+};

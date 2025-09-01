@@ -1,7 +1,7 @@
 import { Box, Container, Flex, Text } from "@chakra-ui/react";
 import SharedItemList from "../components/SharedItemList";
 import { useParams } from "react-router-dom";
-import { useTemplate, useUpdateTemplateItemQuantity } from "./useTemplates";
+import { useCreateTemplateItem, useDeleteTemplateItem, useTemplate, useUpdateTemplateItemQuantity, useUpdateTemplateListOrder } from "./useTemplates";
 
 const InvalidTemplate: React.FC = () => {
   return (
@@ -27,6 +27,13 @@ const InvalidTemplate: React.FC = () => {
 const EditTemplate: React.FC = () => {
   const { templateId } = useParams<{ templateId: string }>();
   const updateTemplateItemQuantity = useUpdateTemplateItemQuantity();
+  const deleteTemplateItem = useDeleteTemplateItem();
+  const updateTemplateListOrder = useUpdateTemplateListOrder();
+
+  const handleReorder = (itemId: string, newSortOrder: number) => {
+    console.log("Reordering item:", itemId, "to new sort order:", newSortOrder);
+    updateTemplateListOrder(itemId, newSortOrder);
+  };
 
   if (!templateId) {
     return <InvalidTemplate />;
@@ -38,6 +45,8 @@ const EditTemplate: React.FC = () => {
     return <InvalidTemplate />;
   }
 
+  const createTemplateItem = useCreateTemplateItem(templateId);
+
   return (
     <Container p={2}>
       <Text mb={4} color="text.primary">
@@ -48,9 +57,9 @@ const EditTemplate: React.FC = () => {
         loading={loading}
         error={error}
         onUpdateQuantity={updateTemplateItemQuantity}
-        onDeleteItem={() => {}}
-        onAddItem={() => {}}
-        updateOrder={() => {}}
+        onDeleteItem={deleteTemplateItem}
+        onAddItem={createTemplateItem}
+        updateOrder={handleReorder}
       />
     </Container>
   );
