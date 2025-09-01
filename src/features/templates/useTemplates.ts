@@ -4,6 +4,8 @@ interface TemplateItem {
   id: string;
   name: string;
   quantity: number;
+  itemId: string;
+  sortOrder?: number;
 }
 
 export interface Template {
@@ -22,6 +24,7 @@ const mapTemplates = (data: any): Template[] => {
       items: item.templateItems.map((templateItem: any) => ({
         id: templateItem.id,
         itemId: templateItem?.id,
+        sortOrder: templateItem.sortOrder,
         name: templateItem.item.name,
         quantity: templateItem.quantity,
       })),
@@ -91,9 +94,9 @@ export const useCreateTemplate = () => (name: string, owner: string) =>
   );
 
 const updateTemplateProperty =
-  (updateObj: UpdateParams<AppSchema, "templates">) => (itemId: string) => {
+  (updateObj: UpdateParams<AppSchema, "templates">) => (id: string) => {
     db.transact([
-      db.tx.templates[lookup("id", itemId)].update(updateObj, {
+      db.tx.templates[lookup("id", id)].update(updateObj, {
         upsert: false,
       }),
     ]);
@@ -101,3 +104,17 @@ const updateTemplateProperty =
 
 export const useDeleteTemplate = () =>
   updateTemplateProperty({ deletedAt: new Date() });
+
+const updateTemplateItemProperty =
+  (updateObj: UpdateParams<AppSchema, "templateItems">) => (id: string) => {
+    db.transact([
+      db.tx.templateItems[lookup("id", id)].update(updateObj, {
+        upsert: false,
+      }),
+    ]);
+  };
+
+export const useUpdateTemplateItemQuantity =
+  () => (id: string, quantity: number) => {
+    updateTemplateItemProperty({ quantity })(id);
+  };

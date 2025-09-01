@@ -1,4 +1,3 @@
-
 import SharedItemList from "../components/SharedItemList";
 import {
   useShoppingList,
@@ -33,6 +32,8 @@ const ShoppingList: React.FC = () => {
       onDeleteItem={deleteItem}
       onAddItem={createItem}
       updateOrder={updateOrder}
+      showCheckedItems
+      allowCheckboxChange
     />
   );
 };

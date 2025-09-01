@@ -47,6 +47,9 @@ const SharedListItem: React.FC<SharedListItemProps> = ({
     onDeleteItem?.(item.id);
   };
 
+  const shouldShowCheckbox =
+    allowCheckboxChange && onCheckItem && onUncheckItem;
+
   return (
     <Box
       width="100%"
@@ -70,22 +73,19 @@ const SharedListItem: React.FC<SharedListItemProps> = ({
             cursor="grab"
             _active={{ cursor: "grabbing" }}
             _hover={{ opacity: 1 }}
-            fontSize="lg"
-            fontWeight="bold"
-            userSelect="none"
             {...dragHandleProps?.attributes}
             {...dragHandleProps?.listeners}
           >
             <Icons.Drag />
           </Text>
         )}
-        {allowCheckboxChange && (
+        {shouldShowCheckbox && (
           <NeuomorphicCheckbox
             checked={!!item.checkedAt}
             onCheckedChange={handleCheckboxChange}
           />
         )}
-        <Text fontSize="md" color="text.primary" fontWeight="medium" flex={1}>
+        <Text lineClamp={1} fontSize="md" color="text.primary" flex={1}>
           {item.name}
         </Text>
         {allowQuantityChange && (

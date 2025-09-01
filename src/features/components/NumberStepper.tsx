@@ -6,11 +6,9 @@ const NumberStepper: React.FC<{
   value: number;
   onChange: (value: number) => void;
 }> = ({ value, onChange }) => {
-  const handleIncrement = () =>
-    onChange(value + 1);
+  const handleIncrement = () => onChange(value + 1);
 
-  const handleDecrement = () =>
-    onChange(value - 1);
+  const handleDecrement = () => onChange(value - 1);
 
   return (
     <NumberInput.Root unstyled spinOnPress={false} color="text.primary">
@@ -24,7 +22,12 @@ const NumberStepper: React.FC<{
             <Icons.Minus />
           </NeuomorphicButton>
         </NumberInput.DecrementTrigger>
-        <NumberInput.ValueText textAlign="center" fontSize="lg" minW={3} maxW={3}>
+        <NumberInput.ValueText
+          textAlign="center"
+          fontSize="md"
+          minW={5}
+          maxW={5}
+        >
           {value}
         </NumberInput.ValueText>
         <NumberInput.IncrementTrigger asChild>

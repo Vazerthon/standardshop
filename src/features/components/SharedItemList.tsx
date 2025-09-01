@@ -65,18 +65,33 @@ export interface SharedListItemType {
 
 interface SharedItemListProps {
   uncheckedItems: SharedListItemType[];
-  checkedItems: SharedListItemType[];
+  checkedItems?: SharedListItemType[];
+  showCheckedItems?: boolean;
   loading?: boolean;
   error?: Error | null;
   onUpdateQuantity: (itemId: string, quantity: number) => void;
-  onCheckItem: (itemId: string) => void;
-  onUncheckItem: (itemId: string) => void;
+  onCheckItem?: (itemId: string) => void;
+  onUncheckItem?: (itemId: string) => void;
+  allowCheckboxChange?: boolean;
   onDeleteItem: (itemId: string) => void;
   onAddItem: (itemName: string, userId: string) => void;
   updateOrder: (itemId: string, newSortOrder: number) => void;
 }
 
-const SharedItemList: React.FC<SharedItemListProps> = ({ uncheckedItems, checkedItems, loading, error, onUpdateQuantity, onCheckItem, onUncheckItem, onDeleteItem, onAddItem, updateOrder }) => {
+const SharedItemList: React.FC<SharedItemListProps> = ({
+  uncheckedItems,
+  checkedItems,
+  loading,
+  error,
+  onUpdateQuantity,
+  onCheckItem,
+  onUncheckItem,
+  onDeleteItem,
+  onAddItem,
+  updateOrder,
+  showCheckedItems,
+  allowCheckboxChange,
+}) => {
   const sensors = useSensors(
     useSensor(TouchSensor, {
       activationConstraint: {
@@ -125,6 +140,9 @@ const SharedItemList: React.FC<SharedItemListProps> = ({ uncheckedItems, checked
     );
   }
 
+  const shouldShowCheckedItems =
+    showCheckedItems && checkedItems && checkedItems.length > 0;
+
   return (
     <Container p={2}>
       {error && (
@@ -144,30 +162,59 @@ const SharedItemList: React.FC<SharedItemListProps> = ({ uncheckedItems, checked
           restrictToParentElement,
         ]}
       >
+        {uncheckedItems.length === 0 && (
+          <Text fontSize="md" color="text.secondary" textAlign="center" my={4}>
+            No items to display. Add some items to get started!
+          </Text>
+        )}
         <SortableContext
           items={uncheckedItems.map((item) => item.id)}
           strategy={verticalListSortingStrategy}
         >
           {uncheckedItems.map((item) => (
-            <SortableSharedListItem key={item.id} item={item} allowQuantityChange allowCheckboxChange onCheckItem={onCheckItem} onUncheckItem={onUncheckItem} onDeleteItem={onDeleteItem} onUpdateQuantity={onUpdateQuantity} />
+            <SortableSharedListItem
+              key={item.id}
+              item={item}
+              allowQuantityChange
+              allowCheckboxChange={allowCheckboxChange}
+              onCheckItem={onCheckItem}
+              onUncheckItem={onUncheckItem}
+              onDeleteItem={onDeleteItem}
+              onUpdateQuantity={onUpdateQuantity}
+            />
           ))}
         </SortableContext>
       </DndContext>
       <SharedAddListItemInput onAddItem={onAddItem} />
-      <Accordion.Root collapsible>
-        <Accordion.Item key="checked-items" value="checked-items">
-          <Accordion.ItemTrigger>
-            <Text fontSize="md" fontWeight="bold" mt={4} color="text.secondary">
-              Checked Items ({checkedItems.length})
-            </Text>
-          </Accordion.ItemTrigger>
-          <Accordion.ItemContent overflow="unset">
-            {checkedItems.map((item) => (
-              <SharedListItem key={item.id} item={item} allowCheckboxChange onCheckItem={onCheckItem} onUncheckItem={onUncheckItem} onDeleteItem={onDeleteItem} onUpdateQuantity={onUpdateQuantity} />
-            ))}
-          </Accordion.ItemContent>
-        </Accordion.Item>
-      </Accordion.Root>
+      {shouldShowCheckedItems && (
+        <Accordion.Root collapsible>
+          <Accordion.Item key="checked-items" value="checked-items">
+            <Accordion.ItemTrigger>
+              <Text
+                fontSize="md"
+                fontWeight="bold"
+                mt={4}
+                color="text.secondary"
+              >
+                Checked Items ({checkedItems.length})
+              </Text>
+            </Accordion.ItemTrigger>
+            <Accordion.ItemContent overflow="unset">
+              {checkedItems.map((item) => (
+                <SharedListItem
+                  key={item.id}
+                  item={item}
+                  allowCheckboxChange={allowCheckboxChange}
+                  onCheckItem={onCheckItem}
+                  onUncheckItem={onUncheckItem}
+                  onDeleteItem={onDeleteItem}
+                  onUpdateQuantity={onUpdateQuantity}
+                />
+              ))}
+            </Accordion.ItemContent>
+          </Accordion.Item>
+        </Accordion.Root>
+      )}
     </Container>
   );
 };

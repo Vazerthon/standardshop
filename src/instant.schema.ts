@@ -28,6 +28,7 @@ const _schema = i.schema({
       quantity: i.number(),
       createdAt: i.date(),
       deletedAt: i.date().optional().indexed(),
+      sortOrder: i.number().indexed().optional(),
     }),
   },
   links: {
