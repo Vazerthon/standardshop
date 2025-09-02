@@ -10,7 +10,7 @@ import { useTemplates } from './useTemplates';
 import TemplateItem from './TemplateItem';
 import CreateTemplate from './CreateTemplate';
 
-const Templates: React.FC = () => {
+const ManageTemplates: React.FC = () => {
   const { templates, loading, error } = useTemplates();
 
   if (loading) {
@@ -49,4 +49,4 @@ const Templates: React.FC = () => {
   );
 };
 
-export default Templates; 
+export default ManageTemplates; 

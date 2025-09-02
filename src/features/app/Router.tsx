@@ -1,6 +1,6 @@
 import { Routes, Route, BrowserRouter, Link } from "react-router-dom";
 import ShoppingList from "@/features/shopping-list/ShoppingList";
-import Templates from "@/features/templates/Templates";
+import ManageTemplates from "@/features/templates/ManageTemplates";
 import { Box, List, Text } from "@chakra-ui/react";
 import EditTemplate from "../templates/EditTemplate";
 
@@ -17,7 +17,7 @@ const Router: React.FC = () => {
   return (
     <Routes>
       <Route path={routes.shoppingList} element={<ShoppingList />} />
-      <Route path={routes.templates} element={<Templates />} />
+      <Route path={routes.templates} element={<ManageTemplates />} />
       <Route path={routes.template} element={<EditTemplate />} />
     </Routes>
   );
