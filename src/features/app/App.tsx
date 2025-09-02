@@ -12,6 +12,7 @@ import { Drawer } from '../components/Drawer';
 import UserEmail from './UserEmail';
 import Router, { BrowserRouter, Navigation } from './Router';
 import { MenuBar } from './MenuBar';
+import TemplateList from '../templates/TemplateList';
 
 function App() {
   const loading = useAuthLoading();
@@ -47,7 +48,10 @@ function App() {
           <Box pt={16}>
             <MenuBar>
               <Drawer>
-                <Navigation />
+                <>
+                  <Navigation />
+                  <TemplateList />
+                </>
                 <>
                   <UserEmail />
                   <NeuomorphicButton

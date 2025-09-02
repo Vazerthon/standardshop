@@ -23,7 +23,7 @@ const mapTemplates = (data: any): Template[] => {
       createdAt: new Date(item.createdAt),
       items: item.templateItems.map((templateItem: any) => ({
         id: templateItem.id,
-        itemId: templateItem?.id,
+        itemId: templateItem?.item?.id,
         sortOrder: templateItem.sortOrder,
         name: templateItem.item?.name,
         quantity: templateItem.quantity,

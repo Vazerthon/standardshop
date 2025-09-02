@@ -7,6 +7,7 @@ import {
   LuMenu,
   LuPencil,
   LuLock,
+  LuBetweenHorizontalStart
 } from "react-icons/lu";
 
 export default {
@@ -18,4 +19,5 @@ export default {
   Drag: LuGripVertical,
   Close: LuX,
   Lock: LuLock,
+  Insert: LuBetweenHorizontalStart
 };

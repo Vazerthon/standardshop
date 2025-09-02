@@ -7,7 +7,7 @@ import {
   Spinner,
 } from '@chakra-ui/react';
 import { useTemplates } from './useTemplates';
-import TemplateItem from './TemplateItem';
+import ManageTemplateItem from './ManageTemplateItem';
 import CreateTemplate from './CreateTemplate';
 
 const ManageTemplates: React.FC = () => {
@@ -39,7 +39,7 @@ const ManageTemplates: React.FC = () => {
         )}
         <Stack gap={2}>
           {templates?.map((template) => (
-            <TemplateItem key={template.id} template={template} />
+            <ManageTemplateItem key={template.id} template={template} />
           ))}
         </Stack>
         <Box mt={4}>

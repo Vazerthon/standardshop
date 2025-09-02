@@ -6,7 +6,7 @@ import { transitions } from "@/theme";
 import NeuomorphicButton from "@/features/components/NeuomorphicButton";
 import { DraggableAttributes } from "@dnd-kit/core";
 import { SyntheticListenerMap } from "@dnd-kit/core/dist/hooks/utilities";
-import Icons from "@/features/components/icons";
+import Icons from "@/features/components/Icons";
 import NumberStepper from "./NumberStepper";
 import { SharedListItemType } from "./SharedItemList";
 

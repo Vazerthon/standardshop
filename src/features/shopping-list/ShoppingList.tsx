@@ -11,7 +11,7 @@ import {
   useUncheckShoppingListItem,
   useUpdateShoppingListItemQuantity,
 } from "./useShoppingList";
-import Icons from "../components/icons";
+import Icons from "../components/Icons";
 
 const ShoppingList: React.FC = () => {
   const { shoppingList, loading, error } = useShoppingList();

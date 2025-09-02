@@ -3,7 +3,7 @@ import NeuomorphicInput from '@/features/components/NeuomorphicInput';
 import { useCurrentUser } from '../auth/useAuthStore';
 import { Flex } from '@chakra-ui/react';
 import NeuomorphicButton from './NeuomorphicButton';
-import Icons from './icons';
+import Icons from './Icons';
 
 interface SharedAddListItemInputProps {
   onAddItem: (itemName: string, userId: string) => void;

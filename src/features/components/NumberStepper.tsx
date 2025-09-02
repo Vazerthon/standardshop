@@ -1,6 +1,6 @@
 import NeuomorphicButton from "@/features/components/NeuomorphicButton";
 import { HStack, NumberInput } from "@chakra-ui/react";
-import Icons from "@/features/components/icons";
+import Icons from "@/features/components/Icons";
 
 const NumberStepper: React.FC<{
   value: number;

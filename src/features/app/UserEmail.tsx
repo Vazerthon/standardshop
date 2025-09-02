@@ -5,7 +5,7 @@ const UserEmail: React.FC = () => {
   const user = useCurrentUser();
 
   return (
-    (<Text color="text.secondary">{user.email}</Text>)
+    (<Text lineClamp={1} color="text.secondary">{user.email}</Text>)
   );
 }
 

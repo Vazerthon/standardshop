@@ -8,14 +8,14 @@ import {
 import { transitions } from '@/theme';
 import { Template, useDeleteTemplate } from './useTemplates';
 import NeuomorphicButton from '@/features/components/NeuomorphicButton';
-import Icons from '@/features/components/icons';
+import Icons from '@/features/components/Icons';
 import { routes } from '../app/Router';
 
-interface TemplateItemProps {
+interface ManageTemplateItemProps {
   template: Template
 }
 
-const TemplateItem: React.FC<TemplateItemProps> = ({ template }) => {
+const ManageTemplateItem: React.FC<ManageTemplateItemProps> = ({ template }) => {
   const deleteTemplate = useDeleteTemplate();
 
   return (
@@ -63,4 +63,4 @@ const TemplateItem: React.FC<TemplateItemProps> = ({ template }) => {
   );
 };
 
-export default TemplateItem; 
+export default ManageTemplateItem; 

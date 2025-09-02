@@ -58,7 +58,7 @@ export const useShoppingList = () => {
   };
 };
 
-const useNextSortOrder = () => {
+export const useNextSortOrder = () => {
   const {
     shoppingList: { checkedItems },
   } = useShoppingList();
@@ -117,4 +117,17 @@ export const useUpdateShoppingListItemQuantity = () => (itemId: string, quantity
   updateShopListItemProperty({ quantity })(itemId);
 };
 
-
+export const useInsertAllItemsFromTemplate = () => (owner: string, items: { itemId: string; quantity: number }[], startingSortOrder: number) =>
+  db.transact([
+    ...items.map(({ itemId, quantity }, i) => {
+      const shopListItemId = id();
+      return db.tx.shopListItems[shopListItemId]
+        .update({
+          sortOrder: startingSortOrder + i,
+          quantity,
+          createdAt: new Date(),
+        })
+        .link({ item: itemId })
+        .link({ owner });
+    })
+  ]);

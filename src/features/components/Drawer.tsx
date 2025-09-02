@@ -3,7 +3,7 @@ import {
   Drawer as ChakraDrawer,
 } from '@chakra-ui/react';
 import NeuomorphicButton from './NeuomorphicButton';
-import Icons from './icons';
+import Icons from './Icons';
 
 interface DrawerProps {
   children: [React.ReactNode, React.ReactNode];
