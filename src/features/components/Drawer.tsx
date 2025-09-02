@@ -13,13 +13,13 @@ export const Drawer: React.FC<DrawerProps> = ({ children }) => {
   const [body, footer] = children;
   return (
       <ChakraDrawer.Root placement="start">
-        <ChakraDrawer.Trigger asChild bottom={6} left={6 } position="fixed">
+        <ChakraDrawer.Trigger asChild>
           <NeuomorphicButton
             aria-label="Open drawer"
             borderRadius="full"
             width={10}
           >
-            <Box as="span" fontSize="lg"><Icons.Menu /></Box>
+            <Icons.Menu />
           </NeuomorphicButton>
         </ChakraDrawer.Trigger>
         

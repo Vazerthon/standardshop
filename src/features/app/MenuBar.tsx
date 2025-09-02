@@ -3,10 +3,10 @@ import { transitions } from '@/theme';
 import { useScrollDirection } from '../hooks/useScrollDirection';
 
 interface MenuBarProps extends BoxProps {
-  
+  children?: React.ReactNode;
 }
 
-export function MenuBar({ ...props }: MenuBarProps) {
+export function MenuBar({ children, ...props }: MenuBarProps) {
   const scrollDirection = useScrollDirection();
   const isVisible = scrollDirection === 'up' || scrollDirection === null;
 
@@ -30,6 +30,7 @@ export function MenuBar({ ...props }: MenuBarProps) {
         py={4}
         minH={12}
       >
+        {children}
       </Flex>
     </Box>
   );

@@ -46,9 +46,7 @@ function App() {
       </db.SignedOut>
       <db.SignedIn>
         <BrowserRouter>
-          <MenuBar />
-          <Box minH="100vh" bg="bg.primary">
-            <Router />
+          <MenuBar>
             <Drawer>
               <Navigation />
               <>
@@ -61,6 +59,9 @@ function App() {
                 </NeuomorphicButton>
               </>
             </Drawer>
+          </MenuBar>
+          <Box minH="100vh" bg="bg.primary">
+            <Router />
           </Box>
         </BrowserRouter>
       </db.SignedIn>
