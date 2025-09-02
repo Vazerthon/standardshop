@@ -1,7 +1,6 @@
 import {
   Box,
   Flex,
-  Text,
   Center,
   Spinner,
 } from '@chakra-ui/react';
@@ -12,6 +11,7 @@ import NeuomorphicButton from '../components/NeuomorphicButton';
 import { Drawer } from '../components/Drawer';
 import UserEmail from './UserEmail';
 import Router, { BrowserRouter, Navigation } from './Router';
+import { MenuBar } from './MenuBar';
 
 function App() {
   const loading = useAuthLoading();
@@ -30,7 +30,6 @@ function App() {
           boxShadow="neuomorphicLarge"
         >
           <Spinner size="lg" color="accent.primary" />
-          <Text fontSize="lg" color="text.secondary">Loading...</Text>
         </Flex>
       </Center>
     );
@@ -45,8 +44,7 @@ function App() {
       </db.SignedOut>
       <db.SignedIn>
         <BrowserRouter>
-          <Box minH="100vh" bg="bg.primary">
-            <Router />
+          <MenuBar>
             <Drawer>
               <Navigation />
               <>
@@ -59,6 +57,9 @@ function App() {
                 </NeuomorphicButton>
               </>
             </Drawer>
+          </MenuBar>
+          <Box minH="100vh" bg="bg.primary">
+            <Router />
           </Box>
         </BrowserRouter>
       </db.SignedIn>
