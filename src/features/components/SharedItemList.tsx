@@ -30,7 +30,6 @@ import {
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import SharedListItem, { SharedListItemProps } from "./SharedListItem";
-import SharedAddListItemInput from "./CreateItem";
 import CreateItem from "./CreateItem";
 
 const SortableSharedListItem: React.FC<SharedListItemProps> = ({
