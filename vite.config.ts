@@ -11,9 +11,9 @@ export default defineConfig({
       registerType: "autoUpdate",
       includeAssets: ["favicon.ico", "apple-touch-icon.png"],
       manifest: {
-        name: "🎵",
-        short_name: "🎵",
-        description: "🎵",
+        name: "Standard Shop",
+        short_name: "🛒",
+        description: "A structured shopping list application",
         theme_color: "#000",
         icons: [
           {
