@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Box, Flex, Switch, Text } from "@chakra-ui/react";
+import { Flex, Switch } from "@chakra-ui/react";
 import { useSetExtraContentRenderFunction } from "../app/useMenuBarStore";
 import SharedItemList from "../components/SharedItemList";
 import {
