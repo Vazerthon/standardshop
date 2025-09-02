@@ -30,7 +30,6 @@ const CreateTemplate: React.FC = () => {
         <NeuomorphicButton
           type="submit"
           disabled={!templateName.trim()}
-          colorScheme="accent"
         >
           Create template
         </NeuomorphicButton>

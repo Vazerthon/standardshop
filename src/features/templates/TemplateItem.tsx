@@ -4,8 +4,6 @@ import {
   Flex,
   Heading,
   Text,
-  Stack,
-  Badge,
 } from '@chakra-ui/react';
 import { transitions } from '@/theme';
 import { Template, useDeleteTemplate } from './useTemplates';
@@ -61,32 +59,6 @@ const TemplateItem: React.FC<TemplateItemProps> = ({ template }) => {
           </NeuomorphicButton>
         </>
       </Flex>
-
-      <Box>
-        <Stack direction="column" gap={2}>
-          {template.items.map((templateItem) => (
-            <Box
-              key={templateItem.id}
-              p={2}
-              bg="bg.primary"
-              borderRadius="xl"
-              boxShadow="neuomorphicInset"
-            >
-              <Stack direction="row" justify="space-between" align="center">
-                <Text truncate fontSize="sm" color="text.primary">{templateItem.name}</Text>
-                <Badge
-                  variant="solid"
-                  borderRadius="lg"
-                  px={3}
-                  py={1}
-                >
-                  Qty: {templateItem.quantity}
-                </Badge>
-              </Stack>
-            </Box>
-          ))}
-        </Stack>
-      </Box>
     </Box>
   );
 };

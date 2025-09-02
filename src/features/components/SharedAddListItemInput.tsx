@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import NeuomorphicInput from '@/features/components/NeuomorphicInput';
 import { useCurrentUser } from '../auth/useAuthStore';
+import { Flex } from '@chakra-ui/react';
+import NeuomorphicButton from './NeuomorphicButton';
+import Icons from './icons';
 
 interface SharedAddListItemInputProps {
   onAddItem: (itemName: string, userId: string) => void;
@@ -12,31 +15,34 @@ const SharedAddListItemInput: React.FC<SharedAddListItemInputProps> = ({
   const user = useCurrentUser();
   const [newItemName, setNewItemName] = useState('');
 
-  const handleCreateItem = () => {
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
     if (!newItemName.trim()) return;
-    
-    try {
-      onAddItem(newItemName, user.id);
-      setNewItemName('');
-    } catch (error) {
-      console.error('Error adding item:', error);
-    }
-  }
+
+    onAddItem(newItemName, user.id);
+    setNewItemName('');
+  };
 
   return (
-    <NeuomorphicInput
-      placeholder="Add a new item"
-      size="lg"
-      value={newItemName}
-      onBlur={() => handleCreateItem()}
-      onKeyDown={(e) => {
-        if (e.key === 'Enter') {
-          e.preventDefault();
-          handleCreateItem();
-        }
-      }}
-      onChange={(e) => setNewItemName(e.target.value)}
-    />
+    <form onSubmit={handleSubmit}>
+      <Flex>
+        <NeuomorphicInput
+          placeholder="Add list item"
+          mr={2}
+          onChange={(e) => setNewItemName(e.target.value)}
+          value={newItemName}
+        />
+        <NeuomorphicButton
+          type="submit"
+          disabled={!newItemName.trim()}
+          aria-label="Add list item"
+          borderRadius="full"
+          w={2}
+        >
+          <Icons.Plus />
+        </NeuomorphicButton>
+      </Flex>
+    </form>
   );
 };
 
