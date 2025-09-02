@@ -12,6 +12,7 @@ import NeuomorphicButton from '../components/NeuomorphicButton';
 import { Drawer } from '../components/Drawer';
 import UserEmail from './UserEmail';
 import Router, { BrowserRouter, Navigation } from './Router';
+import { MenuBar } from './MenuBar';
 
 function App() {
   const loading = useAuthLoading();
@@ -45,6 +46,7 @@ function App() {
       </db.SignedOut>
       <db.SignedIn>
         <BrowserRouter>
+          <MenuBar />
           <Box minH="100vh" bg="bg.primary">
             <Router />
             <Drawer>

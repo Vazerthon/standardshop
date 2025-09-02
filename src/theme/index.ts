@@ -20,7 +20,6 @@ export const theme = defineConfig({
         neuomorphicInset: { value: 'inset 4px 4px 8px #d1d1d1, inset -4px -4px 8px #ffffff' },
         neuomorphicInsetHover: { value: 'inset 6px 6px 12px #d1d1d1, inset -6px -6px 12px #ffffff' },
         neuomorphicLarge: { value: '12px 12px 24px #d1d1d1, -12px -12px 24px #ffffff' },
-        header: { value: '0 4px 8px rgba(0,0,0,0.1)' },
       },
     },
     semanticTokens: {
