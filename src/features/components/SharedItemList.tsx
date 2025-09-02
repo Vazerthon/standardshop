@@ -76,6 +76,9 @@ interface SharedItemListProps {
   onDeleteItem: (itemId: string) => void;
   onAddItem: (itemName: string, userId: string) => void;
   updateOrder: (itemId: string, newSortOrder: number) => void;
+  allowReordering?: boolean;
+  allowQuantityChange?: boolean;
+  allowDeleteItems?: boolean;
 }
 
 const SharedItemList: React.FC<SharedItemListProps> = ({
@@ -91,6 +94,9 @@ const SharedItemList: React.FC<SharedItemListProps> = ({
   updateOrder,
   showCheckedItems,
   allowCheckboxChange,
+  allowReordering,
+  allowQuantityChange,
+  allowDeleteItems,
 }) => {
   const sensors = useSensors(
     useSensor(TouchSensor, {
@@ -144,7 +150,7 @@ const SharedItemList: React.FC<SharedItemListProps> = ({
     showCheckedItems && checkedItems && checkedItems.length > 0;
 
   return (
-    <Container p={2}>
+    <Container p={2} mt={16}>
       {error && (
         <Box p={4} mt={4} borderRadius="xl" boxShadow="neuomorphicInset">
           <Text fontSize="sm" color="text.error">
@@ -175,12 +181,14 @@ const SharedItemList: React.FC<SharedItemListProps> = ({
             <SortableSharedListItem
               key={item.id}
               item={item}
-              allowQuantityChange
+              allowQuantityChange={allowQuantityChange}
               allowCheckboxChange={allowCheckboxChange}
               onCheckItem={onCheckItem}
               onUncheckItem={onUncheckItem}
               onDeleteItem={onDeleteItem}
               onUpdateQuantity={onUpdateQuantity}
+              allowDelete={allowDeleteItems}
+              allowDrag={allowReordering}
             />
           ))}
         </SortableContext>

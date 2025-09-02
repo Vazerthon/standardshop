@@ -26,7 +26,7 @@ const useAuthStore = create<AuthState>((set, get) => ({
     const email = get().email;
 
     if (!email) {
-      set({ message: 'Please enter your email address.' });
+      set({ message: "Please enter your email address." });
       return;
     }
 
@@ -35,10 +35,10 @@ const useAuthStore = create<AuthState>((set, get) => ({
     try {
       await db.auth.sendMagicCode({ email });
       set({ waitingForCode: true });
-      set({ message: 'Check your email for the magic code!' });
+      set({ message: "Check your email for the magic code!" });
     } catch (error) {
       set({ waitingForCode: false });
-      set({ message: 'Error signing in. Please try again.' });
+      set({ message: "Error signing in. Please try again." });
     } finally {
       set({ loading: false });
     }
@@ -48,7 +48,7 @@ const useAuthStore = create<AuthState>((set, get) => ({
     const email = get().email;
 
     if (!email) {
-      set({ message: 'Please enter your email address.' });
+      set({ message: "Please enter your email address." });
       return;
     }
 
@@ -57,9 +57,9 @@ const useAuthStore = create<AuthState>((set, get) => ({
 
     try {
       await db.auth.signInWithMagicCode({ code, email });
-      set({ message: 'Magic code verified successfully!' });
+      set({ message: "Magic code verified successfully!" });
     } catch (error) {
-      set({ message: 'Error verifying magic code. Please try again.' });
+      set({ message: "Error verifying magic code. Please try again." });
     } finally {
       set({ loading: false });
     }
@@ -73,13 +73,15 @@ const useAuthStore = create<AuthState>((set, get) => ({
   },
 }));
 
-// Custom hooks for specific functionality
 export const useAuthLoading = () => useAuthStore((state) => state.loading);
 export const useAuthMessage = () => useAuthStore((state) => state.message);
-export const useAuthGetMagicCode = () => useAuthStore((state) => state.getMagicCode);
+export const useAuthGetMagicCode = () =>
+  useAuthStore((state) => state.getMagicCode);
 export const useAuthSignOut = () => useAuthStore((state) => state.signOut);
-export const useAuthWaitingForCode = () => useAuthStore((state) => state.waitingForCode);
-export const useAuthVerifyMagicCode = () => useAuthStore((state) => state.verifyMagicCode);
+export const useAuthWaitingForCode = () =>
+  useAuthStore((state) => state.waitingForCode);
+export const useAuthVerifyMagicCode = () =>
+  useAuthStore((state) => state.verifyMagicCode);
 export const useAuthEmail = () => useAuthStore((state) => state.email);
 export const useSetAuthEmail = () => useAuthStore((state) => state.setEmail);
 export const useCurrentUser = () => db.useUser();

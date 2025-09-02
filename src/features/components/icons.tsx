@@ -1,4 +1,13 @@
-import { LuTrash, LuMinus, LuPlus, LuGripVertical, LuX , LuMenu, LuPencil } from "react-icons/lu";
+import {
+  LuTrash,
+  LuMinus,
+  LuPlus,
+  LuGripVertical,
+  LuX,
+  LuMenu,
+  LuPencil,
+  LuLock,
+} from "react-icons/lu";
 
 export default {
   Trash: LuTrash,
@@ -8,4 +17,5 @@ export default {
   Menu: LuMenu,
   Drag: LuGripVertical,
   Close: LuX,
-}
+  Lock: LuLock,
+};

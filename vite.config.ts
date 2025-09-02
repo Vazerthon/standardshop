@@ -12,7 +12,7 @@ export default defineConfig({
       includeAssets: ["favicon.ico", "apple-touch-icon.png"],
       manifest: {
         name: "Standard Shop",
-        short_name: "🛒",
+        short_name: "Shop",
         description: "A structured shopping list application",
         theme_color: "#000",
         icons: [

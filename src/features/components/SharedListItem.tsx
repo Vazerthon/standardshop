@@ -22,6 +22,8 @@ export interface SharedListItemProps extends BoxProps {
   onCheckItem?: (itemId: string) => void;
   onUncheckItem?: (itemId: string) => void;
   onDeleteItem?: (itemId: string) => void;
+  allowDelete?: boolean;
+  allowDrag?: boolean;
 }
 
 const SharedListItem: React.FC<SharedListItemProps> = ({
@@ -33,6 +35,8 @@ const SharedListItem: React.FC<SharedListItemProps> = ({
   onCheckItem,
   onUncheckItem,
   onDeleteItem,
+  allowDelete,
+  allowDrag,
   ...boxProps
 }) => {
   const handleCheckboxChange = () => {
@@ -66,7 +70,7 @@ const SharedListItem: React.FC<SharedListItemProps> = ({
       {...boxProps}
     >
       <Flex align="center" gap={3}>
-        {dragHandleProps && (
+        {dragHandleProps && allowDrag && (
           <Text
             color="text.secondary"
             touchAction="none"
@@ -88,20 +92,26 @@ const SharedListItem: React.FC<SharedListItemProps> = ({
         <Text lineClamp={1} fontSize="md" color="text.primary" flex={1}>
           {item.name}
         </Text>
-        {allowQuantityChange && (
+        {allowQuantityChange ? (
           <NumberStepper
             value={item.quantity}
             onChange={(value: number) => onUpdateQuantity?.(item.id, value)}
           />
+        ) : (
+          <Text fontSize="sm" color="text.secondary">
+            x{item.quantity}
+          </Text>
         )}
-        <NeuomorphicButton
-          onClick={handleDeleteItem}
-          aria-label={`Delete ${item.name}`}
-          borderRadius="full"
-          width={2}
-        >
-          <Icons.Trash />
-        </NeuomorphicButton>
+        {allowDelete && (
+          <NeuomorphicButton
+            onClick={handleDeleteItem}
+            aria-label={`Delete ${item.name}`}
+            borderRadius="full"
+            width={2}
+          >
+            <Icons.Trash />
+          </NeuomorphicButton>
+        )}
       </Flex>
     </Box>
   );

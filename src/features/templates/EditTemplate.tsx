@@ -1,7 +1,13 @@
 import { Box, Container, Flex, Text } from "@chakra-ui/react";
 import SharedItemList from "../components/SharedItemList";
 import { useParams } from "react-router-dom";
-import { useCreateTemplateItem, useDeleteTemplateItem, useTemplate, useUpdateTemplateItemQuantity, useUpdateTemplateListOrder } from "./useTemplates";
+import {
+  useCreateTemplateItem,
+  useDeleteTemplateItem,
+  useTemplate,
+  useUpdateTemplateItemQuantity,
+  useUpdateTemplateListOrder,
+} from "./useTemplates";
 
 const InvalidTemplate: React.FC = () => {
   return (
@@ -60,6 +66,9 @@ const EditTemplate: React.FC = () => {
         onDeleteItem={deleteTemplateItem}
         onAddItem={createTemplateItem}
         updateOrder={handleReorder}
+        allowQuantityChange
+        allowReordering
+        allowDeleteItems
       />
     </Container>
   );
