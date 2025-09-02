@@ -47,7 +47,7 @@ const LoginForm: React.FC = () => {
         <Stack gap={6}>
           {message && (
             <Box p={4} borderRadius="xl" boxShadow="neuomorphicInset">
-              <Text fontSize="sm">{message}</Text>
+              <Text fontSize="sm" color="text.primary">{message}</Text>
             </Box>
           )}
           <form onSubmit={handleSubmit} style={{ width: "100%" }}>

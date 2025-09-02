@@ -5,12 +5,16 @@ import { Flex } from '@chakra-ui/react';
 import NeuomorphicButton from './NeuomorphicButton';
 import Icons from './Icons';
 
-interface SharedAddListItemInputProps {
+interface CreateItemProps {
   onAddItem: (itemName: string, userId: string) => void;
+  inputFieldPlaceholder: string;
+  buttonAriaLabel: string;
 }
 
-const SharedAddListItemInput: React.FC<SharedAddListItemInputProps> = ({
+const CreateItem: React.FC<CreateItemProps> = ({
   onAddItem,
+  inputFieldPlaceholder,
+  buttonAriaLabel,
 }) => {
   const user = useCurrentUser();
   const [newItemName, setNewItemName] = useState('');
@@ -27,7 +31,7 @@ const SharedAddListItemInput: React.FC<SharedAddListItemInputProps> = ({
     <form onSubmit={handleSubmit}>
       <Flex>
         <NeuomorphicInput
-          placeholder="Add list item"
+          placeholder={inputFieldPlaceholder}
           mr={2}
           onChange={(e) => setNewItemName(e.target.value)}
           value={newItemName}
@@ -35,7 +39,7 @@ const SharedAddListItemInput: React.FC<SharedAddListItemInputProps> = ({
         <NeuomorphicButton
           type="submit"
           disabled={!newItemName.trim()}
-          aria-label="Add list item"
+          aria-label={buttonAriaLabel}
           borderRadius="full"
           w={2}
         >
@@ -46,4 +50,4 @@ const SharedAddListItemInput: React.FC<SharedAddListItemInputProps> = ({
   );
 };
 
-export default SharedAddListItemInput;
+export default CreateItem;

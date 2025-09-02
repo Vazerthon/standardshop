@@ -30,7 +30,8 @@ import {
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import SharedListItem, { SharedListItemProps } from "./SharedListItem";
-import SharedAddListItemInput from "./SharedAddListItemInput";
+import SharedAddListItemInput from "./CreateItem";
+import CreateItem from "./CreateItem";
 
 const SortableSharedListItem: React.FC<SharedListItemProps> = ({
   item,
@@ -153,7 +154,7 @@ const SharedItemList: React.FC<SharedItemListProps> = ({
     <Container p={2}>
       {error && (
         <Box p={4} mt={4} borderRadius="xl" boxShadow="neuomorphicInset">
-          <Text fontSize="sm" color="text.error">
+          <Text fontSize="sm" color="text.primary">
             {error.message}
           </Text>
         </Box>
@@ -169,7 +170,7 @@ const SharedItemList: React.FC<SharedItemListProps> = ({
         ]}
       >
         {uncheckedItems.length === 0 && (
-          <Text fontSize="md" color="text.secondary" textAlign="center" my={4}>
+          <Text fontSize="sm" color="text.secondary" textAlign="center" my={4}>
             No items to display. Add some items to get started!
           </Text>
         )}
@@ -193,7 +194,11 @@ const SharedItemList: React.FC<SharedItemListProps> = ({
           ))}
         </SortableContext>
       </DndContext>
-      <SharedAddListItemInput onAddItem={onAddItem} />
+      <CreateItem
+        onAddItem={onAddItem}
+        inputFieldPlaceholder="Add list item"
+        buttonAriaLabel="Add list item"
+      />
       {shouldShowCheckedItems && (
         <Accordion.Root collapsible>
           <Accordion.Item key="checked-items" value="checked-items">

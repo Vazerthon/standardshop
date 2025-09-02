@@ -31,7 +31,7 @@ const TemplateList: React.FC = () => {
           borderRadius="xl"
           boxShadow="neuomorphicInset"
         >
-          <Text fontSize="sm" color="text.error">
+          <Text fontSize="sm" color="text.primary">
             {error.message}
           </Text>
         </Box>
