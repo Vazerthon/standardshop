@@ -1,7 +1,6 @@
 import {
   Box,
   Flex,
-  Text,
   Center,
   Spinner,
 } from '@chakra-ui/react';
@@ -31,7 +30,6 @@ function App() {
           boxShadow="neuomorphicLarge"
         >
           <Spinner size="lg" color="accent.primary" />
-          <Text fontSize="lg" color="text.secondary">Loading...</Text>
         </Flex>
       </Center>
     );
