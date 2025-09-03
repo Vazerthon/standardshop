@@ -8,7 +8,7 @@ const _schema = i.schema({
       email: i.string().unique().indexed(),
     }),
     items: i.entity({
-      name: i.string(),
+      name: i.string().indexed(),
       createdAt: i.date(),
       nameAndUserId: i.string().unique().indexed(),
     }),

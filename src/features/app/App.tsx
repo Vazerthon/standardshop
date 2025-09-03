@@ -1,8 +1,5 @@
 import {
   Box,
-  Flex,
-  Center,
-  Spinner,
 } from '@chakra-ui/react';
 import { db } from "@/lib/db";
 import LoginForm from '../auth/LoginForm';
@@ -13,6 +10,7 @@ import UserEmail from './UserEmail';
 import Router, { BrowserRouter, Navigation } from './Router';
 import { MenuBar } from './MenuBar';
 import TemplateList from '../templates/TemplateList';
+import LoadingSpinner from '../components/LoadingSpinner';
 
 function App() {
   const loading = useAuthLoading();
@@ -20,19 +18,7 @@ function App() {
 
   if (loading) {
     return (
-      <Center height="100vh" bg="bg.primary">
-        <Flex
-          direction="column"
-          align="center"
-          gap={6}
-          p={8}
-          bg="surface.primary"
-          borderRadius="2xl"
-          boxShadow="neuomorphicLarge"
-        >
-          <Spinner size="lg" color="accent.primary" />
-        </Flex>
-      </Center>
+      <LoadingSpinner />
     );
   }
 

@@ -3,12 +3,12 @@ import {
   Container,
   Stack,
   Text,
-  Center,
-  Spinner,
 } from '@chakra-ui/react';
 import { useCreateTemplate, useTemplates } from './useTemplates';
 import ManageTemplateItem from './ManageTemplateItem';
 import CreateItem from '../components/CreateItem';
+import LoadingSpinner from '../components/LoadingSpinner';
+import ErrorBox from '../components/ErrorBox';
 
 const ManageTemplates: React.FC = () => {
   const { templates, loading, error } = useTemplates();
@@ -16,27 +16,14 @@ const ManageTemplates: React.FC = () => {
 
   if (loading) {
     return (
-      <Center minH="100vh">
-        <Stack direction="column" align="center">
-          <Spinner size="lg" color="accent.primary" />
-        </Stack>
-      </Center>
+      <LoadingSpinner />
     );
   }
 
   return (
     <Container p={2}>
         {error?.message && (
-          <Box 
-            p={4}
-            mt={4}
-            borderRadius="xl" 
-            boxShadow="neuomorphicInset"
-          >
-            <Text fontSize="sm" color="text.primary">
-              {error.message}
-            </Text>
-          </Box>
+          <ErrorBox error={error} />
         )}
         {templates?.length === 0 && (
           <Text mt={4} px={12} textAlign="center" fontSize="sm" color="text.secondary">

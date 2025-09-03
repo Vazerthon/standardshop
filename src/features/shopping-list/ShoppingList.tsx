@@ -28,11 +28,9 @@ const ShoppingList: React.FC = () => {
     setExtraContentRenderFunction(() => (
       <Flex color="text.secondary" gap={4}>
         <Icons.Edit />
-        <Switch.Root>
-          <Switch.HiddenInput
-            checked={locked}
-            onChange={() => setLocked(!locked)}
-          />
+        <Switch.Root checked={locked}
+            onCheckedChange={() => setLocked(!locked)}>
+          <Switch.HiddenInput />
           <Switch.Control boxShadow="neuomorphicLarge">
             <Switch.Thumb boxShadow="neuomorphicLarge" />
           </Switch.Control>
