@@ -7,7 +7,6 @@ import LoginForm from '../auth/LoginForm';
 import { useAuthLoading, useAuthSignOut } from '../auth/useAuthStore';
 import NeuomorphicButton from '../components/NeuomorphicButton';
 import { Drawer } from '../components/Drawer';
-import UserEmail from './UserEmail';
 import Router, { BrowserRouter, Navigation } from './Router';
 import { MenuBar } from './MenuBar';
 import TemplateList from '../templates/TemplateList';
