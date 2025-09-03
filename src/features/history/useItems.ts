@@ -21,7 +21,7 @@ const distanceSinceLastPurchase = (items: ShoppingListItem[]) => {
   return formatDistanceToNow(mostRecentPurchaseDate, { addSuffix: true });
 };
 
-const mapItemList = (data: any): Item[] => 
+const mapItemsWithHistory = (data: any): Item[] =>
   data?.items.map((item: any) => ({
     id: item.id,
     name: item?.name,
@@ -50,12 +50,30 @@ export const useItemHistory = () => {
     },
   });
 
-  const items = mapItemList(data).filter((item) => item.history.length > 0);
-
-  console.log("Mapped items:", items);
+  const items = mapItemsWithHistory(data).filter((item) => item.history.length > 0);
 
   return {
     items,
+    loading: isLoading,
+    error: error as Error | null,
+  };
+};
+
+export const useItemNames = () => {
+  const { isLoading, data, error } = db.useQuery({
+    items: {
+      $: {
+        order: { name: "asc" },
+      },
+    },
+  });
+
+  return {
+    items: data?.items.map((item: any) => ({
+      id: item.id,
+      label: item.name,
+      value: item.name,
+    })) || [],
     loading: isLoading,
     error: error as Error | null,
   };

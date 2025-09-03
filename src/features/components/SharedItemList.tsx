@@ -79,6 +79,7 @@ interface SharedItemListProps {
   allowReordering?: boolean;
   allowQuantityChange?: boolean;
   allowDeleteItems?: boolean;
+  autocompleteItems?: { id: string; label: string; value: string }[];
 }
 
 const SharedItemList: React.FC<SharedItemListProps> = ({
@@ -97,6 +98,7 @@ const SharedItemList: React.FC<SharedItemListProps> = ({
   allowReordering,
   allowQuantityChange,
   allowDeleteItems,
+  autocompleteItems,
 }) => {
   const sensors = useSensors(
     useSensor(TouchSensor, {
@@ -197,6 +199,7 @@ const SharedItemList: React.FC<SharedItemListProps> = ({
         onAddItem={onAddItem}
         inputFieldPlaceholder="Add list item"
         buttonAriaLabel="Add list item"
+        autocompleteItems={autocompleteItems}
       />
       {shouldShowCheckedItems && (
         <Accordion.Root collapsible>

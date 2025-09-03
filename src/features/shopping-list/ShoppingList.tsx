@@ -12,6 +12,7 @@ import {
   useUpdateShoppingListItemQuantity,
 } from "./useShoppingList";
 import Icons from "../components/Icons";
+import { useItemNames } from "../history/useItems";
 
 const ShoppingList: React.FC = () => {
   const { shoppingList, loading, error } = useShoppingList();
@@ -22,6 +23,7 @@ const ShoppingList: React.FC = () => {
   const uncheckItem = useUncheckShoppingListItem();
   const updateItemQuantity = useUpdateShoppingListItemQuantity();
   const setExtraContentRenderFunction = useSetExtraContentRenderFunction();
+  const { items: autocompleteItems } = useItemNames();
   const [locked, setLocked] = useState(false);
 
   useEffect(() => {
@@ -60,6 +62,7 @@ const ShoppingList: React.FC = () => {
       allowQuantityChange={!locked}
       allowReordering={!locked}
       allowDeleteItems={!locked}
+      autocompleteItems={autocompleteItems}
     />
   );
 };
