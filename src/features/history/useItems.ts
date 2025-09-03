@@ -33,7 +33,7 @@ const mapItemList = (data: any): Item[] =>
     })) || [],
   })) || [];
 
-export const useItems = () => {
+export const useItemHistory = () => {
   const { isLoading, error, data } = db.useQuery({
     items: {
       $: {

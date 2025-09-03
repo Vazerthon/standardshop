@@ -1,10 +1,10 @@
 import { Accordion, Container, Heading, List, Text } from "@chakra-ui/react";
-import { useItems } from "./useItems";
+import { useItemHistory } from "./useItems";
 import LoadingSpinner from "../components/LoadingSpinner";
 import ErrorBox from "../components/ErrorBox";
 
 const History: React.FC = () => {
-  const { items, loading, error } = useItems();
+  const { items, loading, error } = useItemHistory();
 
   if (loading) {
     return (
