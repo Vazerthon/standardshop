@@ -26,6 +26,7 @@ const ItemsAutocomplete: React.FC<ItemsAutocompleteProps> = ({
   const { collection, filter } = useListCollection({
     initialItems: autocompleteItems,
     filter: contains,
+    limit: 5,
   })
 
   const baseStyles = {
