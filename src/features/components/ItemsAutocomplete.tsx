@@ -53,6 +53,8 @@ const ItemsAutocomplete: React.FC<ItemsAutocompleteProps> = ({
       collection={collection}
       onInputValueChange={handleInputChange}
       inputValue={value}
+      inputBehavior="autocomplete"
+      allowCustomValue
       mr={2}
     >
       <Combobox.Control>
