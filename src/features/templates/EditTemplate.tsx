@@ -37,7 +37,6 @@ const EditTemplate: React.FC = () => {
   const updateTemplateListOrder = useUpdateTemplateListOrder();
 
   const handleReorder = (itemId: string, newSortOrder: number) => {
-    console.log("Reordering item:", itemId, "to new sort order:", newSortOrder);
     updateTemplateListOrder(itemId, newSortOrder);
   };
 
