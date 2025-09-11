@@ -10,6 +10,7 @@ import {
   useCheckShoppingListItem,
   useUncheckShoppingListItem,
   useUpdateShoppingListItemQuantity,
+  useDeleteShoppingListItems,
 } from "./useShoppingList";
 import Icons from "../components/Icons";
 import { useItemNames } from "../history/useItems";
@@ -19,12 +20,19 @@ const ShoppingList: React.FC = () => {
   const createItem = useCreateShoppingListItem();
   const updateOrder = useUpdateShoppingListOrder();
   const deleteItem = useDeleteShoppingListItem();
+  const deleteCheckedItems = useDeleteShoppingListItems();
   const checkItem = useCheckShoppingListItem();
   const uncheckItem = useUncheckShoppingListItem();
   const updateItemQuantity = useUpdateShoppingListItemQuantity();
   const setExtraContentRenderFunction = useSetExtraContentRenderFunction();
   const { items: autocompleteItems } = useItemNames();
   const [locked, setLocked] = useState(false);
+
+  const onDeleteCheckedItems = !locked ? () => {
+    const { checkedItems } = shoppingList;
+    const checkedItemIds = checkedItems.map(item => item.id);
+    deleteCheckedItems(checkedItemIds);
+  } : undefined;
 
   useEffect(() => {
     setExtraContentRenderFunction(() => (
@@ -63,6 +71,7 @@ const ShoppingList: React.FC = () => {
       allowReordering={!locked}
       allowDeleteItems={!locked}
       autocompleteItems={autocompleteItems}
+      onDeleteCheckedItems={onDeleteCheckedItems}
     />
   );
 };

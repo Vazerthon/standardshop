@@ -5,6 +5,7 @@ import {
   Center,
   Spinner,
   Accordion,
+  Flex,
 } from "@chakra-ui/react";
 import {
   DndContext,
@@ -31,6 +32,8 @@ import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import SharedListItem, { SharedListItemProps } from "./SharedListItem";
 import CreateItem from "./CreateItem";
+import NeuomorphicButton from "./NeuomorphicButton";
+import Icons from "./Icons";
 
 const SortableSharedListItem: React.FC<SharedListItemProps> = ({
   item,
@@ -80,6 +83,7 @@ interface SharedItemListProps {
   allowQuantityChange?: boolean;
   allowDeleteItems?: boolean;
   autocompleteItems?: { id: string; label: string; value: string }[];
+  onDeleteCheckedItems?: () => void;
 }
 
 const SharedItemList: React.FC<SharedItemListProps> = ({
@@ -99,6 +103,7 @@ const SharedItemList: React.FC<SharedItemListProps> = ({
   allowQuantityChange,
   allowDeleteItems,
   autocompleteItems,
+  onDeleteCheckedItems,
 }) => {
   const sensors = useSensors(
     useSensor(TouchSensor, {
@@ -202,19 +207,32 @@ const SharedItemList: React.FC<SharedItemListProps> = ({
         autocompleteItems={autocompleteItems}
       />
       {shouldShowCheckedItems && (
-        <Accordion.Root collapsible>
+        <Accordion.Root collapsible mt={4}>
           <Accordion.Item key="checked-items" value="checked-items">
-            <Accordion.ItemTrigger>
+            <Accordion.ItemTrigger display="flex">
+              <Accordion.ItemIndicator />
               <Text
                 fontSize="md"
                 fontWeight="bold"
-                mt={4}
                 color="text.secondary"
               >
                 Checked Items ({checkedItems.length})
               </Text>
             </Accordion.ItemTrigger>
             <Accordion.ItemContent overflow="unset">
+              {onDeleteCheckedItems && (
+                <Flex justify="flex-end">
+                  <NeuomorphicButton
+                    variant="circular-raised"
+                    aria-label="Delete all checked items"
+                    mt="-10"
+                  mb="4"
+                  onClick={onDeleteCheckedItems}
+                >
+                  <Icons.Trash />
+                </NeuomorphicButton>
+              </Flex>
+              )}
               {checkedItems.map((item) => (
                 <SharedListItem
                   key={item.id}

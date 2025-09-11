@@ -131,3 +131,11 @@ export const useInsertAllItemsFromTemplate = () => (owner: string, items: { item
         .link({ owner });
     })
   ]);
+
+export const useDeleteShoppingListItems = () => (itemIds: string[]) => {
+  db.transact([
+    ...itemIds.map((itemId) =>
+      db.tx.shopListItems[lookup("id", itemId)].update({ deletedAt: new Date() })
+    ),
+  ]);
+};
