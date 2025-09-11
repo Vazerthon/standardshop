@@ -1,5 +1,4 @@
 import {
-  Box,
   Drawer as ChakraDrawer,
 } from '@chakra-ui/react';
 import NeuomorphicButton from './NeuomorphicButton';
