@@ -54,7 +54,7 @@ const EditTemplate: React.FC = () => {
 
   return (
     <Container p={2}>
-      <Text mb={4} color="text.primary">
+      <Text mb={4} mt={2} color="text.primary" fontWeight={"bold"}>
         {template?.name} template
       </Text>
       <SharedItemList

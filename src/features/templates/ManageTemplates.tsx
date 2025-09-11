@@ -30,7 +30,7 @@ const ManageTemplates: React.FC = () => {
             No templates created yet. Templates can be used to quickly add groups of items to your shopping list. Create one for your weekly shop or your favourite recipes!
           </Text>
         )}
-        <Stack gap={2}>
+        <Stack gap={2} mt={4}>
           {templates?.map((template) => (
             <ManageTemplateItem key={template.id} template={template} />
           ))}

@@ -157,7 +157,7 @@ const SharedItemList: React.FC<SharedItemListProps> = ({
     showCheckedItems && checkedItems && checkedItems.length > 0;
 
   return (
-    <Container p={2}>
+    <Container p={2} mt={2}>
       {error && (
         <Box p={4} mt={4} borderRadius="xl" boxShadow="neuomorphicInset">
           <Text fontSize="sm" color="text.primary">
