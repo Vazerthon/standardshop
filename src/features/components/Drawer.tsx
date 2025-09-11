@@ -16,8 +16,7 @@ export const Drawer: React.FC<DrawerProps> = ({ children }) => {
         <ChakraDrawer.Trigger asChild>
           <NeuomorphicButton
             aria-label="Open drawer"
-            borderRadius="full"
-            width={10}
+            variant="circular-raised"
           >
             <Icons.Menu />
           </NeuomorphicButton>
@@ -30,10 +29,9 @@ export const Drawer: React.FC<DrawerProps> = ({ children }) => {
               <NeuomorphicButton
                 aria-label="Close drawer"
                 borderRadius="full"
-                variant="raised"
-                width={2}
+                variant="circular-raised"
               >
-                <Box as="span" fontSize="lg"><Icons.Close /></Box>
+                <Icons.Close />
               </NeuomorphicButton>
             </ChakraDrawer.CloseTrigger>
             <ChakraDrawer.Header borderBottomWidth="1px" borderColor="bg.primary">

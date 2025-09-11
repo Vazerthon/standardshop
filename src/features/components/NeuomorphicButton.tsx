@@ -3,13 +3,13 @@ import { Button, ButtonProps } from '@chakra-ui/react';
 import { transitions } from '@/theme';
 
 interface NeuomorphicButtonProps extends Omit<ButtonProps, 'variant'> {
-  variant?: 'raised' | 'inset';
+  variant?: 'raised' | 'inset' | 'circular-raised';
 }
 
-const NeuomorphicButton: React.FC<NeuomorphicButtonProps> = ({ 
+const NeuomorphicButton: React.FC<NeuomorphicButtonProps> = ({
   variant = 'raised',
   children,
-  ...props 
+  ...props
 }) => {
   const baseStyles = {
     bg: 'surface.primary',
@@ -38,6 +38,19 @@ const NeuomorphicButton: React.FC<NeuomorphicButtonProps> = ({
         boxShadow: 'neuomorphicInsetHover',
       },
     },
+    'circular-raised': {
+      borderRadius: 'full',
+      aspectRatio: '1/1',
+      boxShadow: 'neuomorphic',
+      _hover: {
+        boxShadow: 'neuomorphicHover',
+        transform: 'translateY(-2px)',
+      },
+      _active: {
+        boxShadow: 'neuomorphicInset',
+        transform: 'translateY(0px)',
+      },
+    }
   };
 
   return (

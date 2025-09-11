@@ -51,8 +51,7 @@ const TemplateListItem: React.FC<TemplateListItemProps> = ({ template }) => {
           <NeuomorphicButton
             onClick={() => insertItemsFromTemplate(owner.id, items, sortOrder)}
             aria-label="Insert template into shopping list"
-            borderRadius="full"
-            width={2}
+            variant='circular-raised'
           >
             <Icons.Insert />
           </NeuomorphicButton>

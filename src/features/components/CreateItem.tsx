@@ -55,8 +55,7 @@ const CreateItem: React.FC<CreateItemProps> = ({
           type="submit"
           disabled={!newItemName.trim()}
           aria-label={buttonAriaLabel}
-          borderRadius="full"
-          w={2}
+          variant="circular-raised"
         >
           <Icons.Plus />
         </NeuomorphicButton>

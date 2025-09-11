@@ -16,8 +16,7 @@ const NumberStepper: React.FC<{
         <NumberInput.DecrementTrigger asChild disabled={value === 1}>
           <NeuomorphicButton
             onClick={handleDecrement}
-            borderRadius="full"
-            width={2}
+            variant="circular-raised"
           >
             <Icons.Minus />
           </NeuomorphicButton>
@@ -33,8 +32,7 @@ const NumberStepper: React.FC<{
         <NumberInput.IncrementTrigger asChild>
           <NeuomorphicButton
             onClick={handleIncrement}
-            borderRadius="full"
-            width={2}
+            variant="circular-raised"
           >
             <Icons.Plus />
           </NeuomorphicButton>

@@ -106,8 +106,7 @@ const SharedListItem: React.FC<SharedListItemProps> = ({
           <NeuomorphicButton
             onClick={handleDeleteItem}
             aria-label={`Delete ${item.name}`}
-            borderRadius="full"
-            width={2}
+            variant="circular-raised"
           >
             <Icons.Trash />
           </NeuomorphicButton>

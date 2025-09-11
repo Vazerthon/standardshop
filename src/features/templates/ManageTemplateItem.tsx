@@ -43,8 +43,7 @@ const ManageTemplateItem: React.FC<ManageTemplateItemProps> = ({ template }) => 
             // @ts-expect-error
             href={routes.makeTemplateRoute(template.id)}
             aria-label="Edit template"
-            borderRadius="full"
-            width={2}
+            variant="circular-raised"
             mr={2}
           >
             <Icons.Edit />
@@ -52,8 +51,7 @@ const ManageTemplateItem: React.FC<ManageTemplateItemProps> = ({ template }) => 
           <NeuomorphicButton
             onClick={() => deleteTemplate(template.id)}
             aria-label="Delete template"
-            borderRadius="full"
-            width={2}
+            variant="circular-raised"
           >
             <Icons.Trash />
           </NeuomorphicButton>
