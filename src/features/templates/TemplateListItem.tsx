@@ -10,6 +10,8 @@ import NeuomorphicButton from '../components/NeuomorphicButton';
 import Icons from '@/features/components/Icons';
 import { useInsertAllItemsFromTemplate, useNextSortOrder } from '../shopping-list/useShoppingList';
 import { useCurrentUser } from '../auth/useAuthStore';
+import { Link } from 'react-router-dom';
+import { routes } from '../app/Router';
 
 interface TemplateListItemProps {
   template: Template;
@@ -27,7 +29,7 @@ const TemplateListItem: React.FC<TemplateListItemProps> = ({ template }) => {
   const sortOrder = useNextSortOrder();
 
   return (
-
+    <Link to={routes.makeTemplateRoute(template.id)} style={{ textDecoration: 'none' }} tabIndex={0}>
     <Box
       width="100%"
       p={2}
@@ -49,7 +51,10 @@ const TemplateListItem: React.FC<TemplateListItemProps> = ({ template }) => {
           </Text>
 
           <NeuomorphicButton
-            onClick={() => insertItemsFromTemplate(owner.id, items, sortOrder)}
+            onClick={(e) => {
+              e.preventDefault();
+              insertItemsFromTemplate(owner.id, items, sortOrder);
+            }}
             aria-label="Insert template into shopping list"
             variant='circular-raised'
           >
@@ -58,6 +63,7 @@ const TemplateListItem: React.FC<TemplateListItemProps> = ({ template }) => {
         </>
       </Flex>
     </Box>
+    </Link>
   );
 };
 
