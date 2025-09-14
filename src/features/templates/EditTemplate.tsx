@@ -8,6 +8,7 @@ import {
   useUpdateTemplateItemQuantity,
   useUpdateTemplateListOrder,
 } from "./useTemplates";
+import { useItemNames } from "../history/useItems";
 
 const InvalidTemplate: React.FC = () => {
   return (
@@ -35,7 +36,7 @@ const EditTemplate: React.FC = () => {
   const updateTemplateItemQuantity = useUpdateTemplateItemQuantity();
   const deleteTemplateItem = useDeleteTemplateItem();
   const updateTemplateListOrder = useUpdateTemplateListOrder();
-
+  const { items: autocompleteItems } = useItemNames();
   const handleReorder = (itemId: string, newSortOrder: number) => {
     updateTemplateListOrder(itemId, newSortOrder);
   };
@@ -65,6 +66,7 @@ const EditTemplate: React.FC = () => {
         onDeleteItem={deleteTemplateItem}
         onAddItem={createTemplateItem}
         updateOrder={handleReorder}
+        autocompleteItems={autocompleteItems}
         allowQuantityChange
         allowReordering
         allowDeleteItems
