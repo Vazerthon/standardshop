@@ -12,7 +12,7 @@ const NumberStepper: React.FC<{
 
   return (
     <NumberInput.Root unstyled spinOnPress={false} color="text.primary">
-      <HStack gap="2">
+      <HStack gap="1.5">
         <NumberInput.DecrementTrigger asChild disabled={value === 1}>
           <NeuomorphicButton
             onClick={handleDecrement}
@@ -23,7 +23,7 @@ const NumberStepper: React.FC<{
         </NumberInput.DecrementTrigger>
         <NumberInput.ValueText
           textAlign="center"
-          fontSize="md"
+          fontSize="sm"
           minW={5}
           maxW={5}
         >
