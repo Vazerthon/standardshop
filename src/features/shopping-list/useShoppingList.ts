@@ -58,21 +58,16 @@ export const useShoppingList = () => {
   };
 };
 
-export const useNextSortOrder = () => {
-  const {
-    shoppingList: { checkedItems },
-  } = useShoppingList();
-  const maxSortOrder = Math.max(
-    ...checkedItems.map((item) => item.sortOrder),
-    0
-  );
-  return maxSortOrder + 1;
-};
-
 export const useCreateShoppingListItem = () => {
-  const nextSortOrder = useNextSortOrder();
+  const {
+    shoppingList: { checkedItems, uncheckedItems },
+  } = useShoppingList();
 
   return (name: string, owner: string) => {
+    const allItems = [...checkedItems, ...uncheckedItems];
+    const nextSortOrder =
+      Math.max(...allItems.map((item) => item.sortOrder), 0) + 1;
+
     const shopListItemId = id();
 
     db.transact([
@@ -109,33 +104,43 @@ export const useUncheckShoppingListItem = () =>
 export const useDeleteShoppingListItem = () =>
   updateShopListItemProperty({ deletedAt: new Date() });
 
-export const useUpdateShoppingListOrder = () => (itemId: string, newSortOrder: number) => {
-  updateShopListItemProperty({ sortOrder: newSortOrder })(itemId);
-};
+export const useUpdateShoppingListOrder =
+  () => (itemId: string, newSortOrder: number) => {
+    updateShopListItemProperty({ sortOrder: newSortOrder })(itemId);
+  };
 
-export const useUpdateShoppingListItemQuantity = () => (itemId: string, quantity: number) => {
-  updateShopListItemProperty({ quantity })(itemId);
-};
+export const useUpdateShoppingListItemQuantity =
+  () => (itemId: string, quantity: number) => {
+    updateShopListItemProperty({ quantity })(itemId);
+  };
 
-export const useInsertAllItemsFromTemplate = () => (owner: string, items: { itemId: string; quantity: number }[], startingSortOrder: number) =>
-  db.transact([
-    ...items.map(({ itemId, quantity }, i) => {
-      const shopListItemId = id();
-      return db.tx.shopListItems[shopListItemId]
-        .update({
-          sortOrder: startingSortOrder + i,
-          quantity,
-          createdAt: new Date(),
-        })
-        .link({ item: itemId })
-        .link({ owner });
-    })
-  ]);
+export const useInsertAllItemsFromTemplate =
+  () =>
+  (
+    owner: string,
+    items: { itemId: string; quantity: number }[],
+    startingSortOrder: number
+  ) =>
+    db.transact([
+      ...items.map(({ itemId, quantity }, i) => {
+        const shopListItemId = id();
+        return db.tx.shopListItems[shopListItemId]
+          .update({
+            sortOrder: startingSortOrder + i,
+            quantity,
+            createdAt: new Date(),
+          })
+          .link({ item: itemId })
+          .link({ owner });
+      }),
+    ]);
 
 export const useDeleteShoppingListItems = () => (itemIds: string[]) => {
   db.transact([
     ...itemIds.map((itemId) =>
-      db.tx.shopListItems[lookup("id", itemId)].update({ deletedAt: new Date() })
+      db.tx.shopListItems[lookup("id", itemId)].update({
+        deletedAt: new Date(),
+      })
     ),
   ]);
 };
