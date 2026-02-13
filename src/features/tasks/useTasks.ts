@@ -1,4 +1,4 @@
-import { db } from "@/lib/db";
+import { db, id } from "@/lib/db";
 import { formatDistanceToNow, max } from "date-fns";
 
 interface TaskCompletion {
@@ -13,6 +13,7 @@ interface Task {
   description?: string;
   completions: TaskCompletion[];
   daysSinceLastCompletion?: number;
+  daysUntilNextDue?: number;
   distanceSinceLastCompletionLabel?: string;
 }
 
@@ -31,16 +32,21 @@ const distanceSinceLastCompletion = (
   };
 };
 
-const mapTasksWithHistory = (data: any): Task[] =>
+const mapTasksWithCompletions = (data: any): Task[] =>
   data?.tasks.map((item: any): Task => {
     const { label, days } =
       distanceSinceLastCompletion(item?.completions) || {};
+
     return {
       id: item.id,
       title: item?.title,
       frequency: item?.frequency,
       description: item?.description,
       daysSinceLastCompletion: days,
+      daysUntilNextDue:
+        item?.frequency && days !== undefined
+          ? item.frequency - days
+          : undefined,
       distanceSinceLastCompletionLabel: label,
       completions:
         item?.completions?.map((historyItem: any) => ({
@@ -55,10 +61,10 @@ export const useTasks = () => {
   const { isLoading, error, data } = db.useQuery({
     tasks: {
       $: {
-        order: { title: "asc" },
         where: {
           deletedAt: { $isNull: true },
         },
+        order: { title: "asc" },
       },
       completions: {
         $: {
@@ -71,13 +77,26 @@ export const useTasks = () => {
     },
   });
 
-  const tasks = mapTasksWithHistory(data).filter(
-    (task) => task.history.length > 0,
-  );
-
   return {
-    tasks,
+    tasks: mapTasksWithCompletions(data),
     loading: isLoading,
     error: error as Error | null,
+  };
+};
+
+export const useUpsertTask = () => {
+  return (
+    title: string,
+    description: string,
+    frequency: number,
+    owner: string,
+  ) => {
+    const taskId = id();
+
+    db.transact([
+      db.tx.tasks[taskId]
+        .update({ title, description, frequency })
+        .link({ owner }),
+    ]);
   };
 };
