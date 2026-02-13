@@ -4,9 +4,11 @@ import { i } from "@instantdb/react";
 
 const _schema = i.schema({
   entities: {
+    // --------------- general entities ---------------
     $users: i.entity({
       email: i.string().unique().indexed(),
     }),
+    // --------------- shop list entities -------------
     items: i.entity({
       name: i.string().indexed(),
       createdAt: i.date(),
@@ -29,6 +31,18 @@ const _schema = i.schema({
       createdAt: i.date(),
       deletedAt: i.date().optional().indexed(),
       sortOrder: i.number().indexed().optional(),
+    }),
+    // --------------- task entities ------------------
+    tasks: i.entity({
+      title: i.string().indexed(),
+      frequency: i.number(),
+      description: i.string().optional(),
+      deletedAt: i.date().optional().indexed(),
+    }),
+    taskCompletions: i.entity({
+      completedAt: i.date(),
+      note: i.string().optional(),
+      deletedAt: i.date().optional().indexed(),
     }),
   },
   links: {
@@ -62,6 +76,18 @@ const _schema = i.schema({
     templateItemsOwner: {
       forward: { on: "templateItems", has: "one", label: "owner" },
       reverse: { on: "$users", has: "many", label: "templateItems" },
+    },
+    tasksTaskCompletions: {
+      forward: { on: "tasks", has: "many", label: "completions" },
+      reverse: { on: "taskCompletions", has: "one", label: "task" },
+    },
+    tasksOwner: {
+      forward: { on: "tasks", has: "one", label: "owner" },
+      reverse: { on: "$users", has: "many", label: "tasks" },
+    },
+    taskCompletionsOwner: {
+      forward: { on: "taskCompletions", has: "one", label: "owner" },
+      reverse: { on: "$users", has: "many", label: "taskCompletions" },
     },
   },
   rooms: {},

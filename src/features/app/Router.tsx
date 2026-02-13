@@ -5,16 +5,18 @@ import ShoppingList from "@/features/shopping-list/ShoppingList";
 import ManageTemplates from "@/features/templates/ManageTemplates";
 import EditTemplate from "@/features/templates/EditTemplate";
 import History from "@/features/history/History";
+import Tasks from "@/features/tasks/Tasks";
 
-const appBaseUrl = '/standardshop'
+const appBaseUrl = "/standardshop";
 
 export const routes = {
   shoppingList: `${appBaseUrl}/`,
   templates: `${appBaseUrl}/templates`,
   template: `${appBaseUrl}/template/:templateId`,
   history: `${appBaseUrl}/history`,
+  tasks: `${appBaseUrl}/tasks`,
   makeTemplateRoute: (id: string) => `${appBaseUrl}/template/${id}`,
-}
+};
 
 const Router: React.FC = () => {
   return (
@@ -23,9 +25,10 @@ const Router: React.FC = () => {
       <Route path={routes.templates} element={<ManageTemplates />} />
       <Route path={routes.template} element={<EditTemplate />} />
       <Route path={routes.history} element={<History />} />
+      <Route path={routes.tasks} element={<Tasks />} />
     </Routes>
   );
-}
+};
 
 const NavItem: React.FC<{ to: string; label: string }> = ({ to, label }) => (
   <List.Item>
@@ -44,6 +47,7 @@ const Navigation: React.FC = () => {
         <NavItem to={routes.shoppingList} label="Shopping List" />
         <NavItem to={routes.templates} label="Manage templates" />
         <NavItem to={routes.history} label="History" />
+        <NavItem to={routes.tasks} label="Tasks" />
       </List.Root>
     </Box>
   );

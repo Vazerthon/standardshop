@@ -5,28 +5,27 @@ import type { InstantRules } from "@instantdb/react";
 // docs https://www.instantdb.com/docs/permissions
 
 const standardRules = {
-    allow: {
-      view: "isOwner",
-      create: "isOwner",
-      update: "isOwner",
-      delete: "false",
-    },
-    bind: [
-      "isOwner", "auth.id in data.ref('owner.id')",
-    ]
-  }
+  allow: {
+    view: "isOwner",
+    create: "isOwner",
+    update: "isOwner",
+    delete: "false",
+  },
+  bind: ["isOwner", "auth.id in data.ref('owner.id')"],
+};
 
 const rules = {
   items: standardRules,
   shopListItems: standardRules,
   templates: standardRules,
   templateItems: standardRules,
+  tasks: standardRules,
+  taskCompletions: standardRules,
   attrs: {
     allow: {
-      $default: 'false',
+      $default: "false",
     },
   },
 } satisfies InstantRules;
 
 export default rules;
-
