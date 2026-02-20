@@ -6,7 +6,7 @@ interface TaskCompletion {
   completedAt: Date;
   note?: string;
 }
-interface Task {
+export interface Task {
   id: string;
   title: string;
   frequency: number;
@@ -97,6 +97,19 @@ export const useUpsertTask = () => {
       db.tx.tasks[taskId]
         .update({ title, description, frequency })
         .link({ owner }),
+    ]);
+  };
+};
+
+export const useMarkTaskAsCompleted = () => {
+  return (taskId: string, owner: string) => {
+    db.transact([
+      db.tx.taskCompletions[id()]
+        .update({
+          completedAt: new Date(),
+        })
+        .link({ owner })
+        .link({ task: taskId }),
     ]);
   };
 };

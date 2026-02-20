@@ -1,7 +1,8 @@
-import { Container, Heading, List, Text } from "@chakra-ui/react";
+import { Container, List } from "@chakra-ui/react";
 import { useTasks } from "./useTasks";
 import LoadingSpinner from "../components/LoadingSpinner";
 import ErrorBox from "../components/ErrorBox";
+import TaskCard from "./TaskCard";
 
 const Tasks: React.FC = () => {
   const { tasks, loading, error } = useTasks();
@@ -11,32 +12,16 @@ const Tasks: React.FC = () => {
   }
 
   return (
-    <Container p={2}>
+    <Container p={2} mt={2}>
       {error?.message && <ErrorBox error={error} />}
-      <Heading my={2} color="text.primary">
-        Tasks
-      </Heading>
 
-      {tasks?.map(
-        ({
-          id,
-          title,
-          description,
-          daysSinceLastCompletion,
-          distanceSinceLastCompletionLabel,
-          // history,
-        }) => (
-          <List.Root key={id} pl={4} mb={2}>
-            <List.Item>
-              <Text fontSize="sm">
-                <strong>{title}</strong> - {description} - Last completed:{" "}
-                {distanceSinceLastCompletionLabel} ({daysSinceLastCompletion}{" "}
-                days ago)
-              </Text>
-            </List.Item>
-          </List.Root>
-        ),
-      )}
+      {tasks?.map((task) => (
+        <List.Root key={task.id} mb={2} variant="plain">
+          <List.Item>
+            <TaskCard task={task} />
+          </List.Item>
+        </List.Root>
+      ))}
     </Container>
   );
 };
