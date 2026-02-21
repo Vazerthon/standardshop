@@ -89,7 +89,7 @@ const SharedListItem: React.FC<SharedListItemProps> = ({
             onCheckedChange={handleCheckboxChange}
           />
         )}
-        <Text lineClamp={1} fontSize="md" color="text.primary" flex={1}>
+        <Text lineClamp={2} fontSize="sm" color="text.primary" flex={1}>
           {item.name}
         </Text>
         {allowQuantityChange ? (
