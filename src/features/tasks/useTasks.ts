@@ -16,15 +16,18 @@ export interface Task {
   minutesSinceLastCompletion?: number;
   daysUntilNextDue?: number;
   distanceSinceLastCompletionLabel?: string;
+  completedInLast10Minutes?: boolean;
+  mostRecentCompletion?: TaskCompletion;
 }
 
 const distanceSinceLastCompletion = (
-  completions: TaskCompletion[],
+  mostRecent: TaskCompletion | undefined,
 ): { label: string; days: number; minutes: number } | undefined => {
-  if (!completions || completions.length === 0) return undefined;
-  const mostRecentCompletionDate = max(
-    completions.map((item) => item.completedAt).filter(Boolean) as Date[],
-  );
+  if (!mostRecent) return undefined;
+  const mostRecentCompletionDate = new Date(mostRecent.completedAt);
+
+  if (!mostRecentCompletionDate) return undefined;
+
   return {
     label: formatDistanceToNow(mostRecentCompletionDate, { addSuffix: true }),
     days: Math.floor(
@@ -36,10 +39,27 @@ const distanceSinceLastCompletion = (
   };
 };
 
+const completedInLast10Minutes = (mostRecent: TaskCompletion | undefined) => {
+  if (!mostRecent) return false;
+  const completedAt = new Date(mostRecent.completedAt);
+  const now = new Date();
+  const diffInMinutes = (now.getTime() - completedAt.getTime()) / 60000;
+  return diffInMinutes < 10;
+};
+
+const getMostRecentCompletion = (completions: TaskCompletion[]): TaskCompletion | undefined => {
+  if (!completions || completions.length === 0) return undefined;
+  return completions.reduce((latest, current) =>
+    current.completedAt > latest.completedAt ? current : latest
+  );
+};
+
 const mapTasksWithCompletions = (data: any): Task[] =>
   data?.tasks.map((item: any): Task => {
+    const mostRecentCompletion = getMostRecentCompletion(item?.completions);
+
     const { label, days, minutes } =
-      distanceSinceLastCompletion(item?.completions) || {};
+      distanceSinceLastCompletion(mostRecentCompletion) || {};
 
     return {
       id: item.id,
@@ -59,6 +79,8 @@ const mapTasksWithCompletions = (data: any): Task[] =>
           completedAt: new Date(historyItem.completedAt),
           note: historyItem.note,
         })) || [],
+      completedInLast10Minutes: completedInLast10Minutes(mostRecentCompletion),
+      mostRecentCompletion,
     };
   }) || [];
 
@@ -115,6 +137,16 @@ export const useMarkTaskAsCompleted = () => {
         })
         .link({ owner })
         .link({ task: taskId }),
+    ]);
+  };
+};
+
+export const useDeleteTaskCompletion = () => {
+  return (completionId: string) => {
+    db.transact([
+      db.tx.taskCompletions[completionId].update({
+        deletedAt: new Date(),
+      }),
     ]);
   };
 };

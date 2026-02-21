@@ -1,9 +1,8 @@
-import { Flex, Container, Heading, Text } from "@chakra-ui/react";
-import { useMarkTaskAsCompleted, type Task } from "./useTasks";
+import { Flex, Container, Heading, Text, CheckboxCheckedChangeDetails } from "@chakra-ui/react";
+import { useMarkTaskAsCompleted, useDeleteTaskCompletion, type Task } from "./useTasks";
 import { transitions } from "@/theme";
-import NeuomorphicButton from "../components/NeuomorphicButton";
-import Icons from "../components/Icons";
 import { useCurrentUser } from "../auth/useAuthStore";
+import NeuomorphicCheckbox from "../components/NeuomorphicCheckbox";
 
 type TaskCardProps = {
   task: Task;
@@ -11,7 +10,20 @@ type TaskCardProps = {
 
 const TaskCard: React.FC<TaskCardProps> = ({ task }) => {
   const markTaskAsCompleted = useMarkTaskAsCompleted();
+  const deleteTaskCompletion = useDeleteTaskCompletion();
   const user = useCurrentUser();
+
+  const handleCheckboxChange = ({ checked }: CheckboxCheckedChangeDetails) => {
+    if (!user) return;
+
+    if (checked) {
+      markTaskAsCompleted(task.id, user.id);
+    } else {
+      if (task.mostRecentCompletion) {
+        deleteTaskCompletion(task.mostRecentCompletion.id);
+      }
+    }
+  };
 
   return (
     <Container
@@ -31,11 +43,10 @@ const TaskCard: React.FC<TaskCardProps> = ({ task }) => {
     >
       <Flex w="100%" justify="space-between" align="center">
         <Heading my={2}>{task.title}</Heading>
-        <NeuomorphicButton
-          onClick={() => markTaskAsCompleted(task.id, user.id)}
-        >
-          <Icons.Check />
-        </NeuomorphicButton>
+        <NeuomorphicCheckbox
+          checked={task.completedInLast10Minutes}
+          onCheckedChange={handleCheckboxChange}
+        />
       </Flex>
       <Text fontSize="sm">
         {task.description}
@@ -45,6 +56,7 @@ const TaskCard: React.FC<TaskCardProps> = ({ task }) => {
         {task.distanceSinceLastCompletionLabel
           ? `Last completed ${task.distanceSinceLastCompletionLabel}`
           : "Never completed"}
+        {!!task.daysUntilNextDue && `, next due in ${task.daysUntilNextDue} days`}
       </Text>
     </Container>
   );
