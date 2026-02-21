@@ -40,7 +40,7 @@ const TaskCard: React.FC<TaskCardProps> = ({ task }) => {
       <Text fontSize="sm">
         {task.description}
         <br />
-        Due every {task.frequency} days
+        Due every {task.frequencyDays} days
         <br />
         {task.distanceSinceLastCompletionLabel
           ? `Last completed ${task.distanceSinceLastCompletionLabel}`

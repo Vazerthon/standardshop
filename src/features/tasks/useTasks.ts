@@ -9,17 +9,18 @@ interface TaskCompletion {
 export interface Task {
   id: string;
   title: string;
-  frequency: number;
+  frequencyDays: number;
   description?: string;
   completions: TaskCompletion[];
   daysSinceLastCompletion?: number;
+  minutesSinceLastCompletion?: number;
   daysUntilNextDue?: number;
   distanceSinceLastCompletionLabel?: string;
 }
 
 const distanceSinceLastCompletion = (
   completions: TaskCompletion[],
-): { label: string; days: number } | undefined => {
+): { label: string; days: number; minutes: number } | undefined => {
   if (!completions || completions.length === 0) return undefined;
   const mostRecentCompletionDate = max(
     completions.map((item) => item.completedAt).filter(Boolean) as Date[],
@@ -29,20 +30,24 @@ const distanceSinceLastCompletion = (
     days: Math.floor(
       (Date.now() - mostRecentCompletionDate.getTime()) / (1000 * 60 * 60 * 24),
     ),
+    minutes: Math.floor(
+      (Date.now() - mostRecentCompletionDate.getTime()) / (1000 * 60),
+    ),
   };
 };
 
 const mapTasksWithCompletions = (data: any): Task[] =>
   data?.tasks.map((item: any): Task => {
-    const { label, days } =
+    const { label, days, minutes } =
       distanceSinceLastCompletion(item?.completions) || {};
 
     return {
       id: item.id,
       title: item?.title,
-      frequency: item?.frequency,
+      frequencyDays: item?.frequency,
       description: item?.description,
       daysSinceLastCompletion: days,
+      minutesSinceLastCompletion: minutes,
       daysUntilNextDue:
         item?.frequency && days !== undefined
           ? item.frequency - days
