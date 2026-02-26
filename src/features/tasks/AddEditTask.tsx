@@ -28,6 +28,11 @@ const AddEditTask: React.FC<AddEditTaskProps> = ({ task, open, onClose }) => {
 
   const formInValidState = !!internalTask.title.trim();
 
+  const handleClose = () => {
+    setInternalTask(defaultTask);
+    onClose();
+  };
+
   const handleSave = () => {
     if (!user) return;
     if (!formInValidState) return;
@@ -37,6 +42,7 @@ const AddEditTask: React.FC<AddEditTaskProps> = ({ task, open, onClose }) => {
       internalTask.title,
       internalTask.description,
       internalTask.frequencyDays,
+      task?.id,
     );
 
     setInternalTask(defaultTask);
@@ -47,7 +53,7 @@ const AddEditTask: React.FC<AddEditTaskProps> = ({ task, open, onClose }) => {
     <Dialog.Root
       open={open}
       onOpenChange={({ open }) => {
-        if (!open) onClose();
+        if (!open) handleClose();
       }}
       size="cover"
     >

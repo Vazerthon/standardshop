@@ -17,9 +17,10 @@ import NeuomorphicCheckbox from "../components/NeuomorphicCheckbox";
 
 type TaskCardProps = {
   task: Task;
+  onEdit?: () => void;
 };
 
-const TaskCard: React.FC<TaskCardProps> = ({ task }) => {
+const TaskCard: React.FC<TaskCardProps> = ({ task, onEdit }) => {
   const markTaskAsCompleted = useMarkTaskAsCompleted();
   const deleteTaskCompletion = useDeleteTaskCompletion();
   const user = useCurrentUser();
@@ -53,7 +54,13 @@ const TaskCard: React.FC<TaskCardProps> = ({ task }) => {
       gap={2}
     >
       <Flex w="100%" justify="space-between" align="center">
-        <Button variant="ghost" p={0} m={0} _hover={{ bg: "transparent" }}>
+        <Button
+          variant="ghost"
+          p={0}
+          m={0}
+          _hover={{ bg: "transparent" }}
+          onClick={onEdit}
+        >
           <Heading color="text.primary" my={2}>
             {task.title}
           </Heading>

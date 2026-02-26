@@ -119,11 +119,12 @@ export const useUpsertTask = () => {
     title: string,
     description?: string,
     frequency?: number,
+    taskId?: string,
   ) => {
-    const taskId = id();
+    const taskIdToUse = taskId || id();
 
     db.transact([
-      db.tx.tasks[taskId]
+      db.tx.tasks[taskIdToUse]
         .update({ title, description, frequency })
         .link({ owner }),
     ]);
