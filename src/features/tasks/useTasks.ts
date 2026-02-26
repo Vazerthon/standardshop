@@ -1,5 +1,5 @@
 import { db, id } from "@/lib/db";
-import { formatDistanceToNow, max } from "date-fns";
+import { formatDistanceToNow } from "date-fns";
 
 interface TaskCompletion {
   id: string;
@@ -9,7 +9,7 @@ interface TaskCompletion {
 export interface Task {
   id: string;
   title: string;
-  frequencyDays: number;
+  frequencyDays?: number;
   description?: string;
   completions: TaskCompletion[];
   daysSinceLastCompletion?: number;
@@ -47,10 +47,12 @@ const completedInLast10Minutes = (mostRecent: TaskCompletion | undefined) => {
   return diffInMinutes < 10;
 };
 
-const getMostRecentCompletion = (completions: TaskCompletion[]): TaskCompletion | undefined => {
+const getMostRecentCompletion = (
+  completions: TaskCompletion[],
+): TaskCompletion | undefined => {
   if (!completions || completions.length === 0) return undefined;
   return completions.reduce((latest, current) =>
-    current.completedAt > latest.completedAt ? current : latest
+    current.completedAt > latest.completedAt ? current : latest,
   );
 };
 
@@ -113,10 +115,10 @@ export const useTasks = () => {
 
 export const useUpsertTask = () => {
   return (
-    title: string,
-    description: string,
-    frequency: number,
     owner: string,
+    title: string,
+    description?: string,
+    frequency?: number,
   ) => {
     const taskId = id();
 

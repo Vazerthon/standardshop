@@ -35,7 +35,7 @@ const _schema = i.schema({
     // --------------- task entities ------------------
     tasks: i.entity({
       title: i.string().indexed(),
-      frequency: i.number(),
+      frequency: i.number().optional(),
       description: i.string().optional(),
       deletedAt: i.date().optional().indexed(),
     }),

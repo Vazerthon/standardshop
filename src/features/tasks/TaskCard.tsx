@@ -1,5 +1,15 @@
-import { Flex, Container, Heading, Text, CheckboxCheckedChangeDetails } from "@chakra-ui/react";
-import { useMarkTaskAsCompleted, useDeleteTaskCompletion, type Task } from "./useTasks";
+import {
+  Flex,
+  Container,
+  Heading,
+  Text,
+  CheckboxCheckedChangeDetails,
+} from "@chakra-ui/react";
+import {
+  useMarkTaskAsCompleted,
+  useDeleteTaskCompletion,
+  type Task,
+} from "./useTasks";
 import { transitions } from "@/theme";
 import { useCurrentUser } from "../auth/useAuthStore";
 import NeuomorphicCheckbox from "../components/NeuomorphicCheckbox";
@@ -51,12 +61,16 @@ const TaskCard: React.FC<TaskCardProps> = ({ task }) => {
       <Text fontSize="sm">
         {task.description}
         <br />
-        Due every {task.frequencyDays} days
-        <br />
+        {!!task.frequencyDays && (
+          <>
+            {`Due every ${task.frequencyDays} days`} <br />
+          </>
+        )}
         {task.distanceSinceLastCompletionLabel
           ? `Last completed ${task.distanceSinceLastCompletionLabel}`
           : "Never completed"}
-        {!!task.daysUntilNextDue && `, next due in ${task.daysUntilNextDue} days`}
+        {!!task.daysUntilNextDue &&
+          `, next due in ${task.daysUntilNextDue} days`}
       </Text>
     </Container>
   );
