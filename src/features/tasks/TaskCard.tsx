@@ -4,6 +4,7 @@ import {
   Heading,
   Text,
   CheckboxCheckedChangeDetails,
+  Button,
 } from "@chakra-ui/react";
 import {
   useMarkTaskAsCompleted,
@@ -52,7 +53,11 @@ const TaskCard: React.FC<TaskCardProps> = ({ task }) => {
       gap={2}
     >
       <Flex w="100%" justify="space-between" align="center">
-        <Heading my={2}>{task.title}</Heading>
+        <Button variant="ghost" p={0} m={0} _hover={{ bg: "transparent" }}>
+          <Heading color="text.primary" my={2}>
+            {task.title}
+          </Heading>
+        </Button>
         <NeuomorphicCheckbox
           checked={task.completedInLast10Minutes}
           onCheckedChange={handleCheckboxChange}

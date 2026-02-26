@@ -8,6 +8,8 @@ import NeuomorphicInput from "../components/NeuomorphicInput";
 
 type AddEditTaskProps = {
   task?: Task;
+  open: boolean;
+  onClose: () => void;
 };
 
 const defaultTask: Task = {
@@ -18,11 +20,10 @@ const defaultTask: Task = {
   completions: [],
 };
 
-const AddEditTask: React.FC<AddEditTaskProps> = ({ task }) => {
+const AddEditTask: React.FC<AddEditTaskProps> = ({ task, open, onClose }) => {
   const user = useCurrentUser();
   const upsertTask = useUpsertTask();
 
-  const [isOpen, setIsOpen] = useState(false);
   const [internalTask, setInternalTask] = useState<Task>(task || defaultTask);
 
   const formInValidState = !!internalTask.title.trim();
@@ -39,25 +40,17 @@ const AddEditTask: React.FC<AddEditTaskProps> = ({ task }) => {
     );
 
     setInternalTask(defaultTask);
-    setIsOpen(false);
+    onClose();
   };
 
   return (
     <Dialog.Root
-      open={isOpen}
-      onOpenChange={({ open }) => setIsOpen(open)}
+      open={open}
+      onOpenChange={({ open }) => {
+        if (!open) onClose();
+      }}
       size="cover"
     >
-      <Dialog.Trigger asChild>
-        <NeuomorphicButton
-          variant="circular-raised"
-          position="fixed"
-          bottom={4}
-          right={4}
-        >
-          <Icons.Plus />
-        </NeuomorphicButton>
-      </Dialog.Trigger>
       <Portal>
         <Dialog.Backdrop />
         <Dialog.Positioner>
