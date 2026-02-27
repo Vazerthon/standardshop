@@ -88,6 +88,86 @@ const mapTasksWithCompletions = (data: any): Task[] =>
     };
   }) || [];
 
+export type TaskTabKey =
+  | "all"
+  | "overdue"
+  | "frequent"
+  | "weekly"
+  | "monthly"
+  | "monthlyPlus"
+  | "yearlyPlus"
+  | "oneOff";
+
+export interface TaskTab {
+  key: TaskTabKey;
+  label: string;
+  filter: (task: Task) => boolean;
+}
+
+export const TASK_TABS: TaskTab[] = [
+  { key: "all", label: "All", filter: () => true },
+  {
+    key: "overdue",
+    label: "Overdue",
+    filter: (t) => t.daysUntilNextDue !== undefined && t.daysUntilNextDue < 0,
+  },
+  {
+    key: "frequent",
+    label: "Frequent",
+    filter: (t) => t.frequencyDays !== undefined && t.frequencyDays > 0 && t.frequencyDays < 7,
+  },
+  {
+    key: "weekly",
+    label: "Weekly",
+    filter: (t) => t.frequencyDays !== undefined && t.frequencyDays >= 7 && t.frequencyDays < 30,
+  },
+  {
+    key: "monthly",
+    label: "Monthly",
+    filter: (t) => t.frequencyDays === 30,
+  },
+  {
+    key: "monthlyPlus",
+    label: "Monthly+",
+    filter: (t) =>
+      t.frequencyDays !== undefined && t.frequencyDays > 30 && t.frequencyDays < 365,
+  },
+  {
+    key: "yearlyPlus",
+    label: "Yearly+",
+    filter: (t) => t.frequencyDays !== undefined && t.frequencyDays >= 365,
+  },
+  {
+    key: "oneOff",
+    label: "One off",
+    filter: (t) => t.frequencyDays === undefined || t.frequencyDays === 0,
+  },
+];
+
+/** Sort by urgency: most overdue first, nulls (no due date) last */
+const sortByUrgency = (a: Task, b: Task): number => {
+  const aDue = a.daysUntilNextDue;
+  const bDue = b.daysUntilNextDue;
+  if (aDue === undefined && bDue === undefined) return a.title.localeCompare(b.title);
+  if (aDue === undefined) return 1;
+  if (bDue === undefined) return -1;
+  return aDue - bDue;
+};
+
+export const getFilteredTasks = (tasks: Task[], tabKey: TaskTabKey): Task[] => {
+  const tab = TASK_TABS.find((t) => t.key === tabKey);
+  if (!tab) return tasks;
+  return tasks.filter(tab.filter).sort(sortByUrgency);
+};
+
+export const getTabCounts = (tasks: Task[]): Record<TaskTabKey, number> => {
+  const counts = {} as Record<TaskTabKey, number>;
+  for (const tab of TASK_TABS) {
+    counts[tab.key] = tasks.filter(tab.filter).length;
+  }
+  return counts;
+};
+
 export const useTasks = () => {
   const { isLoading, error, data } = db.useQuery({
     tasks: {
