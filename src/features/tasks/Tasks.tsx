@@ -73,36 +73,32 @@ const Tasks: React.FC = () => {
       <Tabs.Root
         value={activeTab}
         onValueChange={(e) => setActiveTab(e.value as TaskTabKey)}
-        variant="line"
       >
-        <Box>
-          <Tabs.List
-            flexWrap="nowrap"
-            minW="max-content"
-            bg="surface.primary"
-            borderRadius="md"
-            mb={3}
-            boxShadow="neuomorphic"
-          >
-            <For each={TASK_TABS}>
-              {(tab) => (
-                <Tabs.Trigger
-                  key={tab.key}
-                  value={tab.key}
-                  fontSize="sm"
-                  whiteSpace="nowrap"
-                  px={3}
-                  color="text.primary"
-                >
-                  {tab.label}
-                  <Badge variant="solid" size="sm" borderRadius="full">
-                    {tabCounts[tab.key]}
-                  </Badge>
-                </Tabs.Trigger>
-              )}
-            </For>
-          </Tabs.List>
-        </Box>
+        <Tabs.List
+          flexWrap="nowrap"
+          minW="max-content"
+          bg="surface.primary"
+          borderRadius="md"
+          mb={3}
+          boxShadow="neuomorphic"
+        >
+          <For each={TASK_TABS}>
+            {(tab) => (
+              <Tabs.Trigger
+                key={tab.key}
+                value={tab.key}
+                fontSize="xs"
+                px={1}
+                color="text.primary"
+              >
+                {tab.label}
+                <Badge variant="solid" size="xs" borderRadius="full">
+                  {tabCounts[tab.key]}
+                </Badge>
+              </Tabs.Trigger>
+            )}
+          </For>
+        </Tabs.List>
 
         <For each={TASK_TABS}>
           {(tab) => (

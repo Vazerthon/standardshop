@@ -128,16 +128,11 @@ export const TASK_TABS: TaskTab[] = [
       t.frequencyDays < 30,
   },
   {
-    key: "monthly",
-    label: "Monthly",
-    filter: (t) => t.frequencyDays === 30,
-  },
-  {
     key: "monthlyPlus",
     label: "Monthly+",
     filter: (t) =>
       t.frequencyDays !== undefined &&
-      t.frequencyDays > 30 &&
+      t.frequencyDays >= 30 &&
       t.frequencyDays < 365,
   },
   {
