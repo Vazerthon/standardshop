@@ -114,12 +114,18 @@ export const TASK_TABS: TaskTab[] = [
   {
     key: "frequent",
     label: "Frequent",
-    filter: (t) => t.frequencyDays !== undefined && t.frequencyDays > 0 && t.frequencyDays < 7,
+    filter: (t) =>
+      t.frequencyDays !== undefined &&
+      t.frequencyDays > 0 &&
+      t.frequencyDays < 7,
   },
   {
     key: "weekly",
     label: "Weekly",
-    filter: (t) => t.frequencyDays !== undefined && t.frequencyDays >= 7 && t.frequencyDays < 30,
+    filter: (t) =>
+      t.frequencyDays !== undefined &&
+      t.frequencyDays >= 7 &&
+      t.frequencyDays < 30,
   },
   {
     key: "monthly",
@@ -130,7 +136,9 @@ export const TASK_TABS: TaskTab[] = [
     key: "monthlyPlus",
     label: "Monthly+",
     filter: (t) =>
-      t.frequencyDays !== undefined && t.frequencyDays > 30 && t.frequencyDays < 365,
+      t.frequencyDays !== undefined &&
+      t.frequencyDays > 30 &&
+      t.frequencyDays < 365,
   },
   {
     key: "yearlyPlus",
@@ -148,7 +156,8 @@ export const TASK_TABS: TaskTab[] = [
 const sortByUrgency = (a: Task, b: Task): number => {
   const aDue = a.daysUntilNextDue;
   const bDue = b.daysUntilNextDue;
-  if (aDue === undefined && bDue === undefined) return a.title.localeCompare(b.title);
+  if (aDue === undefined && bDue === undefined)
+    return a.title.localeCompare(b.title);
   if (aDue === undefined) return 1;
   if (bDue === undefined) return -1;
   return aDue - bDue;
