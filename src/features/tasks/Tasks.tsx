@@ -10,21 +10,24 @@ import { useState } from "react";
 
 const Tasks: React.FC = () => {
   const { tasks, loading, error } = useTasks();
-  const [addTaskOpen, setAddTaskOpen] = useState(false);
-  const [editTask, setEditTask] = useState<Task | undefined>(undefined);
+  const [addEditTaskOpen, setAddEditTaskOpen] = useState(false);
+  const [editTaskId, setEditTaskId] = useState<Task["id"] | undefined>(
+    undefined,
+  );
+  const editTask = tasks.find((task) => task.id === editTaskId);
 
   if (loading) {
     return <LoadingSpinner />;
   }
 
   const openEditTaskModal = (task: Task) => {
-    setEditTask(task);
-    setAddTaskOpen(true);
+    setEditTaskId(task.id);
+    setAddEditTaskOpen(true);
   };
 
   const closeEditTaskModal = () => {
-    setEditTask(undefined);
-    setAddTaskOpen(false);
+    setEditTaskId(undefined);
+    setAddEditTaskOpen(false);
   };
 
   return (
@@ -46,14 +49,14 @@ const Tasks: React.FC = () => {
         position="fixed"
         bottom={4}
         right={4}
-        onClick={() => setAddTaskOpen(true)}
+        onClick={() => setAddEditTaskOpen(true)}
       >
         <Icons.Plus />
       </NeuomorphicButton>
 
-      <Show when={addTaskOpen}>
+      <Show when={addEditTaskOpen && editTask}>
         <AddEditTask
-          open={addTaskOpen}
+          open={addEditTaskOpen}
           onClose={closeEditTaskModal}
           task={editTask}
         />

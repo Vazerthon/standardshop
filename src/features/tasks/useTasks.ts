@@ -1,7 +1,7 @@
 import { db, id } from "@/lib/db";
 import { formatDistanceToNow } from "date-fns";
 
-interface TaskCompletion {
+export interface TaskCompletion {
   id: string;
   completedAt: Date;
   note?: string;
@@ -76,11 +76,13 @@ const mapTasksWithCompletions = (data: any): Task[] =>
           : undefined,
       distanceSinceLastCompletionLabel: label,
       completions:
-        item?.completions?.map((historyItem: any) => ({
-          id: historyItem.id,
-          completedAt: new Date(historyItem.completedAt),
-          note: historyItem.note,
-        })) || [],
+        item?.completions
+          ?.filter((historyItem: any) => !historyItem.deletedAt)
+          .map((historyItem: any) => ({
+            id: historyItem.id,
+            completedAt: new Date(historyItem.completedAt),
+            note: historyItem.note,
+          })) || [],
       completedInLast10Minutes: completedInLast10Minutes(mostRecentCompletion),
       mostRecentCompletion,
     };
@@ -144,12 +146,23 @@ export const useMarkTaskAsCompleted = () => {
   };
 };
 
+export const useUpdateTaskCompletion = () => {
+  return ({ id, completedAt, note }: TaskCompletion) => {
+    db.transact([
+      db.tx.taskCompletions[id].update({
+        completedAt,
+        note,
+      }),
+    ]);
+  };
+};
+
 export const useDeleteTaskCompletion = () => {
   return (completionId: string) => {
-    db.transact([
+    db.transact(
       db.tx.taskCompletions[completionId].update({
         deletedAt: new Date(),
       }),
-    ]);
+    );
   };
 };

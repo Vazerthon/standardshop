@@ -1,10 +1,11 @@
-import { Dialog, Portal, Stack } from "@chakra-ui/react";
+import { Dialog, Portal, Show, Stack, For, Text } from "@chakra-ui/react";
 import { useUpsertTask, type Task } from "./useTasks";
 import { useCurrentUser } from "../auth/useAuthStore";
 import NeuomorphicButton from "../components/NeuomorphicButton";
 import Icons from "../components/Icons";
 import { useState } from "react";
 import NeuomorphicInput from "../components/NeuomorphicInput";
+import CompletionEditor from "./CompletionEditor";
 
 type AddEditTaskProps = {
   task?: Task;
@@ -23,6 +24,7 @@ const defaultTask: Task = {
 const AddEditTask: React.FC<AddEditTaskProps> = ({ task, open, onClose }) => {
   const user = useCurrentUser();
   const upsertTask = useUpsertTask();
+  const editing = !!task;
 
   const [internalTask, setInternalTask] = useState<Task>(task || defaultTask);
 
@@ -66,7 +68,7 @@ const AddEditTask: React.FC<AddEditTaskProps> = ({ task, open, onClose }) => {
             color="text.primary"
           >
             <Dialog.Header>
-              <Dialog.Title>{task ? "Edit Task" : "Add Task"}</Dialog.Title>
+              <Dialog.Title>{editing ? "Edit Task" : "Add Task"}</Dialog.Title>
             </Dialog.Header>
             <Dialog.Body>
               <form
@@ -111,6 +113,21 @@ const AddEditTask: React.FC<AddEditTaskProps> = ({ task, open, onClose }) => {
                   />
                 </Stack>
               </form>
+              <Show when={editing && task?.completions?.length}>
+                <Text as="h2" mt={4} fontSize="md" color="text.secondary">
+                  History
+                </Text>
+                <Stack mt={2} gap={2}>
+                  <For each={task?.completions}>
+                    {(completion) => (
+                      <CompletionEditor
+                        key={completion.id}
+                        completion={completion}
+                      />
+                    )}
+                  </For>
+                </Stack>
+              </Show>
             </Dialog.Body>
             <Dialog.Footer>
               <Dialog.ActionTrigger asChild>
