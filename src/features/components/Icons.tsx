@@ -9,6 +9,8 @@ import {
   LuLock,
   LuBetweenHorizontalStart,
   LuCheck,
+  LuRepeat,
+  LuBadgeAlert,
 } from "react-icons/lu";
 
 export default {
@@ -22,4 +24,6 @@ export default {
   Lock: LuLock,
   Insert: LuBetweenHorizontalStart,
   Check: LuCheck,
-};
+  Refresh: LuRepeat,
+  Alert: LuBadgeAlert,
+} as const;

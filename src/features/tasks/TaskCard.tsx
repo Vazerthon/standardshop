@@ -15,6 +15,7 @@ import {
 import { transitions } from "@/theme";
 import { useCurrentUser } from "../auth/useAuthStore";
 import NeuomorphicCheckbox from "../components/NeuomorphicCheckbox";
+import Icons from "../components/Icons";
 
 type TaskCardProps = {
   task: Task;
@@ -88,32 +89,38 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, onEdit }) => {
       <Text as="p" fontSize='sm' color="text.secondary" lineClamp={2}>
         {task.description}
       </Text>
-      <Show when={isRecurring}>
-        <Text as="p" fontSize='sm' color="text.secondary">
-          {`Due every ${task.frequencyDays} days`}
-        </Text>
-      </Show>
-      <Show when={task.distanceSinceLastCompletionLabel} fallback={<Text as="p" fontSize='sm' color="text.secondary">Never completed</Text>}>
-        <Text as="p" fontSize='sm' color="text.secondary">
-          {`Last completed ${task.distanceSinceLastCompletionLabel}`}
-        </Text>
-      </Show>
-      <Show when={overdue}>
-        <Text as="p" fontSize="sm" fontWeight="bold" color="text.secondary">
-          {/* @ts-ignore overdue condition guarantees a value here */}
-          {`Overdue by ${-task.daysUntilNextDue} days`}
-        </Text>
-      </Show>
-      <Show when={dueToday}>
-        <Text as="p" fontSize="sm" fontWeight="bold" color="text.secondary">
-          Due today
-        </Text>
-      </Show>
-      <Show when={dueInFuture}>
-        <Text as="p" fontSize="sm" color="text.secondary">
-          {`Next due in ${task.daysUntilNextDue} days`}
-        </Text>
-      </Show>
+      <Flex gap={2} justify="space-between" align="center" mt={2}>
+        <Show when={isRecurring} fallback={<Text as="p" fontSize='sm' color="text.secondary">One-off task</Text>}>
+          <Text as="p" fontSize='sm' color="text.secondary" display="flex" alignItems="center" gap={1}>
+            <Icons.Refresh />
+            {`${task.frequencyDays} days`}
+          </Text>
+        </Show>
+        <Show when={task.distanceSinceLastCompletionLabel} fallback={<Text as="p" fontSize='sm' color="text.secondary">Never completed</Text>}>
+          <Text as="p" fontSize='sm' color="text.secondary" display="flex" alignItems="center" gap={1}>
+            <Icons.Check />
+            {task.distanceSinceLastCompletionLabel}
+          </Text>
+        </Show>
+        <Show when={overdue}>
+          <Text as="p" fontSize="sm" fontWeight="bold" color="text.secondary" display="flex" alignItems="center" gap={1}>
+            <Icons.Alert />
+            {/* @ts-ignore overdue condition guarantees a value here */}
+            {`Overdue ${-task.daysUntilNextDue} days`}
+          </Text>
+        </Show>
+        <Show when={dueToday}>
+          <Text as="p" fontSize="sm" fontWeight="bold" color="text.secondary">
+            Due today
+          </Text>
+        </Show>
+        <Show when={dueInFuture}>
+          <Text as="p" fontSize="sm" color="text.secondary">
+            {`Due in ${task.daysUntilNextDue} days`}
+          </Text>
+        </Show>
+      </Flex>
+
     </Container>
   );
 };
