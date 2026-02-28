@@ -58,6 +58,7 @@ const AddEditTask: React.FC<AddEditTaskProps> = ({ task, open, onClose }) => {
         if (!open) handleClose();
       }}
       size="cover"
+
     >
       <Portal>
         <Dialog.Backdrop />
@@ -70,7 +71,7 @@ const AddEditTask: React.FC<AddEditTaskProps> = ({ task, open, onClose }) => {
             <Dialog.Header>
               <Dialog.Title>{editing ? "Edit Task" : "Add Task"}</Dialog.Title>
             </Dialog.Header>
-            <Dialog.Body>
+            <Dialog.Body overflow="auto">
               <form
                 onSubmit={(e) => {
                   e.preventDefault();
@@ -128,6 +129,7 @@ const AddEditTask: React.FC<AddEditTaskProps> = ({ task, open, onClose }) => {
                   </For>
                 </Stack>
               </Show>
+
             </Dialog.Body>
             <Dialog.Footer>
               <Dialog.ActionTrigger asChild>

@@ -1,6 +1,5 @@
 import {
   Badge,
-  Box,
   Container,
   For,
   List,
@@ -71,12 +70,16 @@ const Tasks: React.FC = () => {
       {error?.message && <ErrorBox error={error} />}
 
       <Tabs.Root
+        variant="plain"
         value={activeTab}
         onValueChange={(e) => setActiveTab(e.value as TaskTabKey)}
+        css={{
+        "--tabs-indicator-bg": "neuomorphic.text",
+      }}
       >
         <Tabs.List
           flexWrap="nowrap"
-          minW="max-content"
+          minW="100%"
           bg="surface.primary"
           borderRadius="md"
           mb={3}
@@ -92,12 +95,13 @@ const Tasks: React.FC = () => {
                 color="text.primary"
               >
                 {tab.label}
-                <Badge variant="solid" size="xs" borderRadius="full">
+                <Badge variant="solid" size="xs" borderRadius="full" bg="text.secondary" color="white">
                   {tabCounts[tab.key]}
                 </Badge>
               </Tabs.Trigger>
             )}
           </For>
+          <Tabs.Indicator rounded="12" />
         </Tabs.List>
 
         <For each={TASK_TABS}>

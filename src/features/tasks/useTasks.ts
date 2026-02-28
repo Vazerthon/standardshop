@@ -109,7 +109,7 @@ export const TASK_TABS: TaskTab[] = [
   {
     key: "overdue",
     label: "Overdue",
-    filter: (t) => t.daysUntilNextDue !== undefined && t.daysUntilNextDue < 0,
+    filter: (t) => t.daysUntilNextDue !== undefined && t.daysUntilNextDue <= 0,
   },
   {
     key: "frequent",
@@ -186,6 +186,7 @@ export const useTasks = () => {
           where: {
             deletedAt: { $isNull: true },
           },
+          /* @ts-ignore */
           order: { completedAt: "desc" },
         },
       },
