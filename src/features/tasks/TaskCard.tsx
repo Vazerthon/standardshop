@@ -65,10 +65,17 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, onEdit }) => {
           variant="ghost"
           p={0}
           m={0}
+          maxW="90%"
           _hover={{ bg: "transparent" }}
           onClick={onEdit}
         >
-          <Heading color="text.primary">
+          <Heading
+            color="text.primary"
+            fontSize="md"
+            lineClamp={1}
+            textOverflow="ellipsis"
+            whiteSpace="nowrap"
+          >
             {task.title}
           </Heading>
         </Button>
@@ -78,7 +85,7 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, onEdit }) => {
         />
       </Flex>
 
-      <Text as="p" fontSize='sm' color="text.secondary">
+      <Text as="p" fontSize='sm' color="text.secondary" lineClamp={2}>
         {task.description}
       </Text>
       <Show when={isRecurring}>
