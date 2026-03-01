@@ -89,14 +89,13 @@ const mapTasksWithCompletions = (data: any): Task[] =>
   }) || [];
 
 export type TaskTabKey =
-  | "all"
   | "overdue"
   | "frequent"
   | "weekly"
-  | "monthly"
   | "monthlyPlus"
   | "yearlyPlus"
-  | "oneOff";
+  | "oneOff"
+  | "all"
 
 export interface TaskTab {
   key: TaskTabKey;
@@ -105,7 +104,6 @@ export interface TaskTab {
 }
 
 export const TASK_TABS: TaskTab[] = [
-  { key: "all", label: "All", filter: () => true },
   {
     key: "overdue",
     label: "Overdue",
@@ -145,6 +143,7 @@ export const TASK_TABS: TaskTab[] = [
     label: "One off",
     filter: (t) => t.frequencyDays === undefined || t.frequencyDays === 0,
   },
+  { key: "all", label: "All", filter: () => true },
 ];
 
 /** Sort by urgency: most overdue first, nulls (no due date) last */
