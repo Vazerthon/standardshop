@@ -19,9 +19,11 @@ import LoadingSpinner from "../components/LoadingSpinner";
 import ErrorBox from "../components/ErrorBox";
 import TaskCard from "./TaskCard";
 import AddEditTask from "./AddEditTask";
+import ImportTasks from "./ImportTasks";
 import NeuomorphicButton from "../components/NeuomorphicButton";
 import Icons from "../components/Icons";
-import { useMemo, useState } from "react";
+import { useSetExtraContentRenderFunction } from "../app/useMenuBarStore";
+import { useEffect, useMemo, useState } from "react";
 
 const TaskList: React.FC<{
   tasks: Task[];
@@ -48,8 +50,23 @@ const Tasks: React.FC = () => {
     undefined,
   );
   const [activeTab, setActiveTab] = useState<TaskTabKey>("all");
+  const [importOpen, setImportOpen] = useState(false);
   const editTask = tasks.find((task) => task.id === editTaskId);
   const tabCounts = useMemo(() => getTabCounts(tasks), [tasks]);
+
+  const setExtraContent = useSetExtraContentRenderFunction();
+  useEffect(() => {
+    setExtraContent(() => (
+      <NeuomorphicButton
+        variant="circular-raised"
+        onClick={() => setImportOpen(true)}
+        aria-label="Import tasks"
+      >
+        <Icons.Upload />
+      </NeuomorphicButton>
+    ));
+    return () => setExtraContent(undefined);
+  }, [setExtraContent]);
 
   if (loading) {
     return <LoadingSpinner />;
@@ -74,8 +91,8 @@ const Tasks: React.FC = () => {
         value={activeTab}
         onValueChange={(e) => setActiveTab(e.value as TaskTabKey)}
         css={{
-        "--tabs-indicator-bg": "neuomorphic.text",
-      }}
+          "--tabs-indicator-bg": "neuomorphic.text",
+        }}
       >
         <Tabs.List
           flexWrap="nowrap"
@@ -95,7 +112,13 @@ const Tasks: React.FC = () => {
                 color="text.primary"
               >
                 {tab.label}
-                <Badge variant="solid" size="xs" borderRadius="full" bg="text.secondary" color="white">
+                <Badge
+                  variant="solid"
+                  size="xs"
+                  borderRadius="full"
+                  bg="text.secondary"
+                  color="white"
+                >
                   {tabCounts[tab.key]}
                 </Badge>
               </Tabs.Trigger>
@@ -133,6 +156,8 @@ const Tasks: React.FC = () => {
           task={editTask}
         />
       </Show>
+
+      <ImportTasks open={importOpen} onClose={() => setImportOpen(false)} />
     </Container>
   );
 };

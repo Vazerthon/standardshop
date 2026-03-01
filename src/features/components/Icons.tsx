@@ -11,6 +11,7 @@ import {
   LuCheck,
   LuRepeat,
   LuBadgeAlert,
+  LuUpload,
 } from "react-icons/lu";
 
 export default {
@@ -26,4 +27,5 @@ export default {
   Check: LuCheck,
   Refresh: LuRepeat,
   Alert: LuBadgeAlert,
+  Upload: LuUpload,
 } as const;
