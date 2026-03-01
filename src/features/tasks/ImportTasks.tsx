@@ -11,7 +11,7 @@ import {
   type TaskImportFile,
   type ImportSummary,
   type ValidationResult,
-} from "./importTasks";
+} from "./importTasksService";
 
 type ImportState =
   | { step: "idle" }
