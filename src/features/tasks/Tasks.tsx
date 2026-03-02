@@ -73,7 +73,6 @@ const Tasks: React.FC = () => {
   }
 
   const openAddTaskModal = () => {
-    console.log("Opening add task modal");
     setEditTaskId(undefined);
     setAddEditTaskOpen(true);
    };
@@ -149,7 +148,7 @@ const Tasks: React.FC = () => {
         variant="circular-raised"
         position="fixed"
         bottom={4}
-        left={4}
+        right={4}
         onClick={openAddTaskModal}
       >
         <Icons.Plus />
