@@ -1,5 +1,5 @@
-import { Dialog, Portal, Show, Stack, For, Text } from "@chakra-ui/react";
-import { useUpsertTask, type Task } from "./useTasks";
+import { Dialog, Portal, Show, Stack, For, Text, Box } from "@chakra-ui/react";
+import { useDeleteTask, useUpsertTask, type Task } from "./useTasks";
 import { useCurrentUser } from "../auth/useAuthStore";
 import NeuomorphicButton from "../components/NeuomorphicButton";
 import Icons from "../components/Icons";
@@ -24,6 +24,7 @@ const defaultTask: Task = {
 const AddEditTask: React.FC<AddEditTaskProps> = ({ task, open, onClose }) => {
   const user = useCurrentUser();
   const upsertTask = useUpsertTask();
+  const deleteTask = useDeleteTask();
   const editing = !!task;
 
   const [internalTask, setInternalTask] = useState<Task>(task || defaultTask);
@@ -33,6 +34,12 @@ const AddEditTask: React.FC<AddEditTaskProps> = ({ task, open, onClose }) => {
   const handleClose = () => {
     setInternalTask(defaultTask);
     onClose();
+  };
+
+  const handleDelete = () => {
+    if (!task) return;
+    deleteTask(task.id);
+    handleClose();
   };
 
   const handleSave = () => {
@@ -132,6 +139,12 @@ const AddEditTask: React.FC<AddEditTaskProps> = ({ task, open, onClose }) => {
 
             </Dialog.Body>
             <Dialog.Footer>
+              <Show when={editing}>
+                <NeuomorphicButton variant="circular-raised" onClick={handleDelete}>
+                  <Icons.Trash />
+                </NeuomorphicButton>
+              </Show>
+              <Box flex="1" />
               <Dialog.ActionTrigger asChild>
                 <NeuomorphicButton>Cancel</NeuomorphicButton>
               </Dialog.ActionTrigger>
@@ -141,6 +154,7 @@ const AddEditTask: React.FC<AddEditTaskProps> = ({ task, open, onClose }) => {
               >
                 Save
               </NeuomorphicButton>
+              <Box />
             </Dialog.Footer>
             <Dialog.CloseTrigger asChild>
               <NeuomorphicButton

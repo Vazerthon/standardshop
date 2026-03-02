@@ -217,6 +217,16 @@ export const useUpsertTask = () => {
   };
 };
 
+export const useDeleteTask = () => {
+  return (taskId: string) => {
+    db.transact([
+      db.tx.tasks[taskId].update({
+        deletedAt: new Date(),
+      }),
+    ]);
+  };
+};
+
 export const useMarkTaskAsCompleted = () => {
   return (taskId: string, owner: string) => {
     db.transact([
