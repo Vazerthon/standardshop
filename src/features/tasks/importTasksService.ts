@@ -178,10 +178,12 @@ export async function executeImport(
   data: TaskImportFile,
   userId: string,
 ): Promise<void> {
-  const ops: Parameters<typeof db.transact>[0] = [];
+  // Build one group of ops per task (task + its completions)
+  const taskGroups: Parameters<typeof db.transact>[0][] = [];
 
   for (const task of data.tasks) {
     const taskId = id();
+    const group: Parameters<typeof db.transact>[0] = [];
 
     const taskFields: Record<string, unknown> = {
       title: task.title,
@@ -192,7 +194,7 @@ export async function executeImport(
     if (task.deletedAt !== undefined)
       taskFields.deletedAt = new Date(task.deletedAt);
 
-    ops.push(db.tx.tasks[taskId].update(taskFields).link({ owner: userId }));
+    group.push(db.tx.tasks[taskId].update(taskFields).link({ owner: userId }));
 
     for (const comp of task.completions ?? []) {
       const compFields: Record<string, unknown> = {
@@ -202,15 +204,22 @@ export async function executeImport(
       if (comp.deletedAt !== undefined)
         compFields.deletedAt = new Date(comp.deletedAt);
 
-      ops.push(
+      group.push(
         db.tx.taskCompletions[id()]
           .update(compFields)
           .link({ owner: userId })
           .link({ task: taskId }),
       );
     }
+
+    taskGroups.push(group);
   }
 
-  // Single atomic transaction – if any operation fails, nothing is persisted
-  await db.transact(ops);
+  // Process in chunks of 10 tasks per transaction
+  const CHUNK_SIZE = 10;
+  for (let i = 0; i < taskGroups.length; i += CHUNK_SIZE) {
+    const chunk = taskGroups.slice(i, i + CHUNK_SIZE);
+    const ops = chunk.flat();
+    await db.transact(ops);
+  }
 }
