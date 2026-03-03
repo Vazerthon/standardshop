@@ -75,7 +75,7 @@ const Tasks: React.FC = () => {
   const openAddTaskModal = () => {
     setEditTaskId(undefined);
     setAddEditTaskOpen(true);
-   };
+  };
 
   const openEditTaskModal = (task: Task) => {
     setEditTaskId(task.id);
@@ -95,9 +95,6 @@ const Tasks: React.FC = () => {
         variant="plain"
         value={activeTab}
         onValueChange={(e) => setActiveTab(e.value as TaskTabKey)}
-        css={{
-          "--tabs-indicator-bg": "neuomorphic.text",
-        }}
       >
         <Tabs.List
           flexWrap="nowrap"
@@ -114,7 +111,9 @@ const Tasks: React.FC = () => {
                 value={tab.key}
                 fontSize="xs"
                 px={1}
+                my={1}
                 color="text.primary"
+                shadow={activeTab === tab.key ? "neuomorphicInset" : "none"}
               >
                 {tab.label}
                 <Badge
@@ -129,7 +128,6 @@ const Tasks: React.FC = () => {
               </Tabs.Trigger>
             )}
           </For>
-          <Tabs.Indicator rounded="12" />
         </Tabs.List>
 
         <For each={TASK_TABS}>
