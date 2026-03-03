@@ -1,10 +1,22 @@
-import { Accordion, Container, Heading, List, Text } from "@chakra-ui/react";
+import { Accordion, Container, Heading, List, Text, Flex } from "@chakra-ui/react";
 import { useItemHistory } from "./useItems";
 import LoadingSpinner from "../components/LoadingSpinner";
 import ErrorBox from "../components/ErrorBox";
+import { useEffect } from "react";
+import { useSetExtraContentRenderFunction } from "../app/useMenuBarStore";
 
 const History: React.FC = () => {
   const { items, loading, error } = useItemHistory();
+  const setExtraContentRenderFunction = useSetExtraContentRenderFunction();
+
+  useEffect(() => {
+    setExtraContentRenderFunction(() => (
+      <Flex color="text.primary" gap={4} align="center" justify="space-between" w="100%">
+        <Text as="h1" color="text.primary">Purchase History</Text>
+      </Flex>
+    ));
+    return () => setExtraContentRenderFunction(undefined);
+  }, [setExtraContentRenderFunction]);
 
   if (loading) {
     return (
@@ -17,7 +29,6 @@ const History: React.FC = () => {
       {error?.message && (
         <ErrorBox error={error} />
       )}
-      <Heading my={2} color="text.primary">Purchase History</Heading>
       <Accordion.Root color="text.secondary" collapsible>
         {items?.map((item) => (
           <Accordion.Item key={item.id} value={item.name}>

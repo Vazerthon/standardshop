@@ -171,12 +171,12 @@ export const getTabCounts = (tasks: Task[]): Record<TaskTabKey, number> => {
   return counts;
 };
 
-export const useTasks = () => {
+export const useTasks = (archive: boolean = false) => {
   const { isLoading, error, data } = db.useQuery({
     tasks: {
       $: {
         where: {
-          deletedAt: { $isNull: true },
+          deletedAt: { $isNull: archive ? false : true },
         },
         order: { title: "asc" },
       },

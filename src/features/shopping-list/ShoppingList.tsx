@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Flex, Switch } from "@chakra-ui/react";
+import { Flex, Switch, Box, Text } from "@chakra-ui/react";
 import { useSetExtraContentRenderFunction } from "../app/useMenuBarStore";
 import SharedItemList from "../components/SharedItemList";
 import {
@@ -36,16 +36,19 @@ const ShoppingList: React.FC = () => {
 
   useEffect(() => {
     setExtraContentRenderFunction(() => (
-      <Flex color="text.secondary" gap={4}>
-        <Icons.Edit />
-        <Switch.Root checked={locked}
+      <Flex color="text.primary" gap={4} align="center" justify="space-between" w="100%">
+        <Text as="h1" color="text.primary">Shopping list</Text>
+        <Flex gap={4}>
+          <Icons.Edit />
+          <Switch.Root checked={locked}
             onCheckedChange={() => setLocked(!locked)}>
-          <Switch.HiddenInput />
-          <Switch.Control boxShadow="neuomorphicLarge">
-            <Switch.Thumb boxShadow="neuomorphicLarge" />
-          </Switch.Control>
-        </Switch.Root>
-        <Icons.Lock />
+            <Switch.HiddenInput />
+            <Switch.Control boxShadow="neuomorphicLarge">
+              <Switch.Thumb boxShadow="neuomorphicLarge" />
+            </Switch.Control>
+          </Switch.Root>
+          <Icons.Lock />
+        </Flex>
       </Flex>
     ));
     return () => setExtraContentRenderFunction(undefined);

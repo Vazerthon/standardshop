@@ -16,6 +16,7 @@ export const Drawer: React.FC<DrawerProps> = ({ children }) => {
           <NeuomorphicButton
             aria-label="Open drawer"
             variant="circular-raised"
+            mr={6}
           >
             <Icons.Menu />
           </NeuomorphicButton>

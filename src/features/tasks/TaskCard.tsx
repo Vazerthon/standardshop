@@ -20,9 +20,10 @@ import Icons from "../components/Icons";
 type TaskCardProps = {
   task: Task;
   onEdit?: () => void;
+  archive?: boolean;
 };
 
-const TaskCard: React.FC<TaskCardProps> = ({ task, onEdit }) => {
+const TaskCard: React.FC<TaskCardProps> = ({ task, onEdit, archive }) => {
   const markTaskAsCompleted = useMarkTaskAsCompleted();
   const deleteTaskCompletion = useDeleteTaskCompletion();
   const user = useCurrentUser();
@@ -81,6 +82,7 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, onEdit }) => {
           </Heading>
         </Button>
         <NeuomorphicCheckbox
+          disabled={archive}
           checked={task.completedInLast10Minutes}
           onCheckedChange={handleCheckboxChange}
         />

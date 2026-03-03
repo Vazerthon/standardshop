@@ -1,6 +1,7 @@
 import {
   Badge,
   Container,
+  Flex,
   For,
   List,
   Show,
@@ -28,7 +29,8 @@ import { useEffect, useMemo, useState } from "react";
 const TaskList: React.FC<{
   tasks: Task[];
   onEdit: (task: Task) => void;
-}> = ({ tasks, onEdit }) => (
+  archive?: boolean;
+}> = ({ tasks, onEdit, archive }) => (
   <For
     each={tasks}
     fallback={<Text color="text.primary">No tasks found.</Text>}
@@ -36,15 +38,19 @@ const TaskList: React.FC<{
     {(task) => (
       <List.Root key={task.id} mb={2} variant="plain">
         <List.Item>
-          <TaskCard task={task} onEdit={() => onEdit(task)} />
+          <TaskCard task={task} onEdit={() => onEdit(task)} archive={archive} />
         </List.Item>
       </List.Root>
     )}
   </For>
 );
 
-const Tasks: React.FC = () => {
-  const { tasks, loading, error } = useTasks();
+interface TasksProps {
+  archive?: boolean;
+}
+
+const Tasks: React.FC<TasksProps> = ({ archive = false }) => {
+  const { tasks, loading, error } = useTasks(archive);
   const [addEditTaskOpen, setAddEditTaskOpen] = useState(false);
   const [editTaskId, setEditTaskId] = useState<Task["id"] | undefined>(
     undefined,
@@ -57,16 +63,19 @@ const Tasks: React.FC = () => {
   const setExtraContent = useSetExtraContentRenderFunction();
   useEffect(() => {
     setExtraContent(() => (
-      <NeuomorphicButton
-        variant="circular-raised"
-        onClick={() => setImportOpen(true)}
-        aria-label="Import tasks"
-      >
-        <Icons.Upload />
-      </NeuomorphicButton>
+      <Flex gap={2} align="center" justify="space-between" w="100%">
+        <Text as="h1" color="text.primary">{archive ? "Tasks Archive" : "Tasks"}</Text>
+        <NeuomorphicButton
+          variant="circular-raised"
+          onClick={() => setImportOpen(true)}
+          aria-label="Import tasks"
+        >
+          <Icons.Upload />
+        </NeuomorphicButton>
+      </Flex>
     ));
     return () => setExtraContent(undefined);
-  }, [setExtraContent]);
+  }, [setExtraContent, archive]);
 
   if (loading) {
     return <LoadingSpinner />;
@@ -136,6 +145,7 @@ const Tasks: React.FC = () => {
               <TaskList
                 tasks={getFilteredTasks(tasks, tab.key)}
                 onEdit={openEditTaskModal}
+                archive={archive}
               />
             </Tabs.Content>
           )}
