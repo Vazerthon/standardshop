@@ -51,7 +51,8 @@ const CompletionEditor: React.FC<CompletionEditorProps> = ({ completion }) => {
       display="flex"
       alignItems="center"
       gap={2}
-      py={4}
+      p={0}
+      py={2}
     >
       <NeuomorphicInput
         type="date"

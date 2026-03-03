@@ -49,7 +49,7 @@ const Tasks: React.FC = () => {
   const [editTaskId, setEditTaskId] = useState<Task["id"] | undefined>(
     undefined,
   );
-  const [activeTab, setActiveTab] = useState<TaskTabKey>("all");
+  const [activeTab, setActiveTab] = useState<TaskTabKey>("overdue");
   const [importOpen, setImportOpen] = useState(false);
   const editTask = tasks.find((task) => task.id === editTaskId);
   const tabCounts = useMemo(() => getTabCounts(tasks), [tasks]);

@@ -95,7 +95,7 @@ export type TaskTabKey =
   | "monthlyPlus"
   | "yearlyPlus"
   | "oneOff"
-  | "all"
+  | "all";
 
 export interface TaskTab {
   key: TaskTabKey;
