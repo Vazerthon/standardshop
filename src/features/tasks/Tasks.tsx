@@ -72,6 +72,11 @@ const Tasks: React.FC = () => {
     return <LoadingSpinner />;
   }
 
+  const openAddTaskModal = () => {
+    setEditTaskId(undefined);
+    setAddEditTaskOpen(true);
+   };
+
   const openEditTaskModal = (task: Task) => {
     setEditTaskId(task.id);
     setAddEditTaskOpen(true);
@@ -144,12 +149,12 @@ const Tasks: React.FC = () => {
         position="fixed"
         bottom={4}
         right={4}
-        onClick={() => setAddEditTaskOpen(true)}
+        onClick={openAddTaskModal}
       >
         <Icons.Plus />
       </NeuomorphicButton>
 
-      <Show when={addEditTaskOpen && editTask}>
+      <Show when={addEditTaskOpen}>
         <AddEditTask
           open={addEditTaskOpen}
           onClose={closeEditTaskModal}
