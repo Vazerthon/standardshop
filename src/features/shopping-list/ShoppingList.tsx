@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Flex, Switch, Box, Text } from "@chakra-ui/react";
+import { Flex, Switch, Text } from "@chakra-ui/react";
 import { useSetExtraContentRenderFunction } from "../app/useMenuBarStore";
 import SharedItemList from "../components/SharedItemList";
 import {
@@ -28,20 +28,32 @@ const ShoppingList: React.FC = () => {
   const { items: autocompleteItems } = useItemNames();
   const [locked, setLocked] = useState(false);
 
-  const onDeleteCheckedItems = !locked ? () => {
-    const { checkedItems } = shoppingList;
-    const checkedItemIds = checkedItems.map(item => item.id);
-    deleteCheckedItems(checkedItemIds);
-  } : undefined;
+  const onDeleteCheckedItems = !locked
+    ? () => {
+        const { checkedItems } = shoppingList;
+        const checkedItemIds = checkedItems.map((item) => item.id);
+        deleteCheckedItems(checkedItemIds);
+      }
+    : undefined;
 
   useEffect(() => {
     setExtraContentRenderFunction(() => (
-      <Flex color="text.primary" gap={4} align="center" justify="space-between" w="100%">
-        <Text as="h1" color="text.primary">Shopping list</Text>
+      <Flex
+        color="text.primary"
+        gap={4}
+        align="center"
+        justify="space-between"
+        w="100%"
+      >
+        <Text as="h1" color="text.primary">
+          Shopping list
+        </Text>
         <Flex gap={4}>
           <Icons.Edit />
-          <Switch.Root checked={locked}
-            onCheckedChange={() => setLocked(!locked)}>
+          <Switch.Root
+            checked={locked}
+            onCheckedChange={() => setLocked(!locked)}
+          >
             <Switch.HiddenInput />
             <Switch.Control boxShadow="neuomorphicLarge">
               <Switch.Thumb boxShadow="neuomorphicLarge" />

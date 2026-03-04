@@ -1,5 +1,5 @@
 import { db } from "@/lib/db";
-import { formatDistanceToNow, max } from "date-fns"
+import { formatDistanceToNow, max } from "date-fns";
 import { ShoppingListItem } from "../shopping-list/useShoppingList";
 
 interface HistoryRecord {
@@ -17,7 +17,9 @@ export interface Item {
 
 const distanceSinceLastPurchase = (items: ShoppingListItem[]) => {
   if (!items || items.length === 0) return undefined;
-  const mostRecentPurchaseDate = max(items.map(item => item.checkedAt).filter(Boolean) as Date[]);
+  const mostRecentPurchaseDate = max(
+    items.map((item) => item.checkedAt).filter(Boolean) as Date[],
+  );
   return formatDistanceToNow(mostRecentPurchaseDate, { addSuffix: true });
 };
 
@@ -26,11 +28,12 @@ const mapItemsWithHistory = (data: any): Item[] =>
     id: item.id,
     name: item?.name,
     distanceSinceLastPurchase: distanceSinceLastPurchase(item?.shopListItems),
-    history: item?.shopListItems?.map((shopListItem: any) => ({
-      id: shopListItem.id,
-      purchaseDate: new Date(shopListItem.checkedAt),
-      quantity: shopListItem.quantity,
-    })) || [],
+    history:
+      item?.shopListItems?.map((shopListItem: any) => ({
+        id: shopListItem.id,
+        purchaseDate: new Date(shopListItem.checkedAt),
+        quantity: shopListItem.quantity,
+      })) || [],
   })) || [];
 
 export const useItemHistory = () => {
@@ -44,13 +47,16 @@ export const useItemHistory = () => {
           where: {
             checkedAt: { $isNull: false },
           },
+          /* @ts-ignore */
           order: { checkedAt: "desc" },
         },
       },
     },
   });
 
-  const items = mapItemsWithHistory(data).filter((item) => item.history.length > 0);
+  const items = mapItemsWithHistory(data).filter(
+    (item) => item.history.length > 0,
+  );
 
   return {
     items,
@@ -69,11 +75,12 @@ export const useItemNames = () => {
   });
 
   return {
-    items: data?.items.map((item: any) => ({
-      id: item.id,
-      label: item.name,
-      value: item.name,
-    })) || [],
+    items:
+      data?.items.map((item: any) => ({
+        id: item.id,
+        label: item.name,
+        value: item.name,
+      })) || [],
     loading: isLoading,
     error: error as Error | null,
   };
