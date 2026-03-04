@@ -3,16 +3,30 @@ import {
   Container,
   Stack,
   Text,
+  Flex
 } from '@chakra-ui/react';
 import { useCreateTemplate, useTemplates } from './useTemplates';
 import ManageTemplateItem from './ManageTemplateItem';
 import CreateItem from '../components/CreateItem';
 import LoadingSpinner from '../components/LoadingSpinner';
 import ErrorBox from '../components/ErrorBox';
+import { useSetExtraContentRenderFunction } from '../app/useMenuBarStore';
+import { useEffect } from 'react';
 
 const ManageTemplates: React.FC = () => {
   const { templates, loading, error } = useTemplates();
   const createTemplate = useCreateTemplate();
+
+const setExtraContentRenderFunction = useSetExtraContentRenderFunction();
+
+  useEffect(() => {
+    setExtraContentRenderFunction(() => (
+      <Flex color="text.primary" gap={4} align="center" justify="space-between" w="100%">
+        <Text as="h1" color="text.primary">Manage Templates</Text>
+      </Flex>
+    ));
+    return () => setExtraContentRenderFunction(undefined);
+  }, [setExtraContentRenderFunction]);
 
   if (loading) {
     return (
