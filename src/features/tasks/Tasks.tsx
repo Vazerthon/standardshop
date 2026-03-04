@@ -19,7 +19,6 @@ import LoadingSpinner from "../components/LoadingSpinner";
 import ErrorBox from "../components/ErrorBox";
 import TaskCard from "./TaskCard";
 import AddEditTask from "./AddEditTask";
-import ImportTasks from "./ImportTasks";
 import NeuomorphicButton from "../components/NeuomorphicButton";
 import Icons from "../components/Icons";
 import { useSetExtraContentRenderFunction } from "../app/useMenuBarStore";
@@ -55,7 +54,6 @@ const Tasks: React.FC<TasksProps> = ({ archive = false }) => {
     undefined,
   );
   const [activeTab, setActiveTab] = useState<TaskTabKey>("overdue");
-  const [importOpen, setImportOpen] = useState(false);
   const editTask = tasks.find((task) => task.id === editTaskId);
   const tabCounts = useMemo(() => getTabCounts(tasks), [tasks]);
 
@@ -71,13 +69,6 @@ const Tasks: React.FC<TasksProps> = ({ archive = false }) => {
           onValueChange={(value) => setActiveTab(value.value[0] as TaskTabKey)}
           color="text.primary"
         />
-        <NeuomorphicButton
-          variant="circular-raised"
-          onClick={() => setImportOpen(true)}
-          aria-label="Import tasks"
-        >
-          <Icons.Upload />
-        </NeuomorphicButton>
       </Flex>
     ));
     return () => setExtraContent(undefined);
@@ -127,8 +118,6 @@ const Tasks: React.FC<TasksProps> = ({ archive = false }) => {
           task={editTask}
         />
       </Show>
-
-      <ImportTasks open={importOpen} onClose={() => setImportOpen(false)} />
     </Container>
   );
 };
