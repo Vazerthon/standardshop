@@ -1,11 +1,9 @@
 import {
-  Badge,
   Container,
   Flex,
   For,
   List,
   Show,
-  Tabs,
   Text,
 } from "@chakra-ui/react";
 import {
@@ -16,6 +14,7 @@ import {
   TaskTabKey,
   useTasks,
 } from "./useTasks";
+import Select from "../components/Select";
 import LoadingSpinner from "../components/LoadingSpinner";
 import ErrorBox from "../components/ErrorBox";
 import TaskCard from "./TaskCard";
@@ -65,6 +64,13 @@ const Tasks: React.FC<TasksProps> = ({ archive = false }) => {
     setExtraContent(() => (
       <Flex gap={2} align="center" justify="space-between" w="100%">
         <Text as="h1" color="text.primary">{archive ? "Tasks Archive" : "Tasks"}</Text>
+        <Select
+          label="Filter tasks"
+          values={TASK_TABS.map((tab) => ({ label: `${tab.label} (${tabCounts[tab.key]})`, value: tab.key }))}
+          selectedValue={[activeTab]}
+          onValueChange={(value) => setActiveTab(value.value[0] as TaskTabKey)}
+          color="text.primary"
+        />
         <NeuomorphicButton
           variant="circular-raised"
           onClick={() => setImportOpen(true)}
@@ -75,7 +81,7 @@ const Tasks: React.FC<TasksProps> = ({ archive = false }) => {
       </Flex>
     ));
     return () => setExtraContent(undefined);
-  }, [setExtraContent, archive]);
+  }, [setExtraContent, archive, activeTab]);
 
   if (loading) {
     return <LoadingSpinner />;
@@ -99,59 +105,11 @@ const Tasks: React.FC<TasksProps> = ({ archive = false }) => {
   return (
     <Container p={2} mt={2}>
       {error?.message && <ErrorBox error={error} />}
-
-      <Tabs.Root
-        variant="plain"
-        value={activeTab}
-        onValueChange={(e) => setActiveTab(e.value as TaskTabKey)}
-      >
-        <Tabs.List
-          flexWrap="nowrap"
-          minW="100%"
-          bg="surface.primary"
-          borderRadius="md"
-          mb={3}
-          boxShadow="neuomorphic"
-        >
-          <For each={TASK_TABS}>
-            {(tab) => (
-              <Tabs.Trigger
-                key={tab.key}
-                value={tab.key}
-                fontSize="xs"
-                px={1}
-                my={1}
-                color="text.primary"
-                shadow={activeTab === tab.key ? "neuomorphicInset" : "none"}
-              >
-                {tab.label}
-                <Badge
-                  variant="solid"
-                  size="xs"
-                  borderRadius="full"
-                  bg="text.secondary"
-                  color="white"
-                >
-                  {tabCounts[tab.key]}
-                </Badge>
-              </Tabs.Trigger>
-            )}
-          </For>
-        </Tabs.List>
-
-        <For each={TASK_TABS}>
-          {(tab) => (
-            <Tabs.Content key={tab.key} value={tab.key} p={0}>
-              <TaskList
-                tasks={getFilteredTasks(tasks, tab.key)}
-                onEdit={openEditTaskModal}
-                archive={archive}
-              />
-            </Tabs.Content>
-          )}
-        </For>
-      </Tabs.Root>
-
+      <TaskList
+        tasks={getFilteredTasks(tasks, activeTab)}
+        onEdit={openEditTaskModal}
+        archive={archive}
+      />
       <NeuomorphicButton
         variant="circular-raised"
         position="fixed"
