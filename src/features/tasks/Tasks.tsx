@@ -1,11 +1,4 @@
-import {
-  Container,
-  Flex,
-  For,
-  List,
-  Show,
-  Text,
-} from "@chakra-ui/react";
+import { Container, Flex, For, List, Show, Text } from "@chakra-ui/react";
 import {
   getFilteredTasks,
   getTabCounts,
@@ -61,10 +54,15 @@ const Tasks: React.FC<TasksProps> = ({ archive = false }) => {
   useEffect(() => {
     setExtraContent(() => (
       <Flex gap={2} align="center" justify="space-between" w="100%">
-        <Text as="h1" color="text.primary">{archive ? "Tasks Archive" : "Tasks"}</Text>
+        <Text as="h1" color="text.primary">
+          {archive ? "Tasks Archive" : "Tasks"}
+        </Text>
         <Select
           label="Filter tasks"
-          values={TASK_TABS.map((tab) => ({ label: `${tab.label} (${tabCounts[tab.key]})`, value: tab.key }))}
+          values={TASK_TABS.map((tab) => ({
+            label: `${tab.label} (${tabCounts[tab.key]})`,
+            value: tab.key,
+          }))}
           selectedValue={[activeTab]}
           onValueChange={(value) => setActiveTab(value.value[0] as TaskTabKey)}
           color="text.primary"
@@ -72,7 +70,7 @@ const Tasks: React.FC<TasksProps> = ({ archive = false }) => {
       </Flex>
     ));
     return () => setExtraContent(undefined);
-  }, [setExtraContent, archive, activeTab]);
+  }, [setExtraContent, archive, activeTab, tabCounts]);
 
   if (loading) {
     return <LoadingSpinner />;
