@@ -1,26 +1,25 @@
-import {
-  Box,
-  Flex,
-} from '@chakra-ui/react';
+import { Box, Flex } from "@chakra-ui/react";
 import { db } from "@/lib/db";
-import LoginForm from '../auth/LoginForm';
-import { useAuthLoading, useAuthSignOut } from '../auth/useAuthStore';
-import NeuomorphicButton from '../components/NeuomorphicButton';
-import { Drawer } from '../components/Drawer';
-import Router, { BrowserRouter, Navigation } from './Router';
-import { MenuBar } from './MenuBar';
-import TemplateList from '../templates/TemplateList';
-import LoadingSpinner from '../components/LoadingSpinner';
-import ConnectionIndicator from './ConectionIndicator';
+import LoginForm from "../auth/LoginForm";
+import { useAuthLoading, useAuthSignOut } from "../auth/useAuthStore";
+import NeuomorphicButton from "../components/NeuomorphicButton";
+import { Drawer } from "../components/Drawer";
+import Router, {
+  BrowserRouter,
+  MainNavigation,
+  SecondaryNavigation,
+} from "./Router";
+import { MenuBar } from "./MenuBar";
+import TemplateList from "../templates/TemplateList";
+import LoadingSpinner from "../components/LoadingSpinner";
+import ConnectionIndicator from "./ConectionIndicator";
 
 function App() {
   const loading = useAuthLoading();
   const signOut = useAuthSignOut();
 
   if (loading) {
-    return (
-      <LoadingSpinner />
-    );
+    return <LoadingSpinner />;
   }
 
   return (
@@ -36,15 +35,13 @@ function App() {
             <MenuBar>
               <Drawer>
                 <>
-                  <Navigation />
+                  <MainNavigation />
                   <TemplateList />
+                  <SecondaryNavigation />
                 </>
                 <Flex w="100%" align="center" justify="space-between">
                   <ConnectionIndicator />
-                  <NeuomorphicButton
-                    onClick={signOut}
-                    size="md"
-                  >
+                  <NeuomorphicButton onClick={signOut} size="md">
                     Sign Out
                   </NeuomorphicButton>
                 </Flex>

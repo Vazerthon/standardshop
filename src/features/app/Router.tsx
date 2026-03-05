@@ -42,20 +42,29 @@ const NavItem: React.FC<{ to: string; label: string }> = ({ to, label }) => (
   </List.Item>
 );
 
-const Navigation: React.FC = () => {
+const MainNavigation: React.FC = () => {
   return (
     <Box as="nav" p={4} color="text.primary">
       <List.Root variant="plain">
         <NavItem to={routes.shoppingList} label="Shopping List" />
+        <NavItem to={routes.tasks} label="Tasks" />
+      </List.Root>
+    </Box>
+  );
+};
+
+const SecondaryNavigation: React.FC = () => {
+  return (
+    <Box as="nav" p={4} pt={8} color="text.primary">
+      <List.Root variant="plain">
         <NavItem to={routes.templates} label="Manage templates" />
         <NavItem to={routes.history} label="Shopping History" />
-        <NavItem to={routes.tasks} label="Tasks" />
         <NavItem to={routes.tasksArchive} label="Tasks Archive" />
       </List.Root>
     </Box>
   );
 };
 
-export { Navigation, BrowserRouter };
+export { MainNavigation, SecondaryNavigation, BrowserRouter };
 
 export default Router;
