@@ -36,12 +36,24 @@ const mapItemsWithHistory = (data: any): Item[] =>
       })) || [],
   })) || [];
 
-export const useItemHistory = () => {
+export const useItemHistory = (filter: string) => {
+  const dollarFilter =
+    filter.length >= 3
+      ? {
+          where: {
+            name: { $like: `%${filter}%` },
+          },
+          order: { name: "asc" },
+        }
+      : {
+          order: { name: "asc" },
+          limit: 50,
+        };
+
   const { isLoading, error, data } = db.useQuery({
     items: {
-      $: {
-        order: { name: "asc" },
-      },
+      /* @ts-ignore */
+      $: dollarFilter,
       shopListItems: {
         $: {
           where: {
