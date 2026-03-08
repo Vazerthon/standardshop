@@ -14,8 +14,10 @@ import {
 } from "./useShoppingList";
 import Icons from "../components/Icons";
 import { useItemNames } from "../history/useItems";
+import { useShoppingRecommendations } from "./useShoppingRecommendations";
 
 const ShoppingList: React.FC = () => {
+  const { recommendations } = useShoppingRecommendations({ scoreThreshold: 0.5 });
   const { shoppingList, loading, error } = useShoppingList();
   const createItem = useCreateShoppingListItem();
   const updateOrder = useUpdateShoppingListOrder();
@@ -72,6 +74,7 @@ const ShoppingList: React.FC = () => {
     <SharedItemList
       uncheckedItems={uncheckedItems}
       checkedItems={checkedItems}
+      recommendedItems={recommendations}
       loading={loading}
       error={error}
       onUpdateQuantity={updateItemQuantity}
