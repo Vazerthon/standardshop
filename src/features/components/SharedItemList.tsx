@@ -6,6 +6,7 @@ import {
   Spinner,
   Accordion,
   Flex,
+  Show,
 } from "@chakra-ui/react";
 import {
   DndContext,
@@ -69,6 +70,7 @@ export interface SharedListItemType {
 interface SharedItemListProps {
   uncheckedItems: SharedListItemType[];
   checkedItems?: SharedListItemType[];
+  recommendedItems?: SharedListItemType[];
   showCheckedItems?: boolean;
   loading?: boolean;
   error?: Error | null;
@@ -84,11 +86,13 @@ interface SharedItemListProps {
   allowDeleteItems?: boolean;
   autocompleteItems?: { id: string; label: string; value: string }[];
   onDeleteCheckedItems?: () => void;
+  onAddFromRecommendations?: (itemName: string, quantity: number) => void;
 }
 
 const SharedItemList: React.FC<SharedItemListProps> = ({
   uncheckedItems,
   checkedItems,
+  recommendedItems,
   loading,
   error,
   onUpdateQuantity,
@@ -104,6 +108,7 @@ const SharedItemList: React.FC<SharedItemListProps> = ({
   allowDeleteItems,
   autocompleteItems,
   onDeleteCheckedItems,
+  onAddFromRecommendations,
 }) => {
   const sensors = useSensors(
     useSensor(TouchSensor, {
@@ -119,7 +124,7 @@ const SharedItemList: React.FC<SharedItemListProps> = ({
     }),
     useSensor(KeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates,
-    })
+    }),
   );
 
   const handleDragEnd = (event: DragEndEvent) => {
@@ -127,7 +132,7 @@ const SharedItemList: React.FC<SharedItemListProps> = ({
 
     if (over && active.id !== over.id) {
       const oldIndex = uncheckedItems.findIndex(
-        (item) => item.id === active.id
+        (item) => item.id === active.id,
       );
       const newIndex = uncheckedItems.findIndex((item) => item.id === over.id);
 
@@ -158,13 +163,13 @@ const SharedItemList: React.FC<SharedItemListProps> = ({
 
   return (
     <Container p={2} mt={2}>
-      {error && (
+      <Show when={error}>
         <Box p={4} mt={4} borderRadius="xl" boxShadow="neuomorphicInset">
           <Text fontSize="sm" color="text.primary">
-            {error.message}
+            {error?.message}
           </Text>
         </Box>
-      )}
+      </Show>
       <DndContext
         sensors={sensors}
         collisionDetection={closestCenter}
@@ -175,11 +180,11 @@ const SharedItemList: React.FC<SharedItemListProps> = ({
           restrictToParentElement,
         ]}
       >
-        {uncheckedItems.length === 0 && (
+        <Show when={uncheckedItems.length === 0}>
           <Text fontSize="sm" color="text.secondary" textAlign="center" my={4}>
             No items to display. Add some items to get started!
           </Text>
-        )}
+        </Show>
         <SortableContext
           items={uncheckedItems.map((item) => item.id)}
           strategy={verticalListSortingStrategy}
@@ -206,17 +211,34 @@ const SharedItemList: React.FC<SharedItemListProps> = ({
         buttonAriaLabel="Add list item"
         autocompleteItems={autocompleteItems}
       />
-      {shouldShowCheckedItems && (
+      <Show when={recommendedItems && recommendedItems.length > 0}>
+        <Accordion.Root collapsible mt={4}>
+          <Accordion.Item key="recommended-items" value="recommended-items">
+            <Accordion.ItemTrigger display="flex">
+              <Accordion.ItemIndicator />
+              <Text fontSize="md" fontWeight="bold" color="text.secondary">
+                Recommended Items ({recommendedItems?.length})
+              </Text>
+            </Accordion.ItemTrigger>
+            <Accordion.ItemContent overflow="unset">
+              {recommendedItems?.map((item) => (
+                <SharedListItem
+                  key={item.id}
+                  item={item}
+                  onPlusButtonClick={onAddFromRecommendations}
+                />
+              ))}
+            </Accordion.ItemContent>
+          </Accordion.Item>
+        </Accordion.Root>
+      </Show>
+      <Show when={shouldShowCheckedItems}>
         <Accordion.Root collapsible mt={4}>
           <Accordion.Item key="checked-items" value="checked-items">
             <Accordion.ItemTrigger display="flex">
               <Accordion.ItemIndicator />
-              <Text
-                fontSize="md"
-                fontWeight="bold"
-                color="text.secondary"
-              >
-                Checked Items ({checkedItems.length})
+              <Text fontSize="md" fontWeight="bold" color="text.secondary">
+                Checked Items ({checkedItems?.length})
               </Text>
             </Accordion.ItemTrigger>
             <Accordion.ItemContent overflow="unset">
@@ -226,14 +248,14 @@ const SharedItemList: React.FC<SharedItemListProps> = ({
                     variant="circular-raised"
                     aria-label="Delete all checked items"
                     mt="-10"
-                  mb="4"
-                  onClick={onDeleteCheckedItems}
-                >
-                  <Icons.Trash />
-                </NeuomorphicButton>
-              </Flex>
+                    mb="4"
+                    onClick={onDeleteCheckedItems}
+                  >
+                    <Icons.Trash />
+                  </NeuomorphicButton>
+                </Flex>
               )}
-              {checkedItems.map((item) => (
+              {checkedItems?.map((item) => (
                 <SharedListItem
                   key={item.id}
                   item={item}
@@ -247,7 +269,7 @@ const SharedItemList: React.FC<SharedItemListProps> = ({
             </Accordion.ItemContent>
           </Accordion.Item>
         </Accordion.Root>
-      )}
+      </Show>
     </Container>
   );
 };

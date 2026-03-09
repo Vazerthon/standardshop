@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, BoxProps, Flex, Text } from "@chakra-ui/react";
+import { Box, BoxProps, Flex, Text, Show } from "@chakra-ui/react";
 import NeuomorphicCheckbox from "../components/NeuomorphicCheckbox";
 import { transitions } from "@/theme";
 
@@ -22,6 +22,7 @@ export interface SharedListItemProps extends BoxProps {
   onCheckItem?: (itemId: string) => void;
   onUncheckItem?: (itemId: string) => void;
   onDeleteItem?: (itemId: string) => void;
+  onPlusButtonClick?: (itemName: string, quantity: number) => void;
   allowDelete?: boolean;
   allowDrag?: boolean;
 }
@@ -35,6 +36,7 @@ const SharedListItem: React.FC<SharedListItemProps> = ({
   onCheckItem,
   onUncheckItem,
   onDeleteItem,
+  onPlusButtonClick,
   allowDelete,
   allowDrag,
   ...boxProps
@@ -70,7 +72,7 @@ const SharedListItem: React.FC<SharedListItemProps> = ({
       {...boxProps}
     >
       <Flex align="center" gap={3}>
-        {dragHandleProps && allowDrag && (
+        <Show when={dragHandleProps && allowDrag}>
           <Text
             color="text.secondary"
             touchAction="none"
@@ -82,27 +84,39 @@ const SharedListItem: React.FC<SharedListItemProps> = ({
           >
             <Icons.Drag />
           </Text>
-        )}
-        {shouldShowCheckbox && (
+        </Show>
+        <Show when={shouldShowCheckbox}>
           <NeuomorphicCheckbox
             checked={!!item.checkedAt}
             onCheckedChange={handleCheckboxChange}
           />
-        )}
+        </Show>
+        <Show when={onPlusButtonClick}>
+          <NeuomorphicButton
+            onClick={() => onPlusButtonClick?.(item.name, item.quantity)}
+            aria-label={`Add more of ${item.name}`}
+            variant="circular-raised"
+          >
+            <Icons.Plus />
+          </NeuomorphicButton>
+        </Show>
         <Text lineClamp={2} fontSize="sm" color="text.primary" flex={1}>
           {item.name}
         </Text>
-        {allowQuantityChange ? (
+        <Show
+          when={allowQuantityChange}
+          fallback={
+            <Text fontSize="sm" color="text.secondary">
+              x{item.quantity}
+            </Text>
+          }
+        >
           <NumberStepper
             value={item.quantity}
             onChange={(value: number) => onUpdateQuantity?.(item.id, value)}
           />
-        ) : (
-          <Text fontSize="sm" color="text.secondary">
-            x{item.quantity}
-          </Text>
-        )}
-        {allowDelete && (
+        </Show>
+        <Show when={allowDelete}>
           <NeuomorphicButton
             onClick={handleDeleteItem}
             aria-label={`Delete ${item.name}`}
@@ -110,7 +124,7 @@ const SharedListItem: React.FC<SharedListItemProps> = ({
           >
             <Icons.Trash />
           </NeuomorphicButton>
-        )}
+        </Show>
       </Flex>
     </Box>
   );

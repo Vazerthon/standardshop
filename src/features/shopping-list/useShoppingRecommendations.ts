@@ -1,0 +1,246 @@
+import { differenceInDays } from "date-fns";
+import { db } from "@/lib/db";
+import { ShoppingListItem } from "./useShoppingList";
+
+const RECENT_WINDOW_DAYS = 60;
+const RECENCY_DECAY_DAYS = 45;
+const FREQUENCY_DECAY_DAYS = 120;
+const RECENT_EVENT_MULTIPLIER = 2.25;
+const RECENT_FREQUENCY_MULTIPLIER = 1.75;
+
+const SCORE_WEIGHTS = {
+  recency: 0.45,
+  frequency: 0.35,
+  seasonality: 0.2,
+} as const;
+
+export interface ShoppingRecommendationOptions {
+  scoreThreshold?: number;
+  now?: Date;
+}
+
+interface PurchaseEvent {
+  checkedAt: Date;
+  quantity: number;
+}
+
+interface RawScore {
+  recency: number;
+  frequency: number;
+  seasonality: number;
+}
+
+interface RecommendationCandidate {
+  itemId: string;
+  name: string;
+  quantity: number;
+  score: RawScore;
+}
+
+const normalize = (value: number, maxValue: number) => {
+  if (maxValue <= 0) return 0;
+  return value / maxValue;
+};
+
+const toDate = (value: unknown): Date | null => {
+  if (!value) return null;
+
+  const date = value instanceof Date ? value : new Date(String(value));
+  return Number.isNaN(date.getTime()) ? null : date;
+};
+
+const circularMonthDistance = (monthA: number, monthB: number) => {
+  const diff = Math.abs(monthA - monthB);
+  return Math.min(diff, 12 - diff);
+};
+
+const seasonalityScore = (events: PurchaseEvent[], now: Date): number => {
+  if (events.length < 2) return 0;
+
+  const monthCounts = new Array<number>(12).fill(0);
+  const years = new Set<number>();
+
+  for (const event of events) {
+    monthCounts[event.checkedAt.getMonth()] += 1;
+    years.add(event.checkedAt.getFullYear());
+  }
+
+  const dominantMonthCount = Math.max(...monthCounts);
+  const dominantMonth = monthCounts.indexOf(dominantMonthCount);
+  const concentration = dominantMonthCount / events.length;
+
+  if (concentration < 0.34) return 0;
+
+  const distance = circularMonthDistance(now.getMonth(), dominantMonth);
+  const proximityByDistance = [1, 0.8, 0.4];
+  const monthProximity = proximityByDistance[distance] ?? 0;
+
+  if (monthProximity === 0) return 0;
+
+  const yearsCovered = years.size;
+  const eventsPerYear = yearsCovered > 0 ? events.length / yearsCovered : events.length;
+  const isAnnualPattern = yearsCovered >= 2 && eventsPerYear <= 1.4;
+
+  if (isAnnualPattern) {
+    return Math.min(1, concentration * 1.25) * monthProximity;
+  }
+
+  return concentration * 0.75 * monthProximity;
+};
+
+const scoreHistory = (events: PurchaseEvent[], now: Date): RawScore => {
+  let recency = 0;
+  let frequency = 0;
+
+  for (const event of events) {
+    const ageInDays = Math.max(0, differenceInDays(now, event.checkedAt));
+    const recencyDecay = Math.exp(-ageInDays / RECENCY_DECAY_DAYS);
+    const frequencyDecay = Math.exp(-ageInDays / FREQUENCY_DECAY_DAYS);
+    const recentMultiplier = ageInDays <= RECENT_WINDOW_DAYS ? RECENT_EVENT_MULTIPLIER : 1;
+    const recentFrequencyMultiplier =
+      ageInDays <= RECENT_WINDOW_DAYS ? RECENT_FREQUENCY_MULTIPLIER : 1;
+
+    recency += recencyDecay * recentMultiplier;
+    frequency += frequencyDecay * recentFrequencyMultiplier;
+  }
+
+  return {
+    recency,
+    frequency,
+    seasonality: seasonalityScore(events, now),
+  };
+};
+
+const averageQuantity = (events: PurchaseEvent[]) => {
+  if (events.length === 0) return 1;
+
+  const total = events.reduce((sum, event) => sum + event.quantity, 0);
+  return Math.max(1, Math.round(total / events.length));
+};
+
+const mapPurchaseEvents = (shopListItems: ShoppingListItem[]): PurchaseEvent[] =>
+  (shopListItems || [])
+    .map((shopListItem: ShoppingListItem) => {
+      const checkedAt = toDate(shopListItem?.checkedAt);
+      if (!checkedAt) return null;
+
+      const quantity =
+        typeof shopListItem?.quantity === "number" && shopListItem.quantity > 0
+          ? shopListItem.quantity
+          : 1;
+
+      return {
+        checkedAt,
+        quantity,
+      } as PurchaseEvent;
+    })
+    .filter(Boolean) as PurchaseEvent[];
+
+const toShoppingListItems = (
+  candidates: RecommendationCandidate[],
+  scoreThreshold: number,
+): ShoppingListItem[] => {
+  if (candidates.length === 0) return [];
+
+  const maxRecency = Math.max(...candidates.map((candidate) => candidate.score.recency));
+  const maxFrequency = Math.max(...candidates.map((candidate) => candidate.score.frequency));
+  const maxSeasonality = Math.max(...candidates.map((candidate) => candidate.score.seasonality));
+
+  return candidates
+    .map((candidate) => {
+      const recency = normalize(candidate.score.recency, maxRecency);
+      const frequency = normalize(candidate.score.frequency, maxFrequency);
+      const seasonality = normalize(candidate.score.seasonality, maxSeasonality);
+
+      const totalScore =
+        recency * SCORE_WEIGHTS.recency +
+        frequency * SCORE_WEIGHTS.frequency +
+        seasonality * SCORE_WEIGHTS.seasonality;
+
+      return {
+        ...candidate,
+        totalScore,
+      };
+    })
+    .sort((a, b) => b.totalScore - a.totalScore)
+    .filter((candidate) =>  candidate.totalScore > (scoreThreshold ?? 0))
+    .map((candidate, index) => ({
+      id: `rec-${candidate.itemId}`,
+      itemId: candidate.itemId,
+      name: candidate.name,
+      quantity: candidate.quantity,
+      sortOrder: index + 1,
+      checkedAt: null,
+    }));
+};
+
+export const useShoppingRecommendations = (
+  options: ShoppingRecommendationOptions = {},
+) => {
+  const scoreThreshold = options.scoreThreshold ?? 0;
+  const now = options.now ?? new Date();
+
+  const {
+    isLoading: isHistoryLoading,
+    error: historyError,
+    data: historyData,
+  } = db.useQuery({
+    items: {
+      shopListItems: {
+        $: {
+          where: {
+            checkedAt: { $isNull: false },
+          },
+        },
+      },
+    },
+  });
+
+  const {
+    isLoading: isUncheckedLoading,
+    error: uncheckedError,
+    data: uncheckedData,
+  } = db.useQuery({
+    shopListItems: {
+      $: {
+        where: {
+          checkedAt: { $isNull: true },
+          deletedAt: { $isNull: true },
+        },
+      },
+      item: {},
+    },
+  });
+
+  const excludedItemIds = new Set<string>(
+    (uncheckedData?.shopListItems || [])
+      .map((shopListItem: any) => shopListItem?.item?.id)
+      .filter(Boolean),
+  );
+
+  const candidates: RecommendationCandidate[] = (historyData?.items || [])
+    .map((item: any) => {
+      if (!item?.id || !item?.name || excludedItemIds.has(item.id)) {
+        return null;
+      }
+
+      const events = mapPurchaseEvents(item?.shopListItems || []);
+      if (events.length === 0) {
+        return null;
+      }
+
+      return {
+        itemId: item.id,
+        name: item.name,
+        quantity: averageQuantity(events),
+        score: scoreHistory(events, now),
+      } as RecommendationCandidate;
+    })
+    .filter(Boolean) as RecommendationCandidate[];
+
+  return {
+    recommendations: toShoppingListItems(candidates, scoreThreshold),
+    loading: isHistoryLoading || isUncheckedLoading,
+    error: (historyError || uncheckedError) as Error | null,
+  };
+};
