@@ -26,10 +26,10 @@ const mapShoppingList = (data: any): MappedShoppingList => {
     })) || [];
 
   const uncheckedItems = allItems.filter(
-    (item: ShoppingListItem) => !item.checkedAt
+    (item: ShoppingListItem) => !item.checkedAt,
   );
   const checkedItems = allItems.filter(
-    (item: ShoppingListItem) => item.checkedAt
+    (item: ShoppingListItem) => item.checkedAt,
   );
 
   return {
@@ -63,7 +63,7 @@ export const useCreateShoppingListItem = () => {
     shoppingList: { checkedItems, uncheckedItems },
   } = useShoppingList();
 
-  return (name: string, owner: string) => {
+  return (name: string, owner: string, quantity?: number) => {
     const allItems = [...checkedItems, ...uncheckedItems];
     const nextSortOrder =
       Math.max(...allItems.map((item) => item.sortOrder), 0) + 1;
@@ -78,7 +78,7 @@ export const useCreateShoppingListItem = () => {
       db.tx.shopListItems[shopListItemId]
         .update({
           sortOrder: nextSortOrder,
-          quantity: 1,
+          quantity: quantity || 1,
           createdAt: new Date(),
         })
         .link({ owner }),
@@ -119,7 +119,7 @@ export const useInsertAllItemsFromTemplate =
   (
     owner: string,
     items: { itemId: string; quantity: number }[],
-    startingSortOrder: number
+    startingSortOrder: number,
   ) =>
     db.transact([
       ...items.map(({ itemId, quantity }, i) => {
@@ -140,7 +140,7 @@ export const useDeleteShoppingListItems = () => (itemIds: string[]) => {
     ...itemIds.map((itemId) =>
       db.tx.shopListItems[lookup("id", itemId)].update({
         deletedAt: new Date(),
-      })
+      }),
     ),
   ]);
 };

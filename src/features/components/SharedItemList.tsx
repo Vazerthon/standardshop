@@ -86,6 +86,7 @@ interface SharedItemListProps {
   allowDeleteItems?: boolean;
   autocompleteItems?: { id: string; label: string; value: string }[];
   onDeleteCheckedItems?: () => void;
+  onAddFromRecommendations?: (itemName: string, quantity: number) => void;
 }
 
 const SharedItemList: React.FC<SharedItemListProps> = ({
@@ -107,6 +108,7 @@ const SharedItemList: React.FC<SharedItemListProps> = ({
   allowDeleteItems,
   autocompleteItems,
   onDeleteCheckedItems,
+  onAddFromRecommendations,
 }) => {
   const sensors = useSensors(
     useSensor(TouchSensor, {
@@ -122,7 +124,7 @@ const SharedItemList: React.FC<SharedItemListProps> = ({
     }),
     useSensor(KeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates,
-    })
+    }),
   );
 
   const handleDragEnd = (event: DragEndEvent) => {
@@ -130,7 +132,7 @@ const SharedItemList: React.FC<SharedItemListProps> = ({
 
     if (over && active.id !== over.id) {
       const oldIndex = uncheckedItems.findIndex(
-        (item) => item.id === active.id
+        (item) => item.id === active.id,
       );
       const newIndex = uncheckedItems.findIndex((item) => item.id === over.id);
 
@@ -214,11 +216,7 @@ const SharedItemList: React.FC<SharedItemListProps> = ({
           <Accordion.Item key="recommended-items" value="recommended-items">
             <Accordion.ItemTrigger display="flex">
               <Accordion.ItemIndicator />
-              <Text
-                fontSize="md"
-                fontWeight="bold"
-                color="text.secondary"
-              >
+              <Text fontSize="md" fontWeight="bold" color="text.secondary">
                 Recommended Items ({recommendedItems?.length})
               </Text>
             </Accordion.ItemTrigger>
@@ -227,6 +225,7 @@ const SharedItemList: React.FC<SharedItemListProps> = ({
                 <SharedListItem
                   key={item.id}
                   item={item}
+                  onPlusButtonClick={onAddFromRecommendations}
                 />
               ))}
             </Accordion.ItemContent>
@@ -238,11 +237,7 @@ const SharedItemList: React.FC<SharedItemListProps> = ({
           <Accordion.Item key="checked-items" value="checked-items">
             <Accordion.ItemTrigger display="flex">
               <Accordion.ItemIndicator />
-              <Text
-                fontSize="md"
-                fontWeight="bold"
-                color="text.secondary"
-              >
+              <Text fontSize="md" fontWeight="bold" color="text.secondary">
                 Checked Items ({checkedItems?.length})
               </Text>
             </Accordion.ItemTrigger>

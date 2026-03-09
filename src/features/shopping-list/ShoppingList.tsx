@@ -15,9 +15,13 @@ import {
 import Icons from "../components/Icons";
 import { useItemNames } from "../history/useItems";
 import { useShoppingRecommendations } from "./useShoppingRecommendations";
+import { useCurrentUser } from "../auth/useAuthStore";
 
 const ShoppingList: React.FC = () => {
-  const { recommendations } = useShoppingRecommendations({ scoreThreshold: 0.5 });
+  const user = useCurrentUser();
+  const { recommendations } = useShoppingRecommendations({
+    scoreThreshold: 0.5,
+  });
   const { shoppingList, loading, error } = useShoppingList();
   const createItem = useCreateShoppingListItem();
   const updateOrder = useUpdateShoppingListOrder();
@@ -29,6 +33,10 @@ const ShoppingList: React.FC = () => {
   const setExtraContentRenderFunction = useSetExtraContentRenderFunction();
   const { items: autocompleteItems } = useItemNames();
   const [locked, setLocked] = useState(false);
+
+  const handleAddFromRecommendations = (itemName: string, quantity: number) => {
+    createItem(itemName, user.id, quantity);
+  };
 
   const onDeleteCheckedItems = !locked
     ? () => {
@@ -90,6 +98,7 @@ const ShoppingList: React.FC = () => {
       allowDeleteItems={!locked}
       autocompleteItems={autocompleteItems}
       onDeleteCheckedItems={onDeleteCheckedItems}
+      onAddFromRecommendations={handleAddFromRecommendations}
     />
   );
 };
