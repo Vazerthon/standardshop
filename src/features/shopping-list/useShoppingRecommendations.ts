@@ -2,15 +2,21 @@ import { differenceInDays } from "date-fns";
 import { db } from "@/lib/db";
 import { ShoppingListItem } from "./useShoppingList";
 
-const RECENT_WINDOW_DAYS = 60;
-const RECENCY_DECAY_DAYS = 45;
+// Number of days considered "recent" for extra scoring boosts.
+const RECENT_WINDOW_DAYS = 180;
+// Controls how quickly recency impact fades as purchases get older.
+const RECENCY_DECAY_DAYS = 90;
+// Controls how quickly frequency impact fades for older purchase events.
 const FREQUENCY_DECAY_DAYS = 120;
+// Extra weight applied to recency when a purchase falls in the recent window.
 const RECENT_EVENT_MULTIPLIER = 2.25;
+// Extra weight applied to frequency when a purchase falls in the recent window.
 const RECENT_FREQUENCY_MULTIPLIER = 1.75;
 
+// Relative contribution of each scoring dimension to the final recommendation score.
 const SCORE_WEIGHTS = {
   recency: 0.45,
-  frequency: 0.35,
+  frequency: 0.55,
   seasonality: 0.2,
 } as const;
 
