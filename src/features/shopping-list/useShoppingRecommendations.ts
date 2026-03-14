@@ -12,12 +12,20 @@ const FREQUENCY_DECAY_DAYS = 120;
 const RECENT_EVENT_MULTIPLIER = 2.25;
 // Extra weight applied to frequency when a purchase falls in the recent window.
 const RECENT_FREQUENCY_MULTIPLIER = 1.75;
+// Reminder appears once a meaningful fraction of the expected cadence has elapsed.
+const DUE_START_RATIO = 0.75;
+// Recently purchased items stay hidden for part of their expected cadence.
+const COOLDOWN_RATIO = 0.7;
+const MIN_COOLDOWN_DAYS = 2;
+const MIN_INTERVAL_DAYS = 1;
+const MAX_INTERVAL_SAMPLES = 8;
 
 // Relative contribution of each scoring dimension to the final recommendation score.
 const SCORE_WEIGHTS = {
-  recency: 0.45,
-  frequency: 0.55,
-  seasonality: 0.2,
+  urgency: 0.5,
+  confidence: 0.25,
+  trend: 0.2,
+  seasonality: 0.05,
 } as const;
 
 export interface ShoppingRecommendationOptions {
@@ -41,11 +49,53 @@ interface RecommendationCandidate {
   name: string;
   quantity: number;
   score: RawScore;
+  cadence: CadenceModel;
+}
+
+interface CadenceModel {
+  daysSinceLastPurchase: number;
+  typicalIntervalDays: number | null;
+  dueStartDays: number | null;
+  cooldownDays: number;
+  confidence: number;
+  urgency: number;
+  eligible: boolean;
 }
 
 const normalize = (value: number, maxValue: number) => {
   if (maxValue <= 0) return 0;
   return value / maxValue;
+};
+
+const clamp = (value: number, min: number, max: number): number =>
+  Math.min(max, Math.max(min, value));
+
+const average = (values: number[]): number => {
+  if (values.length === 0) return 0;
+  return values.reduce((sum, value) => sum + value, 0) / values.length;
+};
+
+const standardDeviation = (values: number[]): number => {
+  if (values.length <= 1) return 0;
+
+  const mean = average(values);
+  const variance =
+    values.reduce((sum, value) => sum + (value - mean) ** 2, 0) / values.length;
+
+  return Math.sqrt(variance);
+};
+
+const median = (values: number[]): number => {
+  if (values.length === 0) return 0;
+
+  const sorted = [...values].sort((a, b) => a - b);
+  const middle = Math.floor(sorted.length / 2);
+
+  if (sorted.length % 2 === 0) {
+    return (sorted[middle - 1] + sorted[middle]) / 2;
+  }
+
+  return sorted[middle];
 };
 
 const toDate = (value: unknown): Date | null => {
@@ -117,6 +167,89 @@ const scoreHistory = (events: PurchaseEvent[], now: Date): RawScore => {
   };
 };
 
+const buildCadenceModel = (events: PurchaseEvent[], now: Date): CadenceModel => {
+  if (events.length === 0) {
+    return {
+      daysSinceLastPurchase: 0,
+      typicalIntervalDays: null,
+      dueStartDays: null,
+      cooldownDays: MIN_COOLDOWN_DAYS,
+      confidence: 0,
+      urgency: 0,
+      eligible: false,
+    };
+  }
+
+  const sortedEvents = [...events].sort(
+    (a, b) => a.checkedAt.getTime() - b.checkedAt.getTime(),
+  );
+  const lastPurchase = sortedEvents[sortedEvents.length - 1].checkedAt;
+  const daysSinceLastPurchase = Math.max(0, differenceInDays(now, lastPurchase));
+
+  if (sortedEvents.length < 2) {
+    return {
+      daysSinceLastPurchase,
+      typicalIntervalDays: null,
+      dueStartDays: null,
+      cooldownDays: MIN_COOLDOWN_DAYS,
+      confidence: 0,
+      urgency: 0,
+      eligible: false,
+    };
+  }
+
+  const allIntervals = sortedEvents
+    .slice(1)
+    .map((event, index) =>
+      Math.max(
+        MIN_INTERVAL_DAYS,
+        differenceInDays(event.checkedAt, sortedEvents[index].checkedAt),
+      ),
+    );
+
+  const recentIntervals = allIntervals.slice(-MAX_INTERVAL_SAMPLES);
+  const typicalIntervalDays = median(recentIntervals);
+  const dueStartDays = Math.max(
+    MIN_INTERVAL_DAYS,
+    Math.floor(typicalIntervalDays * DUE_START_RATIO),
+  );
+  const cooldownDays = Math.max(
+    MIN_COOLDOWN_DAYS,
+    Math.floor(typicalIntervalDays * COOLDOWN_RATIO),
+  );
+  const variability =
+    average(recentIntervals) > 0
+      ? standardDeviation(recentIntervals) / average(recentIntervals)
+      : 1;
+  const stability = clamp(1 - variability, 0, 1);
+  const volume = clamp(recentIntervals.length / 4, 0, 1);
+  const confidence = clamp(volume * 0.6 + stability * 0.4, 0, 1);
+  const eligible =
+    daysSinceLastPurchase >= dueStartDays &&
+    daysSinceLastPurchase >= cooldownDays;
+  const urgency = eligible
+    ? Math.max(
+        0.15,
+        clamp(
+          (daysSinceLastPurchase - dueStartDays) /
+            Math.max(MIN_INTERVAL_DAYS, typicalIntervalDays * 0.5),
+          0,
+          1,
+        ),
+      )
+    : 0;
+
+  return {
+    daysSinceLastPurchase,
+    typicalIntervalDays,
+    dueStartDays,
+    cooldownDays,
+    confidence,
+    urgency,
+    eligible,
+  };
+};
+
 const averageQuantity = (events: PurchaseEvent[]) => {
   if (events.length === 0) return 1;
 
@@ -146,21 +279,30 @@ const toShoppingListItems = (
   candidates: RecommendationCandidate[],
   scoreThreshold: number,
 ): ShoppingListItem[] => {
-  if (candidates.length === 0) return [];
+  const eligibleCandidates = candidates.filter((candidate) => candidate.cadence.eligible);
+  if (eligibleCandidates.length === 0) return [];
 
-  const maxRecency = Math.max(...candidates.map((candidate) => candidate.score.recency));
-  const maxFrequency = Math.max(...candidates.map((candidate) => candidate.score.frequency));
-  const maxSeasonality = Math.max(...candidates.map((candidate) => candidate.score.seasonality));
+  const maxRecency = Math.max(
+    ...eligibleCandidates.map((candidate) => candidate.score.recency),
+  );
+  const maxFrequency = Math.max(
+    ...eligibleCandidates.map((candidate) => candidate.score.frequency),
+  );
+  const maxSeasonality = Math.max(
+    ...eligibleCandidates.map((candidate) => candidate.score.seasonality),
+  );
 
-  return candidates
+  return eligibleCandidates
     .map((candidate) => {
       const recency = normalize(candidate.score.recency, maxRecency);
       const frequency = normalize(candidate.score.frequency, maxFrequency);
       const seasonality = normalize(candidate.score.seasonality, maxSeasonality);
+      const trend = recency * 0.45 + frequency * 0.55;
 
       const totalScore =
-        recency * SCORE_WEIGHTS.recency +
-        frequency * SCORE_WEIGHTS.frequency +
+        candidate.cadence.urgency * SCORE_WEIGHTS.urgency +
+        candidate.cadence.confidence * SCORE_WEIGHTS.confidence +
+        trend * SCORE_WEIGHTS.trend +
         seasonality * SCORE_WEIGHTS.seasonality;
 
       return {
@@ -240,6 +382,7 @@ export const useShoppingRecommendations = (
         name: item.name,
         quantity: averageQuantity(events),
         score: scoreHistory(events, now),
+        cadence: buildCadenceModel(events, now),
       } as RecommendationCandidate;
     })
     .filter(Boolean) as RecommendationCandidate[];

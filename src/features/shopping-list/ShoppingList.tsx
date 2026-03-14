@@ -20,7 +20,7 @@ import { useCurrentUser } from "../auth/useAuthStore";
 const ShoppingList: React.FC = () => {
   const user = useCurrentUser();
   const { recommendations } = useShoppingRecommendations({
-    scoreThreshold: 0.5,
+    scoreThreshold: 0.65,
   });
   const { shoppingList, loading, error } = useShoppingList();
   const createItem = useCreateShoppingListItem();
