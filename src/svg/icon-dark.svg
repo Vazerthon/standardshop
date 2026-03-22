@@ -1,0 +1,18 @@
+<svg width="128" height="128" viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <filter id="neuomorphic-dark-shadow" x="-100%" y="-100%" width="400%" height="400%">
+      <feDropShadow dx="4" dy="4" stdDeviation="4" flood-color="#cccccc"/>
+      <feDropShadow dx="-4" dy="-4" stdDeviation="4" flood-color="#ffffff"/>
+    </filter>
+  </defs>
+  
+  <rect width="128" height="128" fill="#f0f0f0"/>
+  
+  <path d="M 32 64 C 32 44, 48 44, 64 64 C 80 84, 96 84, 96 64 C 96 44, 80 44, 64 64 C 48 84, 32 84, 32 64" 
+        fill="none" 
+        stroke="#cccccc" 
+        stroke-width="10"
+        stroke-linecap="round"
+        filter="url(#neuomorphic-dark-shadow)"
+        opacity="0.9" />
+</svg>
